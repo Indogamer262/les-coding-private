@@ -1,0 +1,71 @@
+:root {
+    /* Colors */
+    --font-size: 16px;
+    --background: #ffffff;
+    --foreground: #030213;
+    /* oklch(0.145 0 0) converted roughly */
+
+    --card: #ffffff;
+    --card-foreground: #030213;
+
+    --popover: #ffffff;
+    --popover-foreground: #030213;
+
+    --primary: #030213;
+    --primary-foreground: #ffffff;
+
+    --secondary: #f4f4f5;
+    /* clean gray */
+    --secondary-foreground: #030213;
+
+    --muted: #ececf0;
+    --muted-foreground: #717182;
+
+    --accent: #e9ebef;
+    --accent-foreground: #030213;
+
+    --destructive: #d4183d;
+    --destructive-foreground: #ffffff;
+
+    --border: rgba(0, 0, 0, 0.1);
+    --input: #e2e8f0;
+    --input-background: #f3f3f5;
+
+    --ring: #94a3b8;
+
+    /* Sidebar Specifics */
+    --sidebar: #ffffff;
+    --sidebar-foreground: #030213;
+    --sidebar-active: #eef2ff;
+    --sidebar-active-foreground: #4f46e5;
+    /* indigo-600 */
+
+    /* Fonts */
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Spacing & Radius */
+    --radius: 0.625rem;
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: #f9fafb;
+    /* gray-50 */
+    color: var(--foreground);
+    font-size: var(--font-size);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
