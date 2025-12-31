@@ -4,6 +4,11 @@
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = trim($uri, '/');
 
+// 1. Static File Handling (Critical for PHP Built-in Server)
+if (preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER["REQUEST_URI"])) {
+    return false;    // Serve the requested resource as-is.
+}
+
 // Helper to render view
 function view($name, $data = []) {
     extract($data);
