@@ -60,7 +60,8 @@
 
             <h2 id="role-title" class="text-xl font-bold text-gray-800 mb-4">Login</h2>
 
-            <form onsubmit="handleLogin(event)" class="space-y-4">
+            <form method="POST" action="" class="space-y-4">
+                <input type="hidden" name="action" value="login">
                 <input type="hidden" name="role" id="selected-role">
 
                 <div>
@@ -116,25 +117,6 @@
             loginFormContainer.classList.add('hidden');
             roleSelection.classList.remove('hidden');
             selectedRoleInput.value = '';
-        }
-
-        function handleLogin(e) {
-            e.preventDefault(); // Prevent actual form submission
-            
-            const role = selectedRoleInput.value;
-            const email = document.getElementById('email').value;
-            
-            // Simulate button loading (optional visual feedback)
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = 'Memproses...';
-            btn.disabled = true;
-
-            // Direct redirect to mimic login
-            // Using query params to let index.php handle the session creation
-            setTimeout(() => {
-                window.location.href = `?action=login&role=${role}&email=${encodeURIComponent(email)}`;
-            }, 500); // 500ms delay for effect
         }
     </script>
 </body>

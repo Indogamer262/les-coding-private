@@ -44,15 +44,14 @@ $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 // Handle Logout
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     session_destroy();
-    header('Location: ' . url(''));
+    header('Location: ./');
     exit;
 }
 
-// Handle Login Submission (Simplified for testing)
-// Supports both GET (link) and POST (form)
-if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'login') {
-    $role = $_REQUEST['role'] ?? 'murid';
-    $email = $_REQUEST['email'] ?? 'user@example.com';
+// Handle Login Submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'login') {
+    $role = $_POST['role'] ?? 'murid';
+    $email = $_POST['email'] ?? 'user@example.com';
     
     // Normalize roles just in case
     if ($role === 'student') $role = 'murid';
@@ -63,7 +62,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'login') {
     $_SESSION['user_email'] = $email;
     $_SESSION['logged_in'] = true;
     
-    header('Location: ' . url(''));
+    header('Location: ./');
     exit;
 }
 
