@@ -8,8 +8,8 @@
                 <h1 class="text-2xl font-bold text-gray-800">
                     <?php 
                         if ($role === 'admin') echo 'Dashboard Admin';
-                        elseif ($role === 'student') echo 'Dashboard Murid';
-                        elseif ($role === 'teacher') echo 'Dashboard Pengajar';
+                        elseif ($role === 'murid') echo 'Dashboard Murid';
+                        elseif ($role === 'pengajar') echo 'Dashboard Pengajar';
                     ?>
                 </h1>
                 <p class="text-sm text-gray-500 mt-1">
@@ -22,23 +22,27 @@
                 <p class="text-sm font-medium text-gray-700">
                     <?php 
                         if ($role === 'admin') echo 'Admin User';
-                        elseif ($role === 'student') echo 'John Doe';
-                        elseif ($role === 'teacher') echo 'Jane Smith';
+                        elseif ($role === 'murid') echo 'John Doe';
+                        elseif ($role === 'pengajar') echo 'Jane Smith';
                     ?>
                 </p>
-                <p class="text-xs text-gray-500">
-                    <?php 
-                        if ($role === 'admin') echo 'Administrator';
-                        elseif ($role === 'student') echo 'Siswa';
-                        elseif ($role === 'teacher') echo 'Pengajar';
-                    ?>
-                </p>
+                <div class="flex items-center justify-end gap-2">
+                    <p class="text-xs text-gray-500">
+                        <?php 
+                            if ($role === 'admin') echo 'Administrator';
+                            elseif ($role === 'murid') echo 'Siswa';
+                            elseif ($role === 'pengajar') echo 'Pengajar';
+                        ?>
+                    </p>
+                    <span class="text-xs text-gray-300">|</span>
+                    <a href="?action=logout" class="text-xs text-red-500 hover:text-red-700">Logout</a>
+                </div>
             </div>
-            <div class="avatar bg-blue-600">
+            <div class="avatar bg-blue-600 h-10 w-10 rounded-full flex items-center justify-center text-white font-bold">
                 <?php 
                     if ($role === 'admin') echo 'A';
-                    elseif ($role === 'student') echo 'J';
-                    elseif ($role === 'teacher') echo 'J';
+                    elseif ($role === 'murid') echo 'J';
+                    elseif ($role === 'pengajar') echo 'J';
                 ?>
             </div>
         </div>

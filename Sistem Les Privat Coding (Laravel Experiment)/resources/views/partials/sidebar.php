@@ -4,35 +4,43 @@ $menu = [];
 
 if ($role === 'admin') {
     $menu = [
-        ['label' => 'Dashboard', 'url' => '?role=admin&page=dashboard', 'icon' => 'home'],
-        ['label' => 'Manajemen Akun', 'url' => '?role=admin&subpage=accounts', 'icon' => 'users'],
-        ['label' => 'Paket Belajar', 'url' => '?role=admin&subpage=packages', 'icon' => 'package'],
-        ['label' => 'Riwayat Pembelian', 'url' => '?role=admin&subpage=purchases', 'icon' => 'shopping-cart'],
-        ['label' => 'Jadwal Kursus', 'url' => '?role=admin&subpage=schedules', 'icon' => 'calendar'],
-        ['label' => 'Riwayat Absensi', 'url' => '?role=admin&subpage=attendance', 'icon' => 'clock'],
+        ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
+        ['label' => 'Manajemen Akun', 'url' => '?subpage=accounts', 'icon' => 'users'],
+        ['label' => 'Paket Belajar', 'url' => '?subpage=packages', 'icon' => 'package'],
+        ['label' => 'Riwayat Pembelian', 'url' => '?subpage=purchases', 'icon' => 'shopping-cart'],
+        ['label' => 'Jadwal Kursus', 'url' => '?subpage=schedules', 'icon' => 'calendar'],
+        ['label' => 'Riwayat Absensi', 'url' => '?subpage=attendance', 'icon' => 'clock'],
     ];
-} elseif ($role === 'student') {
+} elseif ($role === 'murid') {
     $menu = [
-        ['label' => 'Dashboard', 'url' => '?role=student&page=dashboard', 'icon' => 'home'],
-        ['label' => 'Paket Saya', 'url' => '?role=student&subpage=packages', 'icon' => 'package'],
-        ['label' => 'Jadwal Belajar', 'url' => '?role=student&subpage=schedule', 'icon' => 'calendar'],
-        ['label' => 'Riwayat Belajar', 'url' => '?role=student&subpage=history', 'icon' => 'clock'],
+        ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
+        ['label' => 'Paket Saya', 'url' => '?subpage=packages', 'icon' => 'package'],
+        ['label' => 'Jadwal Belajar', 'url' => '?subpage=schedule', 'icon' => 'calendar'],
+        ['label' => 'Riwayat Belajar', 'url' => '?subpage=history', 'icon' => 'clock'],
     ];
-} elseif ($role === 'teacher') {
+} elseif ($role === 'pengajar') {
     $menu = [
-        ['label' => 'Dashboard', 'url' => '?role=teacher&page=dashboard', 'icon' => 'home'],
-        ['label' => 'Jadwal Mengajar', 'url' => '?role=teacher&subpage=schedule', 'icon' => 'calendar'],
-        ['label' => 'Absensi Murid', 'url' => '?role=teacher&subpage=attendance', 'icon' => 'check-square'],
+        ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
+        ['label' => 'Jadwal Mengajar', 'url' => '?subpage=schedule', 'icon' => 'calendar'],
+        ['label' => 'Absensi Murid', 'url' => '?subpage=attendance', 'icon' => 'check-square'],
     ];
 }
 
 // Helper to check active state
 function isActive($url) {
     // Simple check: if active query param matches
-    // In real app, robust URL checking needed
     $current_page = $_GET['subpage'] ?? 'dashboard';
-    if (strpos($url, 'subpage=' . $current_page) !== false) return 'active';
-    if ($current_page === 'dashboard' && strpos($url, 'page=dashboard') !== false) return 'active';
+    
+    // Check if it's the dashboard
+    if ($current_page === 'dashboard' && strpos($url, 'page=dashboard') !== false) {
+        return 'active';
+    }
+    
+    // Check other pages
+    if ($current_page !== 'dashboard' && strpos($url, 'subpage=' . $current_page) !== false) {
+        return 'active';
+    }
+    
     return '';
 }
 ?>
@@ -65,7 +73,7 @@ function isActive($url) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
             <?php elseif($item['icon'] === 'clock'): ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-             <?php elseif($item['icon'] === 'check-square'): ?>
+            <?php elseif($item['icon'] === 'check-square'): ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             <?php else: ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
@@ -73,15 +81,5 @@ function isActive($url) {
             <span><?= htmlspecialchars($item['label']) ?></span>
         </a>
         <?php endforeach; ?>
-
-        <!-- Role Switcher for Demo -->
-        <div class="mt-8 px-4">
-             <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Switch Role (Demo)</div>
-             <div class="flex flex-col gap-1">
-                 <a href="?role=admin" class="text-sm text-gray-600 hover:text-primary">Admin</a>
-                 <a href="?role=student" class="text-sm text-gray-600 hover:text-primary">Murid</a>
-                 <a href="?role=teacher" class="text-sm text-gray-600 hover:text-primary">Pengajar</a>
-             </div>
-        </div>
     </nav>
 </aside>
