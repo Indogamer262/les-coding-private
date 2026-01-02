@@ -40,4 +40,4 @@ $content = ob_get_clean();
 
 $title = ucfirst($role) . ' - ' . ucfirst($page) . ' - Sistem Les Privat';
 
-require base_path('occurence/layout.php');
+require view_path('occurence/layout.php');

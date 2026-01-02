@@ -15,10 +15,10 @@
 </head>
 <body>
     <div class="flex h-screen bg-gray-50">
-        <?php require base_path('occurence/sidebar.php'); ?>
+        <?php require view_path('occurence/sidebar.php'); ?>
 
         <div id="main-content" class="flex-1 flex flex-col overflow-hidden transition-all duration-300 ml-64">
-            <?php require base_path('occurence/topbar.php'); ?>
+            <?php require view_path('occurence/topbar.php'); ?>
 
             <main class="flex-1 overflow-y-auto p-6">
                 <?php if (isset($content)) echo $content; ?>
