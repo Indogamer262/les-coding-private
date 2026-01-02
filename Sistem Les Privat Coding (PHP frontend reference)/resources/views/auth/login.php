@@ -14,8 +14,8 @@
 
     <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
         <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-gray-900">Selamat Datang</h1>
-            <p class="text-gray-500 mt-2">Silakan pilih peran Anda untuk masuk</p>
+            <h1 class="text-2xl font-bold text-gray-900">Les Privat Coding</h1>
+            <p class="text-gray-500 mt-2">Silakan pilih akun untuk masuk</p>
         </div>
 
         <!-- Role Selection -->

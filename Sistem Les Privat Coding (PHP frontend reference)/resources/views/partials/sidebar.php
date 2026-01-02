@@ -5,24 +5,26 @@ $menu = [];
 if ($role === 'admin') {
     $menu = [
         ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
-        ['label' => 'Manajemen Akun', 'url' => '?subpage=accounts', 'icon' => 'users'],
-        ['label' => 'Paket Belajar', 'url' => '?subpage=packages', 'icon' => 'package'],
+        ['label' => 'Kelola Akun', 'url' => '?subpage=accounts', 'icon' => 'users'],
+        ['label' => 'Kelola Paket Les', 'url' => '?subpage=packages', 'icon' => 'package'],
+        ['label' => 'Catat Pembayaran', 'url' => '?subpage=payments', 'icon' => 'credit-card'],
         ['label' => 'Riwayat Pembelian', 'url' => '?subpage=purchases', 'icon' => 'shopping-cart'],
-        ['label' => 'Jadwal Kursus', 'url' => '?subpage=schedules', 'icon' => 'calendar'],
-        ['label' => 'Riwayat Absensi', 'url' => '?subpage=attendance', 'icon' => 'clock'],
+        ['label' => 'Kelola Jadwal', 'url' => '?subpage=schedules', 'icon' => 'calendar'],
+        ['label' => 'Riwayat Kehadiran', 'url' => '?subpage=attendance', 'icon' => 'clock'],
     ];
 } elseif ($role === 'murid') {
     $menu = [
         ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
         ['label' => 'Paket Saya', 'url' => '?subpage=packages', 'icon' => 'package'],
-        ['label' => 'Jadwal Belajar', 'url' => '?subpage=schedule', 'icon' => 'calendar'],
-        ['label' => 'Riwayat Belajar', 'url' => '?subpage=history', 'icon' => 'clock'],
+        ['label' => 'Jadwal Les', 'url' => '?subpage=schedule', 'icon' => 'calendar'],
+        ['label' => 'Riwayat Kehadiran', 'url' => '?subpage=history', 'icon' => 'clock'],
     ];
 } elseif ($role === 'pengajar') {
     $menu = [
         ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
         ['label' => 'Jadwal Mengajar', 'url' => '?subpage=schedule', 'icon' => 'calendar'],
         ['label' => 'Absensi Murid', 'url' => '?subpage=attendance', 'icon' => 'check-square'],
+        ['label' => 'Riwayat Kehadiran', 'url' => '?subpage=history', 'icon' => 'clock'],
     ];
 }
 
@@ -45,21 +47,20 @@ function isActive($url) {
 }
 ?>
 
-<aside class="sidebar bg-white border-r border-gray-200">
+<aside class="sidebar bg-blue-900 border-r border-blue-800">
     <div class="sidebar-header">
-        <div class="flex items-center gap-2 font-bold text-xl text-primary">
-            <span class="p-1 bg-primary text-white rounded">LC</span>
-            <span>Les Coding</span>
+        <div class="flex items-center gap-2 font-bold text-xl text-white px-4 py-4">
+            <span>Les Privat Coding</span>
         </div>
     </div>
     
     <nav class="flex-1 overflow-y-auto py-4">
-        <div class="px-4 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <div class="px-4 mb-2 text-xs font-semibold text-blue-200 uppercase tracking-wider">
             Menu Utama
         </div>
         
         <?php foreach ($menu as $item): ?>
-        <a href="<?= $item['url'] ?>" class="nav-link <?= isActive($item['url']) ?>">
+        <a href="<?= $item['url'] ?>" class="nav-link <?= isActive($item['url']) ?> text-blue-100 hover:text-white hover:bg-blue-800 transition-colors">
             <!-- Simple SVG Handling -->
             <?php if($item['icon'] === 'home'): ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -75,6 +76,8 @@ function isActive($url) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <?php elseif($item['icon'] === 'check-square'): ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <?php elseif($item['icon'] === 'credit-card'): ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
             <?php else: ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
             <?php endif; ?>
