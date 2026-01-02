@@ -23,7 +23,7 @@
                         ?>
                     </p>
                     <span class="text-xs text-gray-300">|</span>
-                    <a href="?action=logout" class="text-xs text-red-500 hover:text-red-700">Logout</a>
+                    <a href="dashboard.php?action=logout" class="text-xs text-red-500 hover:text-red-700">Logout</a>
                 </div>
             </div>
             <div class="avatar bg-blue-900 h-10 w-10 rounded-full flex items-center justify-center text-white font-bold">

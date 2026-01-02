@@ -1,95 +1,22 @@
 <div class="flex flex-col gap-6">
-    <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Kelola Jadwal</h1>
-                <p class="text-gray-600 mt-1">Kelola jadwal les untuk pengajar dan murid</p>
-            </div>
-            <button onclick="openScheduleModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                    <line x1="16" x2="16" y1="2" y2="6"></line>
-                    <line x1="8" x2="8" y1="2" y2="6"></line>
-                    <line x1="3" x2="21" y1="10" y2="10"></line>
-                    <path d="M8 14h.01"></path>
-                    <path d="M12 14h.01"></path>
-                    <path d="M16 14h.01"></path>
-                </svg>
-                Buat Jadwal Baru
-            </button>
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Kelola Jadwal</h1>
+            <p class="text-sm text-gray-600 mt-1">Kelola jadwal les untuk pengajar dan murid</p>
         </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Total Jadwal</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">45</p>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                        <line x1="16" x2="16" y1="2" y2="6"></line>
-                        <line x1="8" x2="8" y1="2" y2="6"></line>
-                        <line x1="3" x2="21" y1="10" y2="10"></line>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-emerald-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Minggu Ini</p>
-                    <p class="text-3xl font-bold text-emerald-600 mt-2">12</p>
-                </div>
-                <div class="bg-emerald-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-emerald-600 mt-3 font-medium">Jadwal aktif</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-purple-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Jadwal Terisi</p>
-                    <p class="text-3xl font-bold text-purple-600 mt-2">38</p>
-                </div>
-                <div class="bg-purple-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <line x1="19" x2="19" y1="8" y2="14"></line>
-                        <line x1="22" x2="16" y1="11" y2="11"></line>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-purple-600 mt-3 font-medium">Ada murid terdaftar</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-orange-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Slot Kosong</p>
-                    <p class="text-3xl font-bold text-orange-600 mt-2">7</p>
-                </div>
-                <div class="bg-orange-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-orange-600 mt-3 font-medium">Belum ada murid</p>
-        </div>
+        <button onclick="openScheduleModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                <line x1="16" x2="16" y1="2" y2="6"></line>
+                <line x1="8" x2="8" y1="2" y2="6"></line>
+                <line x1="3" x2="21" y1="10" y2="10"></line>
+                <path d="M8 14h.01"></path>
+                <path d="M12 14h.01"></path>
+                <path d="M16 14h.01"></path>
+            </svg>
+            Buat Jadwal Baru
+        </button>
     </div>
 
     <!-- Filter Section -->

@@ -4,34 +4,34 @@ $menu = [];
 
 if ($role === 'admin') {
     $menu = [
-        ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
-        ['label' => 'Kelola Akun', 'url' => '?subpage=accounts', 'icon' => 'users'],
-        ['label' => 'Kelola Paket Les', 'url' => '?subpage=packages', 'icon' => 'package'],
-        ['label' => 'Catat Pembayaran', 'url' => '?subpage=payments', 'icon' => 'credit-card'],
-        ['label' => 'Riwayat Pembelian', 'url' => '?subpage=purchases', 'icon' => 'shopping-cart'],
-        ['label' => 'Kelola Jadwal', 'url' => '?subpage=schedules', 'icon' => 'calendar'],
-        ['label' => 'Riwayat Kehadiran', 'url' => '?subpage=attendance', 'icon' => 'clock'],
+        ['label' => 'Dashboard', 'url' => 'dashboard.php?page=dashboard', 'icon' => 'home'],
+        ['label' => 'Kelola Akun', 'url' => 'dashboard.php?page=akun', 'icon' => 'users'],
+        ['label' => 'Kelola Paket Les', 'url' => 'dashboard.php?page=paketLes', 'icon' => 'package'],
+        ['label' => 'Catat Pembayaran', 'url' => 'dashboard.php?page=pembayaran', 'icon' => 'credit-card'],
+        ['label' => 'Riwayat Pembelian', 'url' => 'dashboard.php?page=pembelian', 'icon' => 'shopping-cart'],
+        ['label' => 'Kelola Jadwal', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
+        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=absensi', 'icon' => 'clock'],
     ];
 } elseif ($role === 'murid') {
     $menu = [
-        ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
-        ['label' => 'Paket Saya', 'url' => '?subpage=packages', 'icon' => 'package'],
-        ['label' => 'Jadwal Les', 'url' => '?subpage=schedule', 'icon' => 'calendar'],
-        ['label' => 'Riwayat Kehadiran', 'url' => '?subpage=history', 'icon' => 'clock'],
+        ['label' => 'Dashboard', 'url' => 'dashboard.php?page=dashboard', 'icon' => 'home'],
+        ['label' => 'Paket Saya', 'url' => 'dashboard.php?page=paketLes', 'icon' => 'package'],
+        ['label' => 'Jadwal Les', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
+        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=riwayatKehadiran', 'icon' => 'clock'],
     ];
 } elseif ($role === 'pengajar') {
     $menu = [
-        ['label' => 'Dashboard', 'url' => '?page=dashboard', 'icon' => 'home'],
-        ['label' => 'Jadwal Mengajar', 'url' => '?subpage=schedule', 'icon' => 'calendar'],
-        ['label' => 'Absensi Murid', 'url' => '?subpage=attendance', 'icon' => 'check-square'],
-        ['label' => 'Riwayat Kehadiran', 'url' => '?subpage=history', 'icon' => 'clock'],
+        ['label' => 'Dashboard', 'url' => 'dashboard.php?page=dashboard', 'icon' => 'home'],
+        ['label' => 'Jadwal Mengajar', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
+        ['label' => 'Absensi Murid', 'url' => 'dashboard.php?page=absensi', 'icon' => 'check-square'],
+        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=riwayatKehadiran', 'icon' => 'clock'],
     ];
 }
 
 // Helper to check active state
 function isActive($url) {
     // Simple check: if active query param matches
-    $current_page = $_GET['subpage'] ?? 'dashboard';
+    $current_page = $_GET['page'] ?? 'dashboard';
     
     // Check if it's the dashboard
     if ($current_page === 'dashboard' && strpos($url, 'page=dashboard') !== false) {
@@ -39,7 +39,7 @@ function isActive($url) {
     }
     
     // Check other pages
-    if ($current_page !== 'dashboard' && strpos($url, 'subpage=' . $current_page) !== false) {
+    if ($current_page !== 'dashboard' && strpos($url, 'page=' . $current_page) !== false) {
         return 'active';
     }
     

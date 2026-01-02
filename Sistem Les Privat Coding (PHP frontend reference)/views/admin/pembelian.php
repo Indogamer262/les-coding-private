@@ -1,9 +1,9 @@
 <div class="flex flex-col gap-6">
-    <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Riwayat Pembelian</h1>
-            <p class="text-gray-600 mt-1">Lihat seluruh riwayat pembelian paket les</p>
+            <p class="text-sm text-gray-600 mt-1">Lihat seluruh riwayat pembelian paket les</p>
         </div>
     </div>
 
@@ -47,75 +47,6 @@
                     <option value="used">Terpakai Habis</option>
                 </select>
             </div>
-        </div>
-    </div>
-
-    <!-- Stats Summary -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Total Pembelian</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">156</p>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-blue-600 mt-3 font-medium">Sepanjang masa</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-emerald-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Paket Aktif</p>
-                    <p class="text-3xl font-bold text-emerald-600 mt-2">89</p>
-                </div>
-                <div class="bg-emerald-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-emerald-600 mt-3 font-medium">Sedang berjalan</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-orange-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Kadaluarsa</p>
-                    <p class="text-3xl font-bold text-orange-600 mt-2">45</p>
-                </div>
-                <div class="bg-orange-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-orange-600 mt-3 font-medium">Masa aktif habis</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-purple-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Total Pendapatan</p>
-                    <p class="text-2xl font-bold text-purple-600 mt-2">Rp 68 Jt</p>
-                </div>
-                <div class="bg-purple-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="2" x2="12" y2="22"></line>
-                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-purple-600 mt-3 font-medium">Total keseluruhan</p>
         </div>
     </div>
 

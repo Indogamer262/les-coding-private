@@ -1,79 +1,11 @@
 <div class="flex flex-col gap-6">
-    <!-- Welcome Banner -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg p-6 text-white">
-        <h2 class="text-2xl font-bold">Absensi Murid ✓</h2>
-        <p class="mt-2 text-blue-100">Catat kehadiran dan materi pertemuan</p>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Pertemuan Hari Ini</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">3</p>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                        <line x1="16" x2="16" y1="2" y2="6"></line>
-                        <line x1="8" x2="8" y1="2" y2="6"></line>
-                        <line x1="3" x2="21" y1="10" y2="10"></line>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-green-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Sudah Diabsen</p>
-                    <p class="text-3xl font-bold text-green-600 mt-2">1</p>
-                </div>
-                <div class="bg-green-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-orange-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Belum Diabsen</p>
-                    <p class="text-3xl font-bold text-orange-600 mt-2">2</p>
-                </div>
-                <div class="bg-orange-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-purple-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Minggu Ini</p>
-                    <p class="text-3xl font-bold text-purple-600 mt-2">5</p>
-                </div>
-                <div class="bg-purple-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 3v18h18"></path>
-                        <path d="m19 9-5 5-4-4-3 3"></path>
-                    </svg>
-                </div>
-            </div>
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Absensi Murid</h2>
+            <p class="text-sm text-gray-600 mt-1">Catat kehadiran dan materi pertemuan</p>
         </div>
     </div>
-
-    <!-- Attendance List -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-800">Daftar Pertemuan Hari Ini</h2>
                 <div class="text-sm text-gray-600">Kamis, 02 Jan 2026</div>

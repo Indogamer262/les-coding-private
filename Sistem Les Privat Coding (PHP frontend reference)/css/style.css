@@ -9,7 +9,7 @@
     --secondary: #f4f4f5;
     --secondary-foreground: #030213;
     --muted: #ececf0;
-    --muted-foreground: #717182;
+    --muted-foreground: #1f1fbb;
     --accent: #e9ebef;
     --accent-foreground: #030213;
     --destructive: #d4183d;
@@ -19,14 +19,14 @@
     --ring: #030213;
     --radius: 0.625rem;
 
-    /* Sidebar specific */
-    --sidebar-background: #fbfbfb;
-    --sidebar-foreground: #030213;
-    --sidebar-primary: #030213;
+    /* Sidebar specific (dark blue) */
+    --sidebar-background: #111e3f;
+    --sidebar-foreground: #dbeafe;
+    --sidebar-primary: #1d4ed8;
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #f4f4f5;
-    --sidebar-accent-foreground: #030213;
-    --sidebar-border: rgba(0, 0, 0, 0.05);
+    --sidebar-accent: #1e3a8a;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #0f172a;
 
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -45,6 +45,11 @@ body {
     background-color: #f7f8fa;
     color: var(--foreground);
     -webkit-font-smoothing: antialiased;
+}
+
+table, tr, td, th {
+    border: 1px solid black;
+    border-collapse: collapse;
 }
 
 /* Utilities */
@@ -104,8 +109,48 @@ body {
     height: 100vh;
 }
 
+/* Position utilities */
+.fixed {
+    position: fixed;
+}
+
+.inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.z-50 {
+    z-index: 50;
+}
+
 .w-full {
     width: 100%;
+}
+
+/* Width / max-width utilities */
+.max-w-md {
+    max-width: 28rem;
+}
+
+.max-w-lg {
+    max-width: 32rem;
+}
+
+.max-w-2xl {
+    max-width: 42rem;
+}
+
+/* Margin utilities */
+.mx-4 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+/* Max-height utility (used by modal) */
+.max-h-\[90vh\] {
+    max-height: 90vh;
 }
 
 .flex-1 {
@@ -268,6 +313,28 @@ body {
 
 .bg-yellow-50 {
     background-color: #fefce8;
+}
+
+.bg-yellow-500 {
+    background-color: #eab308;
+}
+
+.bg-yellow-600 {
+    background-color: #ca8a04;
+}
+
+.bg-black {
+    background-color: #000000;
+}
+
+/* Background opacity helper (used with bg-black for overlays) */
+.bg-opacity-50 {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .bg-orange-500 {
@@ -502,6 +569,10 @@ body {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+.shadow-2xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -570,6 +641,10 @@ body {
 
 .hover\:bg-blue-800:hover {
     background-color: #1e3a8a;
+}
+
+.hover\:bg-yellow-600:hover {
+    background-color: #ca8a04;
 }
 
 .hover\:shadow-lg:hover {
@@ -644,8 +719,8 @@ body {
 
 /* Blue dark sidebar styling */
 .sidebar.bg-blue-900 {
-    background-color: #111e3f;
-    border-color: #0f172a;
+    background-color: #1e3a8a;
+    border-color: #111e3f;
 }
 
 .sidebar.bg-blue-900 .nav-link {
@@ -653,12 +728,12 @@ body {
 }
 
 .sidebar.bg-blue-900 .nav-link:hover {
-    background-color: #1e3a8a;
+    background-color: #1d4ed8;
     color: white;
 }
 
 .sidebar.bg-blue-900 .nav-link.active {
-    background-color: #1d4ed8;
+    background-color: #2563eb;
     color: white;
 }
 

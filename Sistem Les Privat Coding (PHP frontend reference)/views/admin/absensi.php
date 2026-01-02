@@ -1,9 +1,9 @@
 <div class="flex flex-col gap-6">
-    <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Riwayat Kehadiran</h1>
-            <p class="text-gray-600 mt-1">Lihat seluruh riwayat kehadiran murid</p>
+            <p class="text-sm text-gray-600 mt-1">Lihat seluruh riwayat kehadiran murid</p>
         </div>
     </div>
 
@@ -53,76 +53,6 @@
                     <option value="tidak-hadir">Tidak Hadir</option>
                 </select>
             </div>
-        </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-lg shadow-md border border-green-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Total Pertemuan</p>
-                    <p class="text-3xl font-bold text-green-600 mt-2">124</p>
-                </div>
-                <div class="bg-green-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                        <line x1="16" x2="16" y1="2" y2="6"></line>
-                        <line x1="8" x2="8" y1="2" y2="6"></line>
-                        <line x1="3" x2="21" y1="10" y2="10"></line>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-green-600 mt-3 font-medium">Bulan ini</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Kehadiran</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">108</p>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-blue-600 mt-3 font-medium">87% tingkat kehadiran</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-red-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Tidak Hadir</p>
-                    <p class="text-3xl font-bold text-red-600 mt-2">16</p>
-                </div>
-                <div class="bg-red-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" x2="9" y1="9" y2="15"></line>
-                        <line x1="9" x2="15" y1="9" y2="15"></line>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-red-600 mt-3 font-medium">13% ketidakhadiran</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-purple-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Rata-rata per Hari</p>
-                    <p class="text-3xl font-bold text-purple-600 mt-2">4.1</p>
-                </div>
-                <div class="bg-purple-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 3v18h18"></path>
-                        <path d="m19 9-5 5-4-4-3 3"></path>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-purple-600 mt-3 font-medium">Pertemuan per hari</p>
         </div>
     </div>
 

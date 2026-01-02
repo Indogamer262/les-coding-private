@@ -1,86 +1,17 @@
 <div class="flex flex-col gap-6">
-    <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Catat Pembayaran</h1>
-                <p class="text-gray-600 mt-1">Catat pembayaran pembelian paket les oleh murid</p>
-            </div>
-            <button onclick="openPaymentModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-                    <line x1="2" x2="22" y1="10" y2="10"></line>
-                </svg>
-                Catat Pembayaran
-            </button>
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Catat Pembayaran</h1>
+            <p class="text-sm text-gray-600 mt-1">Catat pembayaran pembelian paket les oleh murid</p>
         </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Hari Ini</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">5</p>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-                        <line x1="2" x2="22" y1="10" y2="10"></line>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-blue-600 mt-3 font-medium">Transaksi pembayaran</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-emerald-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Bulan Ini</p>
-                    <p class="text-3xl font-bold text-emerald-600 mt-2">34</p>
-                </div>
-                <div class="bg-emerald-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-emerald-600 mt-3 font-medium">↑ 8% dari bulan lalu</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-purple-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Pendapatan Hari Ini</p>
-                    <p class="text-2xl font-bold text-purple-600 mt-2">Rp 1,2 Jt</p>
-                </div>
-                <div class="bg-purple-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="2" x2="12" y2="22"></line>
-                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-orange-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Pendapatan Bulan Ini</p>
-                    <p class="text-2xl font-bold text-orange-600 mt-2">Rp 18,5 Jt</p>
-                </div>
-                <div class="bg-orange-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M3 3v18h18"></path>
-                        <path d="m19 9-5 5-4-4-3 3"></path>
-                    </svg>
-                </div>
-            </div>
-            <p class="text-xs text-orange-600 mt-3 font-medium">↑ 15% dari bulan lalu</p>
-        </div>
+        <button onclick="openPaymentModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                <line x1="2" x2="22" y1="10" y2="10"></line>
+            </svg>
+            Catat Pembayaran
+        </button>
     </div>
 
     <!-- Recent Payments Table -->

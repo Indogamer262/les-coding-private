@@ -1,81 +1,11 @@
 <div class="flex flex-col gap-6">
-    <!-- Welcome Banner -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-        <h2 class="text-2xl font-bold">Paket Les Saya 📚</h2>
-        <p class="mt-2 text-blue-100">Kelola dan pantau paket les Anda</p>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-lg shadow-md border border-blue-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Paket Aktif</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-2">2</p>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m7.5 4.27 9 5.15"></path>
-                        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
-                        <path d="m3.3 7 8.7 5 8.7-5"></path>
-                        <path d="M12 22V12"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-emerald-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Sisa Pertemuan</p>
-                    <p class="text-3xl font-bold text-emerald-600 mt-2">11</p>
-                </div>
-                <div class="bg-emerald-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md border border-purple-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-600 text-sm font-medium">Total Pembelian</p>
-                    <p class="text-3xl font-bold text-purple-600 mt-2">5</p>
-                </div>
-                <div class="bg-purple-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                </div>
-            </div>
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Paket Les Saya</h2>
+            <p class="text-sm text-gray-600 mt-1">Kelola dan pantau paket les Anda</p>
         </div>
     </div>
-
-    <!-- Active Packages -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800">Paket Aktif Saya</h2>
-        </div>
-        <div class="p-6 space-y-4">
-            <!-- Package Card 1 - Expiring Soon -->
-            <div class="border-2 border-orange-200 bg-orange-50 rounded-lg p-4">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-2">
-                            <h3 class="text-lg font-bold text-gray-800">Paket 4 Pertemuan</h3>
-                            <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">⚠️ Segera Kadaluarsa</span>
-                        </div>
-                        <p class="text-sm text-gray-600">Dibeli: 28 Des 2025</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-2xl font-bold text-orange-600">Rp 250.000</p>
-                    </div>
-                </div>
-                
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div class="bg-white rounded-lg p-3">
                         <p class="text-xs text-gray-600 mb-1">Sisa Pertemuan</p>
