@@ -12,8 +12,8 @@
 1. Buka terminal dan masuk ke folder ini.
 2. Jalankan server PHP built-in:
 
-	`php -S localhost:8000 -t .`
+	php -S localhost:8000 -t .
 
 3. Buka di browser:
 
-	`http://localhost:8000/`
+	http://localhost:8000/

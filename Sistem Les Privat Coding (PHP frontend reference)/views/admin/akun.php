@@ -79,10 +79,9 @@
                                 <button type="button" onclick="editAccount(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
                                     Edit
                                 </button>
-                                <label class="relative inline-flex items-center cursor-pointer" title="Aktif / Nonaktif">
-                                    <input type="checkbox" class="sr-only peer" checked onchange="toggleStatus(1, this.checked ? 'active' : 'inactive', this)">
-                                    <div class="relative w-14 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:after:translate-x-6"></div>
-                                </label>
+                                <button type="button" onclick="toggleStatus(1, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
+                                    Nonaktifkan
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -108,10 +107,9 @@
                                 <button type="button" onclick="editAccount(2)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
                                     Edit
                                 </button>
-                                <label class="relative inline-flex items-center cursor-pointer" title="Aktif / Nonaktif">
-                                    <input type="checkbox" class="sr-only peer" checked onchange="toggleStatus(2, this.checked ? 'active' : 'inactive', this)">
-                                    <div class="relative w-14 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:after:translate-x-6"></div>
-                                </label>
+                                <button type="button" onclick="toggleStatus(2, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
+                                    Nonaktifkan
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -137,10 +135,9 @@
                                 <button type="button" onclick="editAccount(3)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
                                     Edit
                                 </button>
-                                <label class="relative inline-flex items-center cursor-pointer" title="Aktif / Nonaktif">
-                                    <input type="checkbox" class="sr-only peer" onchange="toggleStatus(3, this.checked ? 'active' : 'inactive', this)">
-                                    <div class="relative w-14 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:after:translate-x-6"></div>
-                                </label>
+                                <button type="button" onclick="toggleStatus(3, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors" title="Aktifkan">
+                                    Aktifkan
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -166,10 +163,9 @@
                                 <button type="button" onclick="editAccount(4)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
                                     Edit
                                 </button>
-                                <label class="relative inline-flex items-center cursor-pointer" title="Aktif / Nonaktif">
-                                    <input type="checkbox" class="sr-only peer" checked onchange="toggleStatus(4, this.checked ? 'active' : 'inactive', this)">
-                                    <div class="relative w-14 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:after:translate-x-6"></div>
-                                </label>
+                                <button type="button" onclick="toggleStatus(4, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
+                                    Nonaktifkan
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -349,31 +345,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function toggleStatus(id, newStatus, checkboxEl) {
+function toggleStatus(id, btnEl) {
+    const row = btnEl ? btnEl.closest('tr') : null;
+    if (!row) return;
+    
+    const currentStatus = row.getAttribute('data-status');
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     const action = newStatus === 'active' ? 'mengaktifkan' : 'menonaktifkan';
+    
     if (!confirm('Apakah Anda yakin ingin ' + action + ' akun ini?')) {
-        if (checkboxEl) checkboxEl.checked = !checkboxEl.checked;
         return;
     }
 
-    // Cari row berdasarkan id (checkbox ada di dalam row)
-    const row = checkboxEl ? checkboxEl.closest('tr') : null;
-    if (row) {
-        row.setAttribute('data-status', newStatus);
-        row.classList.toggle('opacity-60', newStatus !== 'active');
+    row.setAttribute('data-status', newStatus);
+    row.classList.toggle('opacity-60', newStatus !== 'active');
 
-        const badge = row.querySelector('.account-status-badge');
-        if (badge) {
-            if (newStatus === 'active') {
-                badge.textContent = 'Aktif';
-                badge.classList.remove('bg-gray-100', 'text-gray-700');
-                badge.classList.add('bg-green-100', 'text-green-700');
-            } else {
-                badge.textContent = 'Nonaktif';
-                badge.classList.remove('bg-green-100', 'text-green-700');
-                badge.classList.add('bg-gray-100', 'text-gray-700');
-            }
+    const badge = row.querySelector('.account-status-badge');
+    if (badge) {
+        if (newStatus === 'active') {
+            badge.textContent = 'Aktif';
+            badge.classList.remove('bg-gray-100', 'text-gray-700');
+            badge.classList.add('bg-green-100', 'text-green-700');
+        } else {
+            badge.textContent = 'Nonaktif';
+            badge.classList.remove('bg-green-100', 'text-green-700');
+            badge.classList.add('bg-gray-100', 'text-gray-700');
         }
+    }
+    
+    // Update button text and style
+    btnEl.classList.remove(
+        'bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50',
+        'bg-blue-600', 'text-white', 'hover:bg-blue-700'
+    );
+
+    if (newStatus === 'active') {
+        btnEl.textContent = 'Nonaktifkan';
+        btnEl.title = 'Nonaktifkan';
+        btnEl.classList.add('bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50');
+    } else {
+        btnEl.textContent = 'Aktifkan';
+        btnEl.title = 'Aktifkan';
+        btnEl.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
     }
 
     if (typeof window.refreshAccountsTable === 'function') {

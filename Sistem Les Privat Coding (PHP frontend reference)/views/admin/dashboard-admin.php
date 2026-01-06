@@ -27,22 +27,22 @@
                     <tbody class="divide-y divide-gray-200">
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 font-medium text-gray-800">Ahmad Fauzi</td>
-                            <td class="px-6 py-4 text-gray-600">React Intermediate</td>
+                            <td class="px-6 py-4 text-gray-600">Paket 8 Pertemuan</td>
                             <td class="px-6 py-4 text-gray-800">02 Jan 2026</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 font-medium text-gray-800">Siti Nurhaliza</td>
-                            <td class="px-6 py-4 text-gray-600">Python Basics</td>
+                            <td class="px-6 py-4 text-gray-600">Paket 4 Pertemuan</td>
                             <td class="px-6 py-4 text-gray-800">01 Jan 2026</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 font-medium text-gray-800">Budi Santoso</td>
-                            <td class="px-6 py-4 text-gray-600">JavaScript Pro</td>
+                            <td class="px-6 py-4 text-gray-600">Paket 12 Pertemuan</td>
                             <td class="px-6 py-4 text-gray-800">31 Des 2025</td>
                         </tr>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 font-medium text-gray-800">Rini Wijaya</td>
-                            <td class="px-6 py-4 text-gray-600">Web Development</td>
+                            <td class="px-6 py-4 text-gray-600">Paket 8 Pertemuan</td>
                             <td class="px-6 py-4 text-gray-800">30 Des 2025</td>
                         </tr>
                     </tbody>
@@ -63,7 +63,7 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="font-semibold text-gray-800">Rahman Hidayat</p>
-                            <p class="text-sm text-gray-600 mt-1">React Advanced</p>
+                            <p class="text-sm text-gray-600 mt-1">Paket 4 Pertemuan</p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -81,7 +81,7 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="font-semibold text-gray-800">Lisa Wijaya</p>
-                            <p class="text-sm text-gray-600 mt-1">JavaScript Basics</p>
+                            <p class="text-sm text-gray-600 mt-1">Paket 8 Pertemuan</p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -99,7 +99,7 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="font-semibold text-gray-800">Doni Sutrisno</p>
-                            <p class="text-sm text-gray-600 mt-1">Python Pro</p>
+                            <p class="text-sm text-gray-600 mt-1">Paket 12 Pertemuan</p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>

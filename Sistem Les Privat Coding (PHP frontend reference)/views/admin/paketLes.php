@@ -19,7 +19,10 @@
     <!-- Packages Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800">Daftar Paket</h2>
+            <div class="flex items-center justify-between gap-4 flex-wrap">
+                <h2 class="text-lg font-semibold text-gray-800">Daftar Paket</h2>
+                <input type="text" id="searchPackage" placeholder="Cari nama paket..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchPackages(this.value)">
+            </div>
         </div>
         <div class="overflow-x-auto p-6">
             <table class="w-full text-left text-sm">
@@ -28,7 +31,7 @@
                         <th class="px-6 py-4">Nama Paket</th>
                         <th class="px-6 py-4">Harga</th>
                         <th class="px-6 py-4 text-center">Jumlah Pertemuan</th>
-                        <th class="px-6 py-4 text-center">Status Dijual</th>
+                        <th class="px-6 py-4 text-center">Status</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -40,14 +43,16 @@
                         <td class="px-6 py-4 text-gray-700">Rp 250.000</td>
                         <td class="px-6 py-4 text-center text-gray-700">4</td>
                         <td class="px-6 py-4 text-center">
-                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Dijual</span>
+                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <label class="relative inline-flex items-center cursor-pointer" title="Dijual / Tidak dijual">
-                                    <input type="checkbox" class="sr-only peer" checked onchange="togglePackageSellStatus(1, this.checked ? 'active' : 'inactive', this)">
-                                    <div class="relative w-14 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:after:translate-x-6"></div>
-                                </label>
+                            <div class="flex items-center justify-center gap-2">
+                                <button type="button" onclick="editPackage(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
+                                    Edit
+                                </button>
+                                <button type="button" onclick="togglePackageStatus(1, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
+                                    Nonaktifkan
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -59,14 +64,16 @@
                         <td class="px-6 py-4 text-gray-700">Rp 450.000</td>
                         <td class="px-6 py-4 text-center text-gray-700">8</td>
                         <td class="px-6 py-4 text-center">
-                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Dijual</span>
+                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <label class="relative inline-flex items-center cursor-pointer" title="Dijual / Tidak dijual">
-                                    <input type="checkbox" class="sr-only peer" checked onchange="togglePackageSellStatus(2, this.checked ? 'active' : 'inactive', this)">
-                                    <div class="relative w-14 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:after:translate-x-6"></div>
-                                </label>
+                            <div class="flex items-center justify-center gap-2">
+                                <button type="button" onclick="editPackage(2)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
+                                    Edit
+                                </button>
+                                <button type="button" onclick="togglePackageStatus(2, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
+                                    Nonaktifkan
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -78,14 +85,16 @@
                         <td class="px-6 py-4 text-gray-700">Rp 600.000</td>
                         <td class="px-6 py-4 text-center text-gray-700">12</td>
                         <td class="px-6 py-4 text-center">
-                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Tidak dijual</span>
+                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Nonaktif</span>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <label class="relative inline-flex items-center cursor-pointer" title="Dijual / Tidak dijual">
-                                    <input type="checkbox" class="sr-only peer" onchange="togglePackageSellStatus(3, this.checked ? 'active' : 'inactive', this)">
-                                    <div class="relative w-14 h-8 bg-gray-200 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-7 after:w-7 after:transition-all peer-checked:after:translate-x-6"></div>
-                                </label>
+                            <div class="flex items-center justify-center gap-2">
+                                <button type="button" onclick="editPackage(3)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
+                                    Edit
+                                </button>
+                                <button type="button" onclick="togglePackageStatus(3, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors" title="Aktifkan">
+                                    Aktifkan
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -123,10 +132,10 @@
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status Dijual</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                 <select name="sellStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="active">Dijual</option>
-                    <option value="inactive">Tidak dijual</option>
+                    <option value="active">Aktif</option>
+                    <option value="inactive">Nonaktif</option>
                 </select>
             </div>
         </form>
@@ -181,16 +190,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function togglePackageSellStatus(id, newStatus, checkboxEl) {
-    const action = newStatus === 'active' ? 'menjual' : 'menghentikan penjualan';
-    if (!confirm('Apakah Anda yakin ingin ' + action + ' paket ini?')) {
-        if (checkboxEl) checkboxEl.checked = !checkboxEl.checked;
-        return;
-    }
+function editPackage(id) {
+    openPackageModal('Edit Paket');
+    // Load package data here
+}
 
-    const row = document.querySelector('[data-package-id="' + id + '"]');
-    if (!row) {
-        alert('Status berhasil diubah!');
+function searchPackages(value) {
+    const searchValue = value.toLowerCase();
+    const rows = document.querySelectorAll('#packagesTableBody tr');
+    
+    rows.forEach(row => {
+        const namaPaket = row.querySelector('td:first-child p');
+        if (namaPaket) {
+            const text = namaPaket.textContent.toLowerCase();
+            row.style.display = text.includes(searchValue) ? '' : 'none';
+        }
+    });
+}
+
+function togglePackageStatus(id, btnEl) {
+    const row = btnEl ? btnEl.closest('tr') : document.querySelector('[data-package-id="' + id + '"]');
+    if (!row) return;
+    
+    const currentStatus = row.getAttribute('data-status');
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    const action = newStatus === 'active' ? 'mengaktifkan' : 'menonaktifkan';
+    
+    if (!confirm('Apakah Anda yakin ingin ' + action + ' paket ini?')) {
         return;
     }
 
@@ -200,14 +226,30 @@ function togglePackageSellStatus(id, newStatus, checkboxEl) {
     const badge = row.querySelector('.package-status-badge');
     if (badge) {
         if (newStatus === 'active') {
-            badge.textContent = 'Dijual';
+            badge.textContent = 'Aktif';
             badge.classList.remove('bg-gray-100', 'text-gray-700');
             badge.classList.add('bg-green-100', 'text-green-700');
         } else {
-            badge.textContent = 'Tidak dijual';
+            badge.textContent = 'Nonaktif';
             badge.classList.remove('bg-green-100', 'text-green-700');
             badge.classList.add('bg-gray-100', 'text-gray-700');
         }
+    }
+    
+    // Update button text and style
+    btnEl.classList.remove(
+        'bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50',
+        'bg-blue-600', 'text-white', 'hover:bg-blue-700'
+    );
+
+    if (newStatus === 'active') {
+        btnEl.textContent = 'Nonaktifkan';
+        btnEl.title = 'Nonaktifkan';
+        btnEl.classList.add('bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50');
+    } else {
+        btnEl.textContent = 'Aktifkan';
+        btnEl.title = 'Aktifkan';
+        btnEl.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
     }
 
     alert('Status berhasil diubah!');
