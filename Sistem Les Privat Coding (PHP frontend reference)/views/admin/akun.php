@@ -19,31 +19,30 @@
     <!-- Accounts Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between gap-4 flex-wrap">
-                <div class="flex items-center gap-4 flex-wrap">
-                    <h2 class="text-lg font-semibold text-gray-800">Daftar Akun</h2>
-                    <div class="flex gap-2 flex-wrap">
-                        <button type="button" onclick="filterAccounts('all', this)" data-filter="all" class="filter-tab p-2 rounded-lg font-medium text-sm transition-colors bg-blue-600 text-white hover:bg-blue-700">
-                            Semua
-                        </button>
-                        <button type="button" onclick="filterAccounts('murid', this)" data-filter="murid" class="filter-tab p-2 rounded-lg font-medium text-sm transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200">
-                            Murid
-                        </button>
-                        <button type="button" onclick="filterAccounts('pengajar', this)" data-filter="pengajar" class="filter-tab p-2 rounded-lg font-medium text-sm transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200">
-                            Pengajar
-                        </button>
-                        <button type="button" onclick="filterAccounts('admin', this)" data-filter="admin" class="filter-tab p-2 rounded-lg font-medium text-sm transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200">
-                            Admin
-                        </button>
-                        <button type="button" onclick="filterAccounts('active', this)" data-filter="active" class="filter-tab p-2 rounded-lg font-medium text-sm transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200">
-                            Aktif
-                        </button>
-                        <button type="button" onclick="filterAccounts('inactive', this)" data-filter="inactive" class="filter-tab p-2 rounded-lg font-medium text-sm transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200">
-                            Nonaktif
-                        </button>
-                    </div>
+            <h2 class="text-lg font-semibold text-gray-800">Daftar Akun</h2>
+            <div class="mt-4 flex flex-wrap items-end gap-3">
+                <div class="w-40">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Akun</label>
+                    <select id="filterRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
+                        <option value="all">Semua</option>
+                        <option value="murid">Murid</option>
+                        <option value="pengajar">Pengajar</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </div>
-                <input type="text" placeholder="Cari nama atau email..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchAccounts(this.value)">
+                <div class="w-40">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                    <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
+                        <option value="all">Semua</option>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Nonaktif</option>
+                    </select>
+                </div>
+                <div class="flex-1"></div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
+                    <input type="text" id="searchAccount" placeholder="Cari nama atau email..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
+                </div>
             </div>
         </div>
         <div class="overflow-x-auto p-6">
@@ -225,75 +224,40 @@
 </div>
 
 <script>
-(() => {
-    const state = {
-        filter: 'all',
-        query: ''
-    };
-
-    function getRows() {
-        return document.querySelectorAll('#accountsTableBody tr');
-    }
-
-    function setActiveTab(activeButton) {
-        const tabs = document.querySelectorAll('.filter-tab');
-
-        tabs.forEach((tab) => {
-            tab.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-            tab.classList.add('bg-gray-100', 'text-gray-500', 'hover:bg-gray-200');
-        });
-
-        if (!activeButton) return;
-
-        activeButton.classList.remove('bg-gray-100', 'text-gray-500', 'hover:bg-gray-200');
-        activeButton.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-    }
-
-    function matchesFilter(row, filter) {
+function applyFilters() {
+    const roleFilter = document.getElementById('filterRole').value;
+    const statusFilter = document.getElementById('filterStatus').value;
+    const searchQuery = document.getElementById('searchAccount').value.toLowerCase();
+    const rows = document.querySelectorAll('#accountsTableBody tr');
+    
+    rows.forEach(row => {
         const role = row.getAttribute('data-role');
         const status = row.getAttribute('data-status');
-
-        if (filter === 'all') return true;
-        if (filter === 'murid' || filter === 'pengajar' || filter === 'admin') return role === filter;
-        if (filter === 'active' || filter === 'inactive') return status === filter;
-
-        return true;
-    }
-
-    function matchesQuery(row, query) {
-        if (!query) return true;
-        return row.textContent.toLowerCase().includes(query.toLowerCase());
-    }
-
-    function updateAccountRows() {
-        const rows = getRows();
-        rows.forEach((row) => {
-            const visible = matchesFilter(row, state.filter) && matchesQuery(row, state.query);
-            row.style.display = visible ? '' : 'none';
-        });
-    }
-
-    // Expose refresh hook for other handlers (e.g., toggle status)
-    window.refreshAccountsTable = updateAccountRows;
-
-    window.filterAccounts = (filter, buttonEl) => {
-        state.filter = filter;
-        setActiveTab(buttonEl);
-        updateAccountRows();
-    };
-
-    window.searchAccounts = (query) => {
-        state.query = query || '';
-        updateAccountRows();
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Pastikan keadaan awal rapi dan konsisten.
-        const defaultTab = document.querySelector('.filter-tab[data-filter="all"]');
-        setActiveTab(defaultTab);
-        updateAccountRows();
+        const text = row.textContent.toLowerCase();
+        
+        let visible = true;
+        
+        // Role filter
+        if (roleFilter !== 'all' && role !== roleFilter) {
+            visible = false;
+        }
+        
+        // Status filter
+        if (statusFilter !== 'all' && status !== statusFilter) {
+            visible = false;
+        }
+        
+        // Search filter
+        if (searchQuery && !text.includes(searchQuery)) {
+            visible = false;
+        }
+        
+        row.style.display = visible ? '' : 'none';
     });
-})();
+}
+
+// Expose refresh hook for other handlers (e.g., toggle status)
+window.refreshAccountsTable = applyFilters;
 
 function openAddAccountModal() {
     openAccountModal('Tambah Akun Baru');

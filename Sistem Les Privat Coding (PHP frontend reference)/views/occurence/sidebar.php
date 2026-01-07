@@ -11,22 +11,22 @@ if ($role === 'admin') {
         ['label' => 'Verifikasi Pembayaran', 'url' => 'dashboard.php?page=pembayaran', 'icon' => 'credit-card'],
         ['label' => 'Riwayat Pembelian', 'url' => 'dashboard.php?page=pembelian', 'icon' => 'shopping-cart'],
         ['label' => 'Kelola Jadwal', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
-        ['label' => 'Absensi', 'url' => 'dashboard.php?page=absensiAdmin', 'icon' => 'check-square'],
-        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=absensi', 'icon' => 'clock'],
+        ['label' => 'Absensi', 'url' => 'dashboard.php?page=absensi', 'icon' => 'check-square'],
+        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=kehadiran', 'icon' => 'clock'],
     ];
 } elseif ($role === 'murid') {
     $menu = [
         ['label' => 'Dashboard', 'url' => 'dashboard.php?page=dashboard', 'icon' => 'home'],
         ['label' => 'Paket Saya', 'url' => 'dashboard.php?page=paketLes', 'icon' => 'package'],
         ['label' => 'Jadwal Les', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
-        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=riwayatKehadiran', 'icon' => 'clock'],
+        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=kehadiran', 'icon' => 'clock'],
     ];
 } elseif ($role === 'pengajar') {
     $menu = [
         ['label' => 'Dashboard', 'url' => 'dashboard.php?page=dashboard', 'icon' => 'home'],
         ['label' => 'Jadwal Mengajar', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
         ['label' => 'Absensi Murid', 'url' => 'dashboard.php?page=absensi', 'icon' => 'check-square'],
-        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=riwayatKehadiran', 'icon' => 'clock'],
+        ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=kehadiran', 'icon' => 'clock'],
     ];
 }
 

@@ -345,6 +345,10 @@ table, tr, td, th {
     background-color: var(--primary);
 }
 
+.bg-danger {
+    background-color: var(--destructive);
+}
+
 .text-white {
     color: white;
 }
@@ -938,4 +942,41 @@ table, tr, td, th {
 /* Flex utilities */
 .flex-1 {
     flex: 1 1 0%;
+}
+
+/* Italic utility */
+.italic {
+    font-style: italic;
+}
+
+/* Text color for blue-500 */
+.text-blue-500 {
+    color: #3b82f6;
+}
+
+/* Status badge styles */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.status-hadir {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.status-tidak-hadir {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Tracking wide utility */
+.tracking-wide {
+    letter-spacing: 0.025em;
 }

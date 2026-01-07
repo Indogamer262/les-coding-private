@@ -22,9 +22,37 @@
     <!-- Schedules Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between gap-4 flex-wrap">
-                <h2 class="text-lg font-semibold text-gray-800">Daftar Jadwal</h2>
-                <input type="text" id="searchSchedule" placeholder="Cari jadwal..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchSchedules(this.value)">
+            <h2 class="text-lg font-semibold text-gray-800">Daftar Jadwal</h2>
+            <div class="mt-4 flex flex-wrap items-end gap-3">
+                <div class="w-40">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Periode</label>
+                    <select id="filterPeriode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
+                        <option value="all">Semua Periode</option>
+                        <option value="today">Hari Ini</option>
+                        <option value="week">Minggu Ini</option>
+                        <option value="month" selected>Bulan Ini</option>
+                    </select>
+                </div>
+                <div class="w-40">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                    <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
+                        <option value="all">Semua</option>
+                        <option value="terisi">Terisi</option>
+                        <option value="kosong">Kosong</option>
+                    </select>
+                </div>
+                <div class="w-36">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Urutkan</label>
+                    <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
+                        <option value="terbaru">Terbaru</option>
+                        <option value="terlama">Terlama</option>
+                    </select>
+                </div>
+                <div class="flex-1"></div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
+                    <input type="text" id="searchMuridPembayaran" placeholder="Cari pengajar atau murid..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
+                </div>
             </div>
         </div>
         <div class="overflow-x-auto p-6">
@@ -65,7 +93,7 @@
                                 <button type="button" onclick="editSchedule(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
                                     Edit
                                 </button>
-                                <button type="button" onclick="deleteSchedule(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700 transition-colors" title="Hapus">
+                                <button type="button" onclick="deleteSchedule(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-danger text-white hover:bg-red-700 transition-colors" title="Hapus">
                                     Hapus
                                 </button>
                             </div>
@@ -90,14 +118,14 @@
                             <p class="font-medium text-gray-800 whitespace-nowrap">JavaScript</p>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="text-gray-500 italic whitespace-nowrap">Belum terisi</p>
+                            <span class="text-xs text-blue-500 italic">Belum terisi</span>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-center gap-2">
                                 <button type="button" onclick="editSchedule(2)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
                                     Edit
                                 </button>
-                                <button type="button" onclick="deleteSchedule(2)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700 transition-colors" title="Hapus">
+                                 <button type="button" onclick="deleteSchedule(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-danger text-white hover:bg-red-700 transition-colors" title="Hapus">
                                     Hapus
                                 </button>
                             </div>
@@ -129,7 +157,7 @@
                                 <button type="button" onclick="editSchedule(3)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
                                     Edit
                                 </button>
-                                <button type="button" onclick="deleteSchedule(3)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700 transition-colors" title="Hapus">
+                                 <button type="button" onclick="deleteSchedule(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-danger text-white hover:bg-red-700 transition-colors" title="Hapus">
                                     Hapus
                                 </button>
                             </div>
@@ -215,6 +243,24 @@ function updateHariFromTanggal(dateValue) {
     const date = new Date(dateValue);
     const dayIndex = date.getDay();
     document.getElementById('scheduleHari').value = hariNames[dayIndex];
+}
+
+function applyFilters() {
+    const searchValue = document.getElementById('searchMuridPembayaran').value.toLowerCase();
+    const statusFilter = document.getElementById('filterStatus').value;
+    const rows = document.querySelectorAll('#schedulesTableBody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const muridCell = row.querySelectorAll('td')[4]; // Column 5 is murid
+        const isBelumTerisi = muridCell && muridCell.textContent.includes('Belum terisi');
+        const rowStatus = isBelumTerisi ? 'kosong' : 'terisi';
+        
+        let matchesSearch = text.includes(searchValue);
+        let matchesStatus = statusFilter === 'all' || rowStatus === statusFilter;
+        
+        row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+    });
 }
 
 function searchSchedules(value) {
