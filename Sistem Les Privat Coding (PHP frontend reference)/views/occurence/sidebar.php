@@ -13,6 +13,7 @@ if ($role === 'admin') {
         ['label' => 'Kelola Jadwal', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
         ['label' => 'Absensi', 'url' => 'dashboard.php?page=absensi', 'icon' => 'check-square'],
         ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=kehadiran', 'icon' => 'clock'],
+        ['label' => 'Log Aktivitas', 'url' => 'dashboard.php?page=logAktivitas', 'icon' => 'activity'],
     ];
 } elseif ($role === 'murid') {
     $menu = [
@@ -82,6 +83,8 @@ function isActive($url) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
             <?php elseif($item['icon'] === 'book'): ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+            <?php elseif($item['icon'] === 'activity'): ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             <?php else: ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
             <?php endif; ?>
