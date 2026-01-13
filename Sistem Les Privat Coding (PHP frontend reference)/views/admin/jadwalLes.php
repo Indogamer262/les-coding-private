@@ -38,7 +38,7 @@
                     <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
                         <option value="all">Semua</option>
                         <option value="terisi">Terisi</option>
-                        <option value="kosong">Kosong</option>
+                        <option value="Belum Terisi">Belum Terisi</option>
                     </select>
                 </div>
                 <div class="w-36">
@@ -254,7 +254,7 @@ function applyFilters() {
         const text = row.textContent.toLowerCase();
         const muridCell = row.querySelectorAll('td')[4]; // Column 5 is murid
         const isBelumTerisi = muridCell && muridCell.textContent.includes('Belum terisi');
-        const rowStatus = isBelumTerisi ? 'kosong' : 'terisi';
+        const rowStatus = isBelumTerisi ? 'Belum Terisi' : 'terisi';
         
         let matchesSearch = text.includes(searchValue);
         let matchesStatus = statusFilter === 'all' || rowStatus === statusFilter;
