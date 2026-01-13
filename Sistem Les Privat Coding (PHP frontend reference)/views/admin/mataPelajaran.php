@@ -20,7 +20,13 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between gap-4 flex-wrap">
                 <h2 class="text-lg font-semibold text-gray-800">Daftar Mata Pelajaran</h2>
-                <input type="text" id="searchSubject" placeholder="Cari mata pelajaran..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchSubjects(this.value)">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <div class="inline-flex rounded-lg border border-gray-300 overflow-hidden">
+                        <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white">Aktif</button>
+                        <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
+                    </div>
+                    <input type="text" id="searchSubject" placeholder="Cari mata pelajaran..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
+                </div>
             </div>
         </div>
         <div class="overflow-x-auto p-6">
@@ -181,17 +187,48 @@
 </div>
 
 <script>
-function searchSubjects(value) {
-    const searchValue = value.toLowerCase();
+let selectedStatusFilter = 'active';
+
+function setStatusFilter(status) {
+    selectedStatusFilter = status;
+    updateStatusFilterButtons();
+    applyFilters();
+}
+
+function updateStatusFilterButtons() {
+    const activeBtn = document.getElementById('filterStatusActive');
+    const inactiveBtn = document.getElementById('filterStatusInactive');
+    if (!activeBtn || !inactiveBtn) return;
+
+    if (selectedStatusFilter === 'active') {
+        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
+        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+    } else {
+        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
+    }
+}
+
+function applyFilters() {
+    const searchInput = document.getElementById('searchSubject');
+    const searchValue = (searchInput ? searchInput.value : '').toLowerCase();
     const rows = document.querySelectorAll('#subjectsTableBody tr');
-    
+
     rows.forEach(row => {
+        const rowStatus = row.getAttribute('data-status');
         const namaMapel = row.querySelector('td:first-child p');
-        if (namaMapel) {
-            const text = namaMapel.textContent.toLowerCase();
-            row.style.display = text.includes(searchValue) ? '' : 'none';
-        }
+        const nameText = namaMapel ? namaMapel.textContent.toLowerCase() : '';
+
+        const matchesStatus = rowStatus === selectedStatusFilter;
+        const matchesSearch = nameText.includes(searchValue);
+        row.style.display = (matchesStatus && matchesSearch) ? '' : 'none';
     });
+}
+
+function searchSubjects(value) {
+    const input = document.getElementById('searchSubject');
+    if (input) input.value = value;
+    applyFilters();
 }
 
 function openAddSubjectModal() {
@@ -271,6 +308,8 @@ function toggleSubjectStatus(id, btnEl) {
     }
 
     alert('Status berhasil diubah!');
+
+    applyFilters();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -287,5 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
             closeSubjectModal();
         }
     });
+
+    updateStatusFilterButtons();
+    applyFilters();
 });
 </script>

@@ -48,7 +48,8 @@
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-5 py-4 whitespace-nowrap text-center w-56">ID Pembelian</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Tanggal Pembelian</th>
+                        <th class="px-5 py-4 whitespace-nowrap">Tanggal Pemesanan</th>
+                        <th class="px-5 py-4 whitespace-nowrap">Tanggal Pembayaran</th>
                         <th class="px-5 py-4 whitespace-nowrap">Nama Murid</th>
                         <th class="px-3 py-4 whitespace-nowrap">Paket</th>
                         <th class="px-5 py-4">Harga</th>
@@ -63,6 +64,7 @@
                             <span class="font-mono text-sm font-medium text-gray-800">PL-0001</span>
                         </td>
                         <td class="px-4 py-4 text-gray-700 whitespace-nowrap">02 Jan 2026, 09:30</td>
+                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">02 Jan 2026, 09:45</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
                         </td>
@@ -88,6 +90,7 @@
                             <span class="font-mono text-sm font-medium text-gray-800">PL-0012</span>
                         </td>
                         <td class="px-4 py-4 text-gray-700 whitespace-nowrap">28 Des 2025, 10:45</td>
+                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">28 Des 2025, 10:50</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <p class="font-medium text-gray-800 whitespace-nowrap">Ani Susanti</p>
                         </td>
@@ -113,6 +116,7 @@
                             <span class="font-mono text-sm font-medium text-gray-800">PL-0008</span>
                         </td>
                         <td class="px-4 py-4 text-gray-700 whitespace-nowrap">15 Des 2025, 08:15</td>
+                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">15 Des 2025, 08:20</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <p class="font-medium text-gray-800 whitespace-nowrap">Dedi Prasetyo</p>
                         </td>
@@ -123,7 +127,7 @@
                             <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 600.000</span>
                         </td>
                         <td class="px-2 py-4 text-center">
-                            <span class="text-xs text-orange-600 italic">Kadalurasa</span>
+                            <span class="text-xs text-orange-600 italic">Kadaluarsa</span>
                         </td>
                         <td class="px-2 py-4 text-center">
                             <button type="button" onclick="openDetailModal(this)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap">

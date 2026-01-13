@@ -49,6 +49,7 @@
             <table class="w-full text-left text-sm">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
+                        <th class="px-6 py-4">ID</th>
                         <th class="px-6 py-4">Nama</th>
                         <th class="px-6 py-4">Email</th>
                         <th class="px-6 py-4 text-center">Role</th>
@@ -58,7 +59,10 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100" id="accountsTableBody">
                     <!-- Sample Row 1 - Murid Active -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="murid" data-status="active">
+                    <tr class="hover:bg-gray-50 transition-colors" data-role="murid" data-status="active" data-account-id="1">
+                        <td class="px-6 py-4">
+                            <span class="font-mono text-sm font-medium text-gray-800">USR-0001</span>
+                        </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div>
@@ -86,7 +90,10 @@
                     </tr>
 
                     <!-- Sample Row 2 - Pengajar Active -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="pengajar" data-status="active">
+                    <tr class="hover:bg-gray-50 transition-colors" data-role="pengajar" data-status="active" data-account-id="2">
+                        <td class="px-6 py-4">
+                            <span class="font-mono text-sm font-medium text-gray-800">USR-0002</span>
+                        </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div>
@@ -114,7 +121,10 @@
                     </tr>
 
                     <!-- Sample Row 3 - Murid Inactive -->
-                    <tr class="hover:bg-gray-50 transition-colors opacity-60" data-role="murid" data-status="inactive">
+                    <tr class="hover:bg-gray-50 transition-colors opacity-60" data-role="murid" data-status="inactive" data-account-id="3">
+                        <td class="px-6 py-4">
+                            <span class="font-mono text-sm font-medium text-gray-800">USR-0003</span>
+                        </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div>
@@ -142,7 +152,10 @@
                     </tr>
 
                     <!-- Sample Row 4 - Admin Active -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="admin" data-status="active">
+                    <tr class="hover:bg-gray-50 transition-colors" data-role="admin" data-status="active" data-account-id="4">
+                        <td class="px-6 py-4">
+                            <span class="font-mono text-sm font-medium text-gray-800">USR-0004</span>
+                        </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div>

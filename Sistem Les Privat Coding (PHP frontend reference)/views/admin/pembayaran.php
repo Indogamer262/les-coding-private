@@ -48,7 +48,7 @@
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4 whitespace-nowrap">ID Pembelian</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Tanggal</th>
+                        <th class="px-6 py-4 whitespace-nowrap">Tanggal Pemesanan</th>
                         <th class="px-6 py-4 whitespace-nowrap">Nama Murid</th>
                         <th class="px-6 py-4">Paket</th>
                         <th class="px-6 py-4">Jumlah</th>
