@@ -873,6 +873,10 @@ body {
     height: 2.5rem;
 }
 
+.h-9 {
+    height: 1.625rem;
+}
+
 .w-10 {
     width: 2.5rem;
 }
@@ -900,6 +904,14 @@ body {
 
 .bg-orange-300 {
     background-color: #fdba74;
+}
+
+.bg-red-600 {
+    background-color: #dc2626;
+}
+
+.bg-red-700 {
+    background-color: #b91c1c;
 }
 
 /* Additional border colors */

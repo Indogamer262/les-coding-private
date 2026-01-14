@@ -21,16 +21,16 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between gap-4 flex-wrap">
                 <h2 class="text-lg font-semibold text-gray-800">Daftar Paket</h2>
-                <div class="flex items-center gap-3 flex-wrap">
-                    <div class="inline-flex rounded-lg border border-gray-300 overflow-hidden">
-                        <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white">Aktif</button>
-                        <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
-                    </div>
-                    <input type="text" id="searchPackage" placeholder="Cari nama paket..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
-                </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
+        <!-- Filter buttons will be moved here via JS -->
+        <div id="paketDtFilters" class="hidden flex items-center gap-3 flex-wrap">
+            <div class="h-9 inline-flex rounded-lg border border-gray-300 overflow-hidden">
+                <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white">Aktif</button>
+                <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
+            </div>
+        </div>
+        <div class="px-6 py-6">
             <table id="tablePaketAdmin" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
@@ -127,19 +127,17 @@ function updateStatusFilterButtons() {
     if (!activeBtn || !inactiveBtn) return;
 
     if (selectedStatusFilter === 'active') {
-        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
-        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
     } else {
-        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
-        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
     }
 }
 
 function applyFilters() {
     if (!tablePaketAdmin) return;
-    const searchInput = document.getElementById('searchPackage');
-    const searchValue = (searchInput ? searchInput.value : '');
-    tablePaketAdmin.search(searchValue).draw();
+    tablePaketAdmin.draw();
 }
 
 function openAddPackageModal() {
@@ -292,8 +290,9 @@ document.addEventListener('DOMContentLoaded', () => {
             row.setAttribute('data-package-id', String(data.id_paket));
             if (data.status !== 'active') $(row).addClass('opacity-60');
         },
-        dom: 'rt<"dt-bottom"ip>',
         language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
             info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
             infoEmpty: "Tidak ada data",
             infoFiltered: "(disaring dari _MAX_ total data)",
@@ -306,9 +305,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
         ordering: true,
         order: [[0, 'asc']]
     });
+
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tablePaketAdmin_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('paketDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
 
     updateStatusFilterButtons();
     applyFilters();

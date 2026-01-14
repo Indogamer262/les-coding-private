@@ -18,27 +18,26 @@
 
     <!-- Accounts Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-800">Daftar Akun</h2>
 
             <!-- Filters -->
             <div id="akunDtFilters" class="hidden flex flex-wrap items-center gap-3">
-                <div class="w-48 flex items-center gap-2">
-                    <label class="text-xs font-medium text-gray-600 whitespace-nowrap">Role</label>
-                    <select id="filterRole" class="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Role</label>
+                    <select id="filterRole" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="all" selected>Semua</option>
                         <option value="murid">Murid</option>
                         <option value="pengajar">Pengajar</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
-                <div class="w-48 flex items-center gap-2">
-                    <label class="text-xs font-medium text-gray-600 whitespace-nowrap">Status</label>
-                    <select id="filterStatus" class="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="all" selected>Semua</option>
-                        <option value="active">Aktif</option>
-                        <option value="inactive">Nonaktif</option>
-                    </select>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Status</label>
+                    <div class="h-9 inline-flex rounded-lg border border-gray-300 overflow-hidden">
+                        <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white">Aktif</button>
+                        <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +110,7 @@
 <script>
 let tableAkunAdmin;
 let selectedRoleFilter = 'all';
-let selectedStatusFilter = 'all';
+let selectedStatusFilter = 'active';
 
 function escapeHtml(value) {
     if (value === null || value === undefined) return '';
@@ -132,6 +131,26 @@ function roleLabel(role) {
 function applyFilters() {
     if (!tableAkunAdmin) return;
     tableAkunAdmin.draw();
+}
+
+function setStatusFilter(status) {
+    selectedStatusFilter = status;
+    updateStatusFilterButtons();
+    applyFilters();
+}
+
+function updateStatusFilterButtons() {
+    const activeBtn = document.getElementById('filterStatusActive');
+    const inactiveBtn = document.getElementById('filterStatusInactive');
+    if (!activeBtn || !inactiveBtn) return;
+
+    if (selectedStatusFilter === 'active') {
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+    } else {
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
+    }
 }
 
 const akunAdminData = [
@@ -336,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const roleSelect = document.getElementById('filterRole');
-    const statusSelect = document.getElementById('filterStatus');
 
     if (roleSelect) {
         selectedRoleFilter = roleSelect.value || 'all';
@@ -346,13 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (statusSelect) {
-        selectedStatusFilter = statusSelect.value || 'all';
-        statusSelect.addEventListener('change', () => {
-            selectedStatusFilter = statusSelect.value || 'all';
-            applyFilters();
-        });
-    }
+    updateStatusFilterButtons();
 
     // Apply initial filters
     applyFilters();
@@ -366,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterEl.classList.remove('hidden');
         lengthEl.appendChild(filterEl);
     }
+
 });
 
 function toggleStatus(id, btnEl) {

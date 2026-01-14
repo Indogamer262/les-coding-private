@@ -9,133 +9,44 @@
 
     <!-- Purchases Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 class="text-lg font-semibold text-gray-800">Daftar Pembelian</h2>
-            <div class="mt-4 flex flex-wrap items-end gap-3">
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Periode</label>
-                    <select id="filterPeriode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua Periode</option>
+
+            <!-- Filters -->
+            <div id="pembelianDtFilters" class="hidden flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Periode</label>
+                    <select id="filterPeriode" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Semua</option>
                         <option value="today">Hari Ini</option>
                         <option value="week">Minggu Ini</option>
                         <option value="month" selected>Bulan Ini</option>
                     </select>
                 </div>
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Status Paket</label>
-                    <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua</option>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Status</label>
+                    <select id="filterStatus" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" selected>Semua</option>
                         <option value="aktif">Aktif</option>
                         <option value="kadaluarsa">Kadaluarsa</option>
                     </select>
                 </div>
-                <div class="w-36">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Urutkan</label>
-                    <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="terbaru">Terbaru</option>
-                        <option value="terlama">Terlama</option>
-                    </select>
-                </div>
-                <div class="flex-1"></div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
-                    <input type="text" id="searchMuridPembayaran" placeholder="Cari nama murid..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
-                </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table id="tablePembelianAdmin" class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-5 py-4 whitespace-nowrap text-center w-56">ID Pembelian</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Tanggal Pemesanan</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Tanggal Pembayaran</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Nama Murid</th>
-                        <th class="px-3 py-4 whitespace-nowrap">Paket</th>
-                        <th class="px-5 py-4">Harga</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Masa Aktif</th>
-                        <th class="px-3 py-4 whitespace-nowrap text-center">Aksi</th>
+        <div class="px-6 py-6">
+            <table id="tablePembelianAdmin" class="display w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3">ID Pembelian</th>
+                        <th class="px-6 py-3">Tanggal Pemesanan</th>
+                        <th class="px-6 py-3">Tanggal Pembayaran</th>
+                        <th class="px-6 py-3">Nama Murid</th>
+                        <th class="px-6 py-3">Paket</th>
+                        <th class="px-6 py-3">Harga</th>
+                        <th class="px-6 py-3">Masa Aktif</th>
+                        <th class="px-6 py-3">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="purchasesTableBody" class="divide-y divide-gray-100">
-                    <!-- Row 1 - Active Package -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-murid="Budi Santoso" data-total="8" data-sisa="5" data-terpakai-dates="03 Jan 2026|04 Jan 2026|06 Jan 2026">
-                        <td class="px-6 py-4 whitespace-nowrap text-center w-56">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0001</span>
-                        </td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">02 Jan 2026, 09:30</td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">02 Jan 2026, 09:45</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
-                        </td>
-                        <td class="px-3 py-4 whitespace-nowrap">
-                            <p class="px-2 font-medium text-gray-800 whitespace-nowrap">Paket 8 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 450.000</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-medium text-gray-800 whitespace-nowrap">28 hari</span>
-                        </td>
-                        <td class="px-2 py-4 text-center">
-                            <button type="button" onclick="openDetailModal(this)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap">
-                                View Detail
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 - Expiring Soon -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-murid="Ani Susanti" data-total="4" data-sisa="2" data-terpakai-dates="29 Des 2025|01 Jan 2026">
-                        <td class="px-6 py-4 whitespace-nowrap text-center w-56">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0012</span>
-                        </td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">28 Des 2025, 10:45</td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">28 Des 2025, 10:50</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ani Susanti</p>
-                        </td>
-                        <td class="px-3 py-4 whitespace-nowrap">
-                            <p class="px-2 font-medium text-gray-800 whitespace-nowrap">Paket 4 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 250.000</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-medium text-gray-800 whitespace-nowrap">3 hari</span>
-                        </td>
-                        <td class="px-2 py-4 text-center">
-                            <button type="button" onclick="openDetailModal(this)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap">
-                                View Detail
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 - Expired Package -->
-                    <tr class="hover:bg-gray-50 transition-colors opacity-60" data-murid="Dedi Prasetyo" data-total="12" data-sisa="9" data-terpakai-dates="16 Des 2025|18 Des 2025|20 Des 2025">
-                        <td class="px-6 py-4 whitespace-nowrap text-center w-56">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0008</span>
-                        </td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">15 Des 2025, 08:15</td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">15 Des 2025, 08:20</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Dedi Prasetyo</p>
-                        </td>
-                        <td class="px-3 py-4 whitespace-nowrap">
-                            <p class="px-2 font-medium text-gray-800 whitespace-nowrap">Paket 12 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 600.000</span>
-                        </td>
-                        <td class="px-2 py-4 text-center">
-                            <span class="text-xs text-orange-600 italic">Kadaluarsa</span>
-                        </td>
-                        <td class="px-2 py-4 text-center">
-                            <button type="button" onclick="openDetailModal(this)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap">
-                                View Detail
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
@@ -169,7 +80,7 @@
             <div>
                 <h4 class="text-sm font-semibold text-gray-800 mb-2">Pertemuan Terpakai</h4>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
+                    <table id="tableDetailTerpakai" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                                 <th class="px-6 py-4">Ke-</th>
@@ -179,11 +90,6 @@
                                 <th class="px-6 py-4">Materi</th>
                             </tr>
                         </thead>
-                        <tbody id="detailModalTerpakaiBody" class="divide-y divide-gray-100">
-                            <tr>
-                                <td class="px-6 py-4 text-gray-600" colspan="5">-</td>
-                            </tr>
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -192,82 +98,177 @@
 </div>
 
 <script>
-function applyFilters() {
-    const searchValue = document.getElementById('searchMuridPembayaran').value.toLowerCase();
-    const statusFilter = document.getElementById('filterStatus').value;
-    const rows = document.querySelectorAll('#purchasesTableBody tr');
-    
-    rows.forEach(row => {
-        const namaMurid = (row.dataset.murid || '').toLowerCase();
-        const isExpired = row.classList.contains('opacity-60');
-        const rowStatus = isExpired ? 'kadaluarsa' : 'aktif';
-        
-        let matchesSearch = namaMurid.includes(searchValue);
-        let matchesStatus = statusFilter === 'all' || rowStatus === statusFilter;
-        
-        row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
-    });
+let tablePembelianAdmin;
+let tableDetailTerpakai;
+let selectedPeriodeFilter = 'month';
+let selectedStatusFilter = 'all';
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
-function openDetailModal(buttonEl) {
-    const row = buttonEl ? buttonEl.closest('tr') : null;
-    if (!row) return;
+function formatRupiah(amount) {
+    const num = Number(amount || 0);
+    return 'Rp ' + num.toLocaleString('id-ID');
+}
 
-    const idPembelian = row.querySelector('td span.font-mono') ? row.querySelector('td span.font-mono').textContent.trim() : '-';
-    const murid = row.dataset.murid || '-';
-    const total = parseInt(row.dataset.total || '0', 10);
-    const sisa = parseInt(row.dataset.sisa || '0', 10);
-    const terpakaiDatesRaw = row.dataset.terpakaiDates || '';
-    const terpakaiDates = terpakaiDatesRaw
-        ? terpakaiDatesRaw.split('|').map((v) => v.trim()).filter(Boolean)
-        : [];
+// Dummy data
+const pembelianAdminData = [
+    {
+        pembelian_id: 1,
+        id_pembelian: 'PL-0001',
+        tanggal_pesan: '2026-01-02T09:30:00',
+        tanggal_pesan_display: '02 Jan 2026, 09:30',
+        tanggal_bayar: '02 Jan 2026, 09:45',
+        murid: 'Budi Santoso',
+        paket: 'Paket 8 Pertemuan',
+        harga: 450000,
+        masa_aktif: '28 hari',
+        status: 'aktif',
+        total: 8,
+        sisa: 5,
+        terpakai_dates: ['03 Jan 2026', '04 Jan 2026', '06 Jan 2026']
+    },
+    {
+        pembelian_id: 2,
+        id_pembelian: 'PL-0012',
+        tanggal_pesan: '2025-12-28T10:45:00',
+        tanggal_pesan_display: '28 Des 2025, 10:45',
+        tanggal_bayar: '28 Des 2025, 10:50',
+        murid: 'Ani Susanti',
+        paket: 'Paket 4 Pertemuan',
+        harga: 250000,
+        masa_aktif: '3 hari',
+        status: 'aktif',
+        total: 4,
+        sisa: 2,
+        terpakai_dates: ['29 Des 2025', '01 Jan 2026']
+    },
+    {
+        pembelian_id: 3,
+        id_pembelian: 'PL-0008',
+        tanggal_pesan: '2025-12-15T08:15:00',
+        tanggal_pesan_display: '15 Des 2025, 08:15',
+        tanggal_bayar: '15 Des 2025, 08:20',
+        murid: 'Dedi Prasetyo',
+        paket: 'Paket 12 Pertemuan',
+        harga: 600000,
+        masa_aktif: null,
+        status: 'kadaluarsa',
+        total: 12,
+        sisa: 9,
+        terpakai_dates: ['16 Des 2025', '18 Des 2025', '20 Des 2025']
+    }
+];
 
-    document.getElementById('detailModalPembelian').textContent = idPembelian;
-    document.getElementById('detailModalMurid').textContent = murid;
-    document.getElementById('detailModalSisa').textContent = `${sisa}/${total}`;
+function applyFilters() {
+    if (!tablePembelianAdmin) return;
+    tablePembelianAdmin.draw();
+}
 
-    const body = document.getElementById('detailModalTerpakaiBody');
-    body.innerHTML = '';
+function openDetailModal(btnOrId) {
+    let rowData;
+    if (typeof btnOrId === 'number') {
+        rowData = pembelianAdminData.find(r => r.pembelian_id === btnOrId);
+    } else {
+        // Find from button click
+        const row = btnOrId.closest('tr');
+        const dtRow = tablePembelianAdmin.row(row);
+        rowData = dtRow.data();
+    }
+    if (!rowData) return;
 
-    // Sample data for pengajar, mapel, materi - in real app this would come from database
+    document.getElementById('detailModalPembelian').textContent = rowData.id_pembelian;
+    document.getElementById('detailModalMurid').textContent = rowData.murid;
+    document.getElementById('detailModalSisa').textContent = `${rowData.sisa}/${rowData.total}`;
+
+    // Sample data for pengajar, mapel, materi
     const samplePengajar = ['Ahmad Wijaya', 'Dewi Kusuma', 'Eko Prasetyo'];
     const sampleMapel = ['Python', 'JavaScript', 'React.js', 'HTML & CSS', 'Node.js'];
     const sampleMateri = ['Pengenalan Dasar', 'Variabel dan Tipe Data', 'Fungsi dan Modul', 'OOP Basics', 'Project Latihan'];
 
-    if (terpakaiDates.length === 0) {
-        body.innerHTML = `
-            <tr>
-                <td class="px-6 py-4 text-gray-600" colspan="5">Belum ada pertemuan terpakai</td>
-            </tr>
-        `;
-    } else {
-        terpakaiDates.forEach((tanggal, index) => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-gray-50 transition-colors';
-            const pengajar = samplePengajar[index % samplePengajar.length];
-            const mapel = sampleMapel[index % sampleMapel.length];
-            const materi = sampleMateri[index % sampleMateri.length];
-            tr.innerHTML = `
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800">${index + 1}</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800 whitespace-nowrap">${tanggal}</p>
-                    <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800 whitespace-nowrap">${pengajar}</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800 whitespace-nowrap">${mapel}</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="text-sm text-gray-800">${materi}</p>
-                </td>
-            `;
-            body.appendChild(tr);
-        });
+    const terpakaiDates = rowData.terpakai_dates || [];
+
+    // Build data array for DataTable
+    const terpakaiData = terpakaiDates.map((tanggal, index) => ({
+        ke: index + 1,
+        tanggal: tanggal,
+        waktu: '14:00 - 16:00',
+        pengajar: samplePengajar[index % samplePengajar.length],
+        mapel: sampleMapel[index % sampleMapel.length],
+        materi: sampleMateri[index % sampleMateri.length]
+    }));
+
+    // Destroy existing DataTable if exists
+    if (tableDetailTerpakai) {
+        tableDetailTerpakai.destroy();
+        tableDetailTerpakai = null;
     }
+
+    // Initialize DataTable for modal
+    tableDetailTerpakai = $('#tableDetailTerpakai').DataTable({
+        data: terpakaiData,
+        columns: [
+            {
+                data: 'ke',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<p class="font-medium text-gray-800">${data}</p>`;
+                }
+            },
+            {
+                data: null,
+                render: (data, type, row) => {
+                    if (type !== 'display') return row.tanggal + ' ' + row.waktu;
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(row.tanggal)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(row.waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'pengajar',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</p>`;
+                }
+            },
+            {
+                data: 'mapel',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</p>`;
+                }
+            },
+            {
+                data: 'materi',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<p class="text-sm text-gray-800">${escapeHtml(data)}</p>`;
+                }
+            }
+        ],
+        createdRow: (row) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+        },
+        dom: 't',
+        paging: false,
+        info: false,
+        searching: false,
+        ordering: true,
+        order: [[0, 'asc']],
+        language: {
+            zeroRecords: "Belum ada pertemuan terpakai"
+        }
+    });
 
     const modal = document.getElementById('detailPertemuanModal');
     modal.classList.remove('hidden');
@@ -280,16 +281,6 @@ function closeDetailModal() {
     modal.classList.remove('flex');
 }
 
-function searchMuridPembelian(value) {
-    const searchValue = value.toLowerCase();
-    const rows = document.querySelectorAll('#purchasesTableBody tr');
-
-    rows.forEach(row => {
-        const namaMurid = row.dataset.murid || '';
-        row.style.display = namaMurid.toLowerCase().includes(searchValue) ? '' : 'none';
-    });
-}
-
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         const modal = document.getElementById('detailPertemuanModal');
@@ -297,6 +288,166 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Initialize DataTable
-let tablePembelianAdmin = new DataTable('#tablePembelianAdmin');
+document.addEventListener('DOMContentLoaded', () => {
+    // Custom filter (Periode + Status)
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
+        if (!settings?.nTable || settings.nTable.id !== 'tablePembelianAdmin') return true;
+        if (!tablePembelianAdmin) return true;
+
+        const row = tablePembelianAdmin.row(dataIndex).data();
+        if (!row) return true;
+
+        const statusOk = selectedStatusFilter === 'all' || row.status === selectedStatusFilter;
+        return statusOk;
+    });
+
+    tablePembelianAdmin = $('#tablePembelianAdmin').DataTable({
+        data: pembelianAdminData,
+        columns: [
+            {
+                data: 'id_pembelian',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-mono text-sm font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'tanggal_pesan_display',
+                render: (data, type, row) => {
+                    if (type === 'sort' || type === 'type') return row.tanggal_pesan;
+                    // Split tanggal dan waktu untuk 2 baris
+                    const parts = data ? data.split(', ') : ['', ''];
+                    const tanggal = parts[0] || '';
+                    const waktu = parts[1] || '';
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(tanggal)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'tanggal_bayar',
+                render: (data, type, row) => {
+                    if (type !== 'display') return data;
+                    // Split tanggal dan waktu untuk 2 baris
+                    const parts = data ? data.split(', ') : ['', ''];
+                    const tanggal = parts[0] || '';
+                    const waktu = parts[1] || '';
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(tanggal)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'murid',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'paket',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'harga',
+                render: (data, type) => {
+                    if (type !== 'display') return Number(data || 0);
+                    return `
+                        <div>
+                            <p class="font-bold text-emerald-600 whitespace-nowrap">${formatRupiah(data)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: null,
+                render: (data, type, row) => {
+                    if (type !== 'display') return row.masa_aktif || '';
+                    if (row.status === 'kadaluarsa') {
+                        return `<span class="text-xs text-orange-600 italic">Kadaluarsa</span>`;
+                    }
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(row.masa_aktif)}</span>`;
+                }
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: (data, type, row) => {
+                    if (type !== 'display') return '';
+                    return `
+                        <button type="button" onclick="openDetailModal(this)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap">
+                            View Detail
+                        </button>
+                    `;
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-status', data.status);
+            row.setAttribute('data-pembelian-id', String(data.pembelian_id));
+            if (data.status === 'kadaluarsa') $(row).addClass('opacity-60');
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada data yang cocok",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[1, 'desc']]
+    });
+
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tablePembelianAdmin_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('pembelianDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
+
+    const periodeSelect = document.getElementById('filterPeriode');
+    const statusSelect = document.getElementById('filterStatus');
+
+    if (periodeSelect) {
+        selectedPeriodeFilter = periodeSelect.value || 'month';
+        periodeSelect.addEventListener('change', () => {
+            selectedPeriodeFilter = periodeSelect.value || 'month';
+            applyFilters();
+        });
+    }
+
+    if (statusSelect) {
+        selectedStatusFilter = statusSelect.value || 'all';
+        statusSelect.addEventListener('change', () => {
+            selectedStatusFilter = statusSelect.value || 'all';
+            applyFilters();
+        });
+    }
+
+    applyFilters();
+});
 </script>

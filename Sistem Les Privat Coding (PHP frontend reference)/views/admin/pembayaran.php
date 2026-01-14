@@ -9,147 +9,42 @@
 
     <!-- Purchases Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 class="text-lg font-semibold text-gray-800">Daftar Pembelian Menunggu Verifikasi</h2>
-            <div class="mt-4 flex flex-wrap items-end gap-3">
-                <div class="w-48">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Periode</label>
-                    <select id="filterPeriode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua Periode</option>
+
+            <!-- Filters -->
+            <div id="pembayaranDtFilters" class="hidden flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Periode</label>
+                    <select id="filterPeriode" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Semua</option>
                         <option value="today">Hari Ini</option>
                         <option value="week">Minggu Ini</option>
                         <option value="month" selected>Bulan Ini</option>
                     </select>
                 </div>
-                <div class="w-48">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Status Bukti</label>
-                    <select id="filterBukti" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua</option>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Status Bukti</label>
+                    <select id="filterBukti" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" selected>Semua</option>
                         <option value="ada">Sudah Upload</option>
                         <option value="belum">Belum Upload</option>
                     </select>
                 </div>
-                <div class="w-36">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Urutkan</label>
-                    <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="terbaru">Terbaru</option>
-                        <option value="terlama">Terlama</option>
-                    </select>
-                </div>
-                <div class="flex-1"></div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
-                    <input type="text" id="searchMuridPembayaran" placeholder="Cari nama murid..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
-                </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table id="tablePembayaranAdmin" class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-6 py-4 whitespace-nowrap">ID Pembelian</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Tanggal Pemesanan</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Nama Murid</th>
-                        <th class="px-6 py-4">Paket</th>
-                        <th class="px-6 py-4">Jumlah</th>
-                        <th class="px-6 py-4 text-center whitespace-nowrap">Aksi</th>
+        <div class="px-6 py-6">
+            <table id="tablePembayaranAdmin" class="display w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3">ID Pembelian</th>
+                        <th class="px-6 py-3">Tanggal Pemesanan</th>
+                        <th class="px-6 py-3">Nama Murid</th>
+                        <th class="px-6 py-3">Paket</th>
+                        <th class="px-6 py-3">Jumlah</th>
+                        <th class="px-6 py-3">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="paymentTableBody" class="divide-y divide-gray-100">
-                    <!-- Row 1: Ada bukti -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-id="1" data-paid="0" data-pembelian="PL-0001" data-murid="Budi Santoso" data-paket="Paket 8 Pertemuan" data-jumlah="Rp 450.000" data-jumlah-num="450000" data-tanggal="06 Jan 2026, 09:30" data-bukti="ada" data-bukti-url="https://placehold.co/400x600/e2e8f0/475569?text=Bukti+Transfer%0ABudi+Santoso">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0001</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">06 Jan 2026, 09:30</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Paket 8 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 450.000</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="openBuktiModal(1)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all whitespace-nowrap" title="Lihat Bukti">
-                                    Lihat Bukti
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2: Belum ada bukti -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-id="2" data-paid="0" data-pembelian="PL-0002" data-murid="Ani Susanti" data-paket="Paket 4 Pertemuan" data-jumlah="Rp 250.000" data-jumlah-num="250000" data-tanggal="06 Jan 2026, 10:15" data-bukti="belum" data-bukti-url="">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0002</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">06 Jan 2026, 10:15</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ani Susanti</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Paket 4 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 250.000</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <span class="text-gray-400 text-xs italic">Menunggu bukti</span>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3: Ada bukti -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-id="3" data-paid="0" data-pembelian="PL-0003" data-murid="Dedi Prasetyo" data-paket="Paket 12 Pertemuan" data-jumlah="Rp 600.000" data-jumlah-num="600000" data-tanggal="06 Jan 2026, 10:45" data-bukti="ada" data-bukti-url="https://placehold.co/400x600/e2e8f0/475569?text=Bukti+Transfer%0ADedi+Prasetyo">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0003</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">06 Jan 2026, 10:45</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Dedi Prasetyo</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Paket 12 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 600.000</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="openBuktiModal(3)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all whitespace-nowrap" title="Lihat Bukti">
-                                    Lihat Bukti
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 4: Ada bukti -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-id="4" data-paid="0" data-pembelian="PL-0004" data-murid="Siti Rahma" data-paket="Paket 8 Pertemuan" data-jumlah="Rp 450.000" data-jumlah-num="450000" data-tanggal="05 Jan 2026, 14:20" data-bukti="ada" data-bukti-url="https://placehold.co/400x600/e2e8f0/475569?text=Bukti+Transfer%0ASiti+Rahma">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0004</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">05 Jan 2026, 14:20</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Siti Rahma</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Paket 8 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-emerald-600 whitespace-nowrap">Rp 450.000</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="openBuktiModal(4)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all whitespace-nowrap" title="Lihat Bukti">
-                                    Lihat Bukti
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
@@ -230,43 +125,89 @@
 </div>
 
 <script>
+let tablePembayaranAdmin;
+let selectedPeriodeFilter = 'month';
+let selectedBuktiFilter = 'all';
 let currentPurchaseId = null;
 
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatRupiah(amount) {
+    const num = Number(amount || 0);
+    return 'Rp ' + num.toLocaleString('id-ID');
+}
+
+// Dummy data
+const pembayaranAdminData = [
+    {
+        pembayaran_id: 1,
+        id_pembelian: 'PL-0001',
+        tanggal: '2026-01-06T09:30:00',
+        tanggal_display: '06 Jan 2026, 09:30',
+        murid: 'Budi Santoso',
+        paket: 'Paket 8 Pertemuan',
+        jumlah: 450000,
+        bukti: 'ada',
+        bukti_url: 'https://placehold.co/400x600/e2e8f0/475569?text=Bukti+Transfer%0ABudi+Santoso'
+    },
+    {
+        pembayaran_id: 2,
+        id_pembelian: 'PL-0002',
+        tanggal: '2026-01-06T10:15:00',
+        tanggal_display: '06 Jan 2026, 10:15',
+        murid: 'Ani Susanti',
+        paket: 'Paket 4 Pertemuan',
+        jumlah: 250000,
+        bukti: 'belum',
+        bukti_url: ''
+    },
+    {
+        pembayaran_id: 3,
+        id_pembelian: 'PL-0003',
+        tanggal: '2026-01-06T10:45:00',
+        tanggal_display: '06 Jan 2026, 10:45',
+        murid: 'Dedi Prasetyo',
+        paket: 'Paket 12 Pertemuan',
+        jumlah: 600000,
+        bukti: 'ada',
+        bukti_url: 'https://placehold.co/400x600/e2e8f0/475569?text=Bukti+Transfer%0ADedi+Prasetyo'
+    },
+    {
+        pembayaran_id: 4,
+        id_pembelian: 'PL-0004',
+        tanggal: '2026-01-05T14:20:00',
+        tanggal_display: '05 Jan 2026, 14:20',
+        murid: 'Siti Rahma',
+        paket: 'Paket 8 Pertemuan',
+        jumlah: 450000,
+        bukti: 'ada',
+        bukti_url: 'https://placehold.co/400x600/e2e8f0/475569?text=Bukti+Transfer%0ASiti+Rahma'
+    }
+];
+
 function applyFilters() {
-    const searchValue = document.getElementById('searchMuridPembayaran').value.toLowerCase();
-    const buktiFilter = document.getElementById('filterBukti').value;
-    const rows = document.querySelectorAll('#paymentTableBody tr');
-    
-    rows.forEach(row => {
-        const namaMurid = (row.dataset.murid || '').toLowerCase();
-        const bukti = row.dataset.bukti;
-        
-        let visible = true;
-        
-        // Search filter
-        if (searchValue && !namaMurid.includes(searchValue)) {
-            visible = false;
-        }
-        
-        // Bukti filter
-        if (buktiFilter !== 'all' && bukti !== buktiFilter) {
-            visible = false;
-        }
-        
-        row.style.display = visible ? '' : 'none';
-    });
+    if (!tablePembayaranAdmin) return;
+    tablePembayaranAdmin.draw();
 }
 
 function openBuktiModal(id) {
     currentPurchaseId = id;
-    const row = document.querySelector(`tr[data-id="${id}"]`);
-    if (!row) return;
+    const rowData = pembayaranAdminData.find(r => r.pembayaran_id === id);
+    if (!rowData) return;
     
-    document.getElementById('buktiModalPembelian').textContent = row.dataset.pembelian;
-    document.getElementById('buktiModalMurid').textContent = row.dataset.murid;
-    document.getElementById('buktiModalPaket').textContent = row.dataset.paket;
-    document.getElementById('buktiModalJumlah').textContent = row.dataset.jumlah;
-    document.getElementById('buktiImage').src = row.dataset.buktiUrl;
+    document.getElementById('buktiModalPembelian').textContent = rowData.id_pembelian;
+    document.getElementById('buktiModalMurid').textContent = rowData.murid;
+    document.getElementById('buktiModalPaket').textContent = rowData.paket;
+    document.getElementById('buktiModalJumlah').textContent = formatRupiah(rowData.jumlah);
+    document.getElementById('buktiImage').src = rowData.bukti_url;
     
     document.getElementById('buktiModal').classList.remove('hidden');
     document.getElementById('buktiModal').classList.add('flex');
@@ -291,10 +232,11 @@ function confirmFromBukti() {
     `;
     
     setTimeout(() => {
-        const row = document.querySelector(`tr[data-id="${currentPurchaseId}"]`);
-        if (row) {
-            row.dataset.paid = '1';
-            row.remove();
+        // Remove from data array and redraw
+        const index = pembayaranAdminData.findIndex(r => r.pembayaran_id === currentPurchaseId);
+        if (index > -1) {
+            pembayaranAdminData.splice(index, 1);
+            tablePembayaranAdmin.clear().rows.add(pembayaranAdminData).draw();
         }
         
         closeBuktiModal();
@@ -328,8 +270,131 @@ function showSuccessToast() {
     }, 3000);
 }
 
-// Initialize DataTable
-let tablePembayaranAdmin = new DataTable('#tablePembayaranAdmin');
+document.addEventListener('DOMContentLoaded', () => {
+    // Custom filter (Periode + Bukti)
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
+        if (!settings?.nTable || settings.nTable.id !== 'tablePembayaranAdmin') return true;
+        if (!tablePembayaranAdmin) return true;
+
+        const row = tablePembayaranAdmin.row(dataIndex).data();
+        if (!row) return true;
+
+        const buktiOk = selectedBuktiFilter === 'all' || row.bukti === selectedBuktiFilter;
+        return buktiOk;
+    });
+
+    tablePembayaranAdmin = $('#tablePembayaranAdmin').DataTable({
+        data: pembayaranAdminData,
+        columns: [
+            {
+                data: 'id_pembelian',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-mono text-sm font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'tanggal_display',
+                render: (data, type, row) => {
+                    if (type === 'sort' || type === 'type') return row.tanggal;
+                    return `<span class="text-gray-700 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'murid',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'paket',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'jumlah',
+                render: (data, type) => {
+                    if (type !== 'display') return Number(data || 0);
+                    return `<span class="font-bold text-emerald-600 whitespace-nowrap">${formatRupiah(data)}</span>`;
+                }
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: (data, type, row) => {
+                    if (type !== 'display') return '';
+                    if (row.bukti === 'belum') {
+                        return `<span class="text-gray-400 text-xs italic">Menunggu bukti</span>`;
+                    }
+                    return `
+                        <button onclick="openBuktiModal(${row.pembayaran_id})" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all whitespace-nowrap" title="Lihat Bukti">
+                            Lihat Bukti
+                        </button>
+                    `;
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-bukti', data.bukti);
+            row.setAttribute('data-pembayaran-id', String(data.pembayaran_id));
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada data yang cocok",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[1, 'desc']]
+    });
+
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tablePembayaranAdmin_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('pembayaranDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
+
+    const periodeSelect = document.getElementById('filterPeriode');
+    const buktiSelect = document.getElementById('filterBukti');
+
+    if (periodeSelect) {
+        selectedPeriodeFilter = periodeSelect.value || 'month';
+        periodeSelect.addEventListener('change', () => {
+            selectedPeriodeFilter = periodeSelect.value || 'month';
+            applyFilters();
+        });
+    }
+
+    if (buktiSelect) {
+        selectedBuktiFilter = buktiSelect.value || 'all';
+        buktiSelect.addEventListener('change', () => {
+            selectedBuktiFilter = buktiSelect.value || 'all';
+            applyFilters();
+        });
+    }
+
+    applyFilters();
+});
 </script>
 
 <style>
