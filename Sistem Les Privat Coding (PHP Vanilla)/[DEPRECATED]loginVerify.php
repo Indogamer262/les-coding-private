@@ -2,7 +2,7 @@
     session_start();
 
     if (empty($_SESSION["loginStat"])) {
-        $loginStat = 0
+        $loginStat = 0;
     }
     else {
         $loginStat = $_SESSION["loginStat"];

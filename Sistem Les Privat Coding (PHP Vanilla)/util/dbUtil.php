@@ -1,5 +1,5 @@
 <?php
-    class dbUtil {
+    class DBUtil {
         // MySQL Server information properties
         private $servername; //= "localhost";
         private $username; //= "root";
@@ -8,16 +8,16 @@
 
         // constructor fill the server information
         function __construct($servername, $username, $password, $dbname) {
-            $this->$servername = $servername;
-            $this->$username = $username;
-            $this->$password = $password;
-            $this->$dbane = $dbname;
+            $this->servername = $servername;
+            $this->username = $username;
+            $this->password = $password;
+            $this->dbname = $dbname;
         }
         
         // non-reading type
         public function nonReadingQuery($query) {
             // Create connection
-            $conn = new mysqli($this->$servername, $this->$username, $this->$password, $this->$dbname);
+            $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
 
             // Check connection
             if ($conn->connect_error) {
@@ -38,7 +38,7 @@
         // reading type
         public function readingQuery($query) {
             // Create connection
-            $conn = new mysqli($this->$servername, $this->$username, $this->$password, $this->$dbname);
+            $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
             
             // Check connection
             if ($conn->connect_error) {
@@ -50,7 +50,7 @@
 
             if ($result->num_rows > 0) {
                 // return data of each row
-                $result->fetch_all(MYSQLI_ASSOC);
+                return $result->fetch_all(MYSQLI_ASSOC);
             }
             else {
                 return [];
