@@ -3,113 +3,64 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Paket Saya</h1>
-            <p class="text-sm text-gray-600 mt-1">Lihat seluruh paket les saya</p>
+            <p class="text-sm text-gray-600 mt-1">Lihat seluruh paket les yang telah dibeli</p>
         </div>
     </div>
 
     <!-- Purchases Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 class="text-lg font-semibold text-gray-800">Daftar Paket</h2>
-            <div class="mt-4 flex flex-wrap items-end gap-3">
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Periode</label>
-                    <select id="filterPeriode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua Periode</option>
+
+            <!-- Filters -->
+            <div id="paketMuridDtFilters" class="hidden flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Periode</label>
+                    <select id="filterPeriode" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Semua</option>
                         <option value="today">Hari Ini</option>
-                        <option value="week">Minggu Ini</option>
-                        <option value="month" selected>Bulan Ini</option>
+                        <option value="week" selected>Minggu Ini</option>
+                        <option value="month">Bulan Ini</option>
                     </select>
                 </div>
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Status Paket</label>
-                    <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua</option>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Status</label>
+                    <select id="filterStatus" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" selected>Semua</option>
                         <option value="aktif">Aktif</option>
                         <option value="kadaluarsa">Kadaluarsa</option>
                     </select>
                 </div>
-                <div class="w-36">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Urutkan</label>
-                    <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="terbaru">Terbaru</option>
-                        <option value="terlama">Terlama</option>
-                    </select>
-                </div>
-                <div class="flex-1"></div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
-                    <input type="text" id="searchMuridPembayaran" placeholder="Cari nama murid..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
-                </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table id="tablePaketMurid" class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-5 py-4 whitespace-nowrap text-center w-56">ID Pembelian</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Tanggal Pemesanan</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Tanggal Pembayaran</th>
-                        <th class="px-3 py-4 whitespace-nowrap">Paket</th>
-                        <th class="px-5 py-4 whitespace-nowrap">Masa Aktif</th>
+        <div class="px-6 py-6">
+            <table id="tablePaketMurid" class="display w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3">ID Pembelian</th>
+                        <th class="px-6 py-3">Tanggal Pemesanan</th>
+                        <th class="px-6 py-3">Paket</th>
+                        <th class="px-6 py-3 text-center">Sisa Pertemuan</th>
+                        <th class="px-6 py-3">Masa Aktif</th>
+                        <th class="px-6 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="purchasesTableBody" class="divide-y divide-gray-100">
-                    <!-- Row 1 - Active Package -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-murid="Budi Santoso" data-total="8" data-sisa="5" data-terpakai-dates="03 Jan 2026|04 Jan 2026|06 Jan 2026">
-                        <td class="px-6 py-4 whitespace-nowrap text-center w-56">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0001</span>
-                        </td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">02 Jan 2026, 09:30</td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">02 Jan 2026, 09:45</td>
-                        <td class="px-3 py-4 whitespace-nowrap">
-                            <p class="px-2 font-medium text-gray-800 whitespace-nowrap">Paket 8 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-medium text-gray-800 whitespace-nowrap">28 hari</span>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 - Expiring Soon -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-murid="Ani Susanti" data-total="4" data-sisa="2" data-terpakai-dates="29 Des 2025|01 Jan 2026">
-                        <td class="px-6 py-4 whitespace-nowrap text-center w-56">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0012</span>
-                        </td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">28 Des 2025, 10:45</td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">28 Des 2025, 10:50</td>
-                        <td class="px-3 py-4 whitespace-nowrap">
-                            <p class="px-2 font-medium text-gray-800 whitespace-nowrap">Paket 4 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-medium text-gray-800 whitespace-nowrap">3 hari</span>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 - Expired Package -->
-                    <tr class="hover:bg-gray-50 transition-colors opacity-60" data-murid="Dedi Prasetyo" data-total="12" data-sisa="9" data-terpakai-dates="16 Des 2025|18 Des 2025|20 Des 2025">
-                        <td class="px-6 py-4 whitespace-nowrap text-center w-56">
-                            <span class="font-mono text-sm font-medium text-gray-800">PL-0008</span>
-                        </td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">15 Des 2025, 08:15</td>
-                        <td class="px-4 py-4 text-gray-700 whitespace-nowrap">15 Des 2025, 08:20</td>
-                        <td class="px-3 py-4 whitespace-nowrap">
-                            <p class="px-2 font-medium text-gray-800 whitespace-nowrap">Paket 12 Pertemuan</p>
-                        </td>
-                        <td class="px-2 py-4 text-center">
-                            <span class="text-xs text-orange-600 italic">Kadaluarsa</span>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
 </div>
 
 <!-- Detail Sisa Pertemuan Modal -->
-<div id="detailPertemuanModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="closeDetailModal()">
+<div id="detailPertemuanModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50" onclick="closeDetailModal()">
     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-xl font-semibold text-gray-800">Detail Sisa Pertemuan</h3>
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 class="text-xl font-semibold text-gray-800">Detail Pertemuan</h3>
+            <button type="button" onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
 
         <div class="p-6 space-y-4">
@@ -120,8 +71,8 @@
                     <span id="detailModalPembelian" class="font-mono font-semibold text-gray-800">-</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-gray-600">Murid:</span>
-                    <span id="detailModalMurid" class="font-medium text-gray-800">-</span>
+                    <span class="text-gray-600">Paket:</span>
+                    <span id="detailModalPaket" class="font-medium text-gray-800">-</span>
                 </div>
                 <div class="flex justify-between border-t border-gray-200 pt-2">
                     <span class="text-gray-600">Sisa Pertemuan:</span>
@@ -133,21 +84,16 @@
             <div>
                 <h4 class="text-sm font-semibold text-gray-800 mb-2">Pertemuan Terpakai</h4>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
+                    <table id="tableDetailTerpakai" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                                <th class="px-6 py-4">Ke-</th>
-                                <th class="px-6 py-4">Tanggal & Waktu</th>
-                                <th class="px-6 py-4">Pengajar</th>
-                                <th class="px-6 py-4">Mata Pelajaran</th>
-                                <th class="px-6 py-4">Materi</th>
+                                <th class="px-4 py-3">Ke-</th>
+                                <th class="px-4 py-3">Tanggal & Waktu</th>
+                                <th class="px-4 py-3">Pengajar</th>
+                                <th class="px-4 py-3">Mata Pelajaran</th>
+                                <th class="px-4 py-3">Materi</th>
                             </tr>
                         </thead>
-                        <tbody id="detailModalTerpakaiBody" class="divide-y divide-gray-100">
-                            <tr>
-                                <td class="px-6 py-4 text-gray-600" colspan="5">-</td>
-                            </tr>
-                        </tbody>
                     </table>
                 </div>
             </div>
@@ -156,103 +102,319 @@
 </div>
 
 <script>
-function applyFilters() {
-    const searchValue = document.getElementById('searchMuridPembayaran').value.toLowerCase();
-    const statusFilter = document.getElementById('filterStatus').value;
-    const rows = document.querySelectorAll('#purchasesTableBody tr');
-    
-    rows.forEach(row => {
-        const namaMurid = (row.dataset.murid || '').toLowerCase();
-        const isExpired = row.classList.contains('opacity-60');
-        const rowStatus = isExpired ? 'kadaluarsa' : 'aktif';
-        
-        let matchesSearch = namaMurid.includes(searchValue);
-        let matchesStatus = statusFilter === 'all' || rowStatus === statusFilter;
-        
-        row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
-    });
+let tablePaketMurid;
+let selectedPeriodeFilter = 'week';
+let selectedStatusFilter = 'all';
+let currentPaketData = null;
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
-function openDetailModal(buttonEl) {
-    const row = buttonEl ? buttonEl.closest('tr') : null;
-    if (!row) return;
+// Dummy data for paket murid
+const paketMuridData = [
+    {
+        paket_id: 1,
+        id_pembelian: 'PL-0001',
+        tanggal_pesan: '2026-01-02',
+        tanggal_pesan_display: '02 Jan 2026, 09:30',
+        paket: 'Paket 8 Pertemuan',
+        total_pertemuan: 8,
+        sisa_pertemuan: 5,
+        masa_aktif: '28 hari',
+        status: 'aktif',
+        pertemuan_terpakai: [
+            { tanggal: '03 Jan 2026', waktu: '14:00 - 16:00', pengajar: 'Ahmad Wijaya', mapel: 'Python', materi: 'Python Functions & Modules' },
+            { tanggal: '04 Jan 2026', waktu: '10:00 - 12:00', pengajar: 'Dewi Kusuma', mapel: 'JavaScript', materi: 'DOM Manipulation' },
+            { tanggal: '06 Jan 2026', waktu: '14:00 - 16:00', pengajar: 'Ahmad Wijaya', mapel: 'React.js', materi: 'React Components & Props' }
+        ]
+    },
+    {
+        paket_id: 2,
+        id_pembelian: 'PL-0012',
+        tanggal_pesan: '2025-12-28',
+        tanggal_pesan_display: '28 Des 2025, 10:45',
+        paket: 'Paket 4 Pertemuan',
+        total_pertemuan: 4,
+        sisa_pertemuan: 2,
+        masa_aktif: '3 hari',
+        status: 'aktif',
+        pertemuan_terpakai: [
+            { tanggal: '29 Des 2025', waktu: '14:00 - 16:00', pengajar: 'Ahmad Wijaya', mapel: 'Python', materi: 'Pengenalan Python' },
+            { tanggal: '01 Jan 2026', waktu: '10:00 - 12:00', pengajar: 'Eko Prasetyo', mapel: 'Node.js', materi: 'Express.js Basics' }
+        ]
+    },
+    {
+        paket_id: 3,
+        id_pembelian: 'PL-0008',
+        tanggal_pesan: '2025-12-15',
+        tanggal_pesan_display: '15 Des 2025, 08:15',
+        paket: 'Paket 12 Pertemuan',
+        total_pertemuan: 12,
+        sisa_pertemuan: 9,
+        masa_aktif: null,
+        status: 'kadaluarsa',
+        pertemuan_terpakai: [
+            { tanggal: '16 Des 2025', waktu: '14:00 - 16:00', pengajar: 'Ahmad Wijaya', mapel: 'Python', materi: 'OOP in Python' },
+            { tanggal: '18 Des 2025', waktu: '10:00 - 12:00', pengajar: 'Dewi Kusuma', mapel: 'JavaScript', materi: 'Async/Await' },
+            { tanggal: '20 Des 2025', waktu: '14:00 - 16:00', pengajar: 'Eko Prasetyo', mapel: 'Node.js', materi: 'REST API' }
+        ]
+    }
+];
 
-    const idPembelian = row.querySelector('td span.font-mono') ? row.querySelector('td span.font-mono').textContent.trim() : '-';
-    const murid = row.dataset.murid || '-';
-    const total = parseInt(row.dataset.total || '0', 10);
-    const sisa = parseInt(row.dataset.sisa || '0', 10);
-    const terpakaiDatesRaw = row.dataset.terpakaiDates || '';
-    const terpakaiDates = terpakaiDatesRaw
-        ? terpakaiDatesRaw.split('|').map((v) => v.trim()).filter(Boolean)
-        : [];
+function applyFilters() {
+    if (!tablePaketMurid) return;
+    tablePaketMurid.draw();
+}
 
-    document.getElementById('detailModalPembelian').textContent = idPembelian;
-    document.getElementById('detailModalMurid').textContent = murid;
-    document.getElementById('detailModalSisa').textContent = `${sisa}/${total}`;
-
-    const body = document.getElementById('detailModalTerpakaiBody');
-    body.innerHTML = '';
-
-    // Sample data for pengajar, mapel, materi - in real app this would come from database
-    const samplePengajar = ['Ahmad Wijaya', 'Dewi Kusuma', 'Eko Prasetyo'];
-    const sampleMapel = ['Python', 'JavaScript', 'React.js', 'HTML & CSS', 'Node.js'];
-    const sampleMateri = ['Pengenalan Dasar', 'Variabel dan Tipe Data', 'Fungsi dan Modul', 'OOP Basics', 'Project Latihan'];
-
-    if (terpakaiDates.length === 0) {
-        body.innerHTML = `
-            <tr>
-                <td class="px-6 py-4 text-gray-600" colspan="5">Belum ada pertemuan terpakai</td>
-            </tr>
-        `;
+function getStatusBadge(status) {
+    if (status === 'aktif') {
+        return '<span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>';
     } else {
-        terpakaiDates.forEach((tanggal, index) => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-gray-50 transition-colors';
-            const pengajar = samplePengajar[index % samplePengajar.length];
-            const mapel = sampleMapel[index % sampleMapel.length];
-            const materi = sampleMateri[index % sampleMateri.length];
-            tr.innerHTML = `
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800">${index + 1}</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800 whitespace-nowrap">${tanggal}</p>
-                    <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800 whitespace-nowrap">${pengajar}</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="font-medium text-gray-800 whitespace-nowrap">${mapel}</p>
-                </td>
-                <td class="px-6 py-4">
-                    <p class="text-sm text-gray-800">${materi}</p>
-                </td>
-            `;
-            body.appendChild(tr);
-        });
+        return '<span class="px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">Kadaluarsa</span>';
+    }
+}
+
+let tableDetailTerpakai;
+
+function openDetailModal(paketId) {
+    const paket = paketMuridData.find(p => p.paket_id === paketId);
+    if (!paket) return;
+    
+    currentPaketData = paket;
+    
+    document.getElementById('detailModalPembelian').textContent = paket.id_pembelian;
+    document.getElementById('detailModalPaket').textContent = paket.paket;
+    document.getElementById('detailModalSisa').textContent = `${paket.sisa_pertemuan}/${paket.total_pertemuan}`;
+    
+    // Build data array for DataTable
+    const terpakaiData = paket.pertemuan_terpakai.map((item, index) => ({
+        ke: index + 1,
+        tanggal: item.tanggal,
+        waktu: item.waktu,
+        pengajar: item.pengajar,
+        mapel: item.mapel,
+        materi: item.materi
+    }));
+
+    // Destroy existing DataTable if exists
+    if (tableDetailTerpakai) {
+        tableDetailTerpakai.destroy();
+        tableDetailTerpakai = null;
     }
 
-    const modal = document.getElementById('detailPertemuanModal');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    // Initialize DataTable for modal
+    tableDetailTerpakai = $('#tableDetailTerpakai').DataTable({
+        data: terpakaiData,
+        columns: [
+            {
+                data: 'ke',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800">${data}</span>`;
+                }
+            },
+            {
+                data: null,
+                render: (data, type, row) => {
+                    if (type !== 'display') return row.tanggal + ' ' + row.waktu;
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(row.tanggal)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(row.waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'pengajar',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'mapel',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'materi',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="text-sm text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            }
+        ],
+        createdRow: (row) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+        },
+        dom: 't',
+        paging: false,
+        info: false,
+        searching: false,
+        ordering: true,
+        order: [[0, 'asc']],
+        language: {
+            zeroRecords: "Belum ada pertemuan terpakai"
+        }
+    });
+    
+    document.getElementById('detailPertemuanModal').classList.remove('hidden');
+    document.getElementById('detailPertemuanModal').classList.add('flex');
 }
 
 function closeDetailModal() {
-    const modal = document.getElementById('detailPertemuanModal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
+    document.getElementById('detailPertemuanModal').classList.add('hidden');
+    document.getElementById('detailPertemuanModal').classList.remove('flex');
+    currentPaketData = null;
 }
 
-function searchMuridPembelian(value) {
-    const searchValue = value.toLowerCase();
-    const rows = document.querySelectorAll('#purchasesTableBody tr');
+document.addEventListener('DOMContentLoaded', () => {
+    // Custom filter for status
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
+        if (!settings?.nTable || settings.nTable.id !== 'tablePaketMurid') return true;
+        if (!tablePaketMurid) return true;
 
-    rows.forEach(row => {
-        const namaMurid = row.dataset.murid || '';
-        row.style.display = namaMurid.toLowerCase().includes(searchValue) ? '' : 'none';
+        const row = tablePaketMurid.row(dataIndex).data();
+        if (!row) return true;
+
+        const statusOk = selectedStatusFilter === 'all' || row.status === selectedStatusFilter;
+        return statusOk;
     });
-}
+
+    tablePaketMurid = $('#tablePaketMurid').DataTable({
+        data: paketMuridData,
+        columns: [
+            {
+                data: 'id_pembelian',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-mono text-sm font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'tanggal_pesan_display',
+                render: (data, type, row) => {
+                    if (type === 'sort' || type === 'type') return row.tanggal_pesan;
+                    // Split tanggal dan waktu untuk 2 baris
+                    const parts = data ? data.split(', ') : ['', ''];
+                    const tanggal = parts[0] || '';
+                    const waktu = parts[1] || '';
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(tanggal)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'paket',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: null,
+                className: 'text-center',
+                render: (data, type, row) => {
+                    if (type !== 'display') return row.sisa_pertemuan;
+                    return `<span class="font-semibold text-blue-600">${row.sisa_pertemuan}/${row.total_pertemuan}</span>`;
+                }
+            },
+            {
+                data: null,
+                render: (data, type, row) => {
+                    if (type !== 'display') return row.masa_aktif || '';
+                    if (row.status === 'kadaluarsa') {
+                        return `<span class="text-xs text-orange-600 italic">Kadaluarsa</span>`;
+                    }
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(row.masa_aktif)}</span>`;
+                }
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: (data, type, row) => {
+                    if (type !== 'display') return '';
+                    return `
+                        <button type="button" onclick="openDetailModal(${row.paket_id})" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap">
+                            View Detail
+                        </button>
+                    `;
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            if (data.status === 'kadaluarsa') {
+                $(row).addClass('opacity-60');
+            }
+            row.setAttribute('data-paket-id', String(data.paket_id));
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada paket ditemukan",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[1, 'desc']]
+    });
+
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tablePaketMurid_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('paketMuridDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
+
+    const periodeSelect = document.getElementById('filterPeriode');
+    const statusSelect = document.getElementById('filterStatus');
+
+    if (periodeSelect) {
+        selectedPeriodeFilter = periodeSelect.value || 'week';
+        periodeSelect.addEventListener('change', () => {
+            selectedPeriodeFilter = periodeSelect.value || 'week';
+            applyFilters();
+        });
+    }
+
+    if (statusSelect) {
+        selectedStatusFilter = statusSelect.value || 'all';
+        statusSelect.addEventListener('change', () => {
+            selectedStatusFilter = statusSelect.value || 'all';
+            applyFilters();
+        });
+    }
+
+    applyFilters();
+});
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -260,7 +422,4 @@ document.addEventListener('keydown', (e) => {
         if (modal && !modal.classList.contains('hidden')) closeDetailModal();
     }
 });
-
-// Initialize DataTable
-let tablePaketMurid = new DataTable('#tablePaketMurid');
 </script>

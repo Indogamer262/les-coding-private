@@ -62,6 +62,7 @@
                         <th class="px-6 py-4">Hari & Waktu</th>
                         <th class="px-6 py-4">Mata Pelajaran</th>
                         <th class="px-6 py-4">Murid</th>
+                        <th class="px-6 py-4 text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -77,6 +78,9 @@
                         </td>
                         <td class="px-6 py-4 text-gray-600">Python</td>
                         <td class="px-6 py-4 font-medium text-gray-800">Ahmad Fauzi</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Selesai</span>
+                        </td>
                     </tr>
 
                     <tr class="hover:bg-gray-50 transition-colors">
@@ -91,6 +95,9 @@
                         </td>
                         <td class="px-6 py-4 text-gray-600">React.js</td>
                         <td class="px-6 py-4 font-medium text-gray-800">Dewi Lestari</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-4 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Mendatang</span>
+                        </td>
                     </tr>
 
                     <tr class="hover:bg-gray-50 transition-colors">
@@ -105,6 +112,9 @@
                         </td>
                         <td class="px-6 py-4 text-gray-600">JavaScript</td>
                         <td class="px-6 py-4 font-medium text-gray-800">Siti Nurhaliza</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-4 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Mendatang</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
