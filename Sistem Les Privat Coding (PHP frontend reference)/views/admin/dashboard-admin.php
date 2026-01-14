@@ -84,13 +84,13 @@
         </div>
     </div>
 
-    <!-- Jadwal Terisi Minggu Ini Section -->
+    <!-- Jadwal Terisi Section -->
     <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 class="text-lg font-semibold text-gray-800">Jadwal Terisi Minggu Ini</h2>
+            <h2 class="text-lg font-semibold text-gray-800">Jadwal Terisi</h2>
             <a href="dashboard.php?page=jadwalLes" class="text-sm text-blue-600 font-medium hover:underline">Lihat Semua</a>
         </div>
-        <div class="overflow-x-auto p-6">
+        <div class="px-6 py-6">
             <table id="tableDashboardJadwal" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead>
                     <tr class="bg-gray-50 text-xs uppercase text-gray-600 font-semibold tracking-wide border-b border-gray-200">
@@ -117,7 +117,7 @@ function escapeHtml(value) {
         .replace(/'/g, '&#039;');
 }
 
-// Dummy data untuk jadwal minggu ini
+// Dummy data untuk jadwal terisi
 const dashboardJadwalData = [
     {
         tanggal: '2026-01-06',
@@ -154,6 +154,16 @@ const dashboardJadwalData = [
         pengajar: 'Dewi Kusuma',
         mapel: 'HTML & CSS',
         murid: 'Siti Rahma'
+    },
+    // Contoh data di luar bulan ini (sekarang tetap tampil karena tidak difilter)
+    {
+        tanggal: '2026-02-02',
+        tanggal_display: '02 Feb 2026',
+        hari: 'Senin',
+        waktu: '14:00 - 16:00',
+        pengajar: 'Eko Prasetyo',
+        mapel: 'Python',
+        murid: 'Dedi Prasetyo'
     }
 ];
 
@@ -205,15 +215,24 @@ document.addEventListener('DOMContentLoaded', () => {
         createdRow: (row) => {
             $(row).addClass('hover:bg-gray-50 transition-colors');
         },
-        dom: 't',
-        paging: false,
-        info: false,
-        searching: false,
         ordering: true,
         order: [[0, 'asc']],
         language: {
-            zeroRecords: "Tidak ada jadwal minggu ini"
-        }
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada jadwal terisi",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        responsive: true
     });
 });
 </script>

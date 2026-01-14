@@ -19,8 +19,8 @@ if ($role === 'admin') {
     $menu = [
         ['label' => 'Dashboard', 'url' => 'dashboard.php?page=dashboard', 'icon' => 'home'],
         ['label' => 'Beli Paket', 'url' => 'dashboard.php?page=beliPaket', 'icon' => 'shopping-cart'],
-        ['label' => 'Pilih Jadwal', 'url' => 'dashboard.php?page=pilihJadwal', 'icon' => 'calendar-plus'],
         ['label' => 'Paket Saya', 'url' => 'dashboard.php?page=paketLes', 'icon' => 'package'],
+        ['label' => 'Pilih Jadwal', 'url' => 'dashboard.php?page=pilihJadwal', 'icon' => 'calendar-plus'],
         ['label' => 'Jadwal Les', 'url' => 'dashboard.php?page=jadwalLes', 'icon' => 'calendar'],
         ['label' => 'Riwayat Kehadiran', 'url' => 'dashboard.php?page=kehadiran', 'icon' => 'clock'],
     ];
