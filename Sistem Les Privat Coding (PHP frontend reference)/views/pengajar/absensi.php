@@ -31,7 +31,7 @@
                 <div class="flex-1"></div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
-                    <input type="text" id="searchMuridPembayaran" placeholder="Cari pengajar, murid, atau mata pelajaran..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
+                    <input type="text" id="searchMuridPembayaran" placeholder="Cari murid atau mata pelajaran..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
                 </div>
             </div>
         </div>
@@ -41,7 +41,6 @@
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">Tanggal</th>
                         <th class="px-6 py-4">Hari & Waktu</th>
-                        <th class="px-6 py-4">Pengajar</th>
                         <th class="px-6 py-4">Mata Pelajaran</th>
                         <th class="px-6 py-4">Murid</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
@@ -58,9 +57,6 @@
                                 <p class="font-medium text-gray-800">Senin</p>
                                 <p class="text-sm text-gray-600">14:00 - 16:00</p>
                             </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ahmad Wijaya</p>
                         </td>
                         <td class="px-6 py-4">
                             <p class="font-medium text-gray-800 whitespace-nowrap">Python</p>
@@ -87,9 +83,6 @@
                                 <p class="font-medium text-gray-800">Senin</p>
                                 <p class="text-sm text-gray-600">16:00 - 18:00</p>
                             </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ahmad Wijaya</p>
                         </td>
                         <td class="px-6 py-4">
                             <p class="font-medium text-gray-800 whitespace-nowrap">React.js</p>

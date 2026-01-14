@@ -48,7 +48,6 @@
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">Tanggal & Waktu</th>
-                        <th class="px-6 py-4">Pengajar</th>
                         <th class="px-6 py-4">Mata Pelajaran</th>
                         <th class="px-6 py-4">Murid</th>
                         <th class="px-6 py-4">Materi</th>
@@ -61,9 +60,6 @@
                         <td class="px-6 py-4">
                             <p class="font-medium text-gray-800 whitespace-nowrap">30 Des 2025, Senin</p>
                             <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ahmad Wijaya</p>
                         </td>
                         <td class="px-6 py-4">
                             <p class="font-medium text-gray-800 whitespace-nowrap">Python</p>
@@ -86,9 +82,6 @@
                             <p class="text-sm text-gray-600">10:00 - 12:00</p>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Dewi Kusuma</p>
-                        </td>
-                        <td class="px-6 py-4">
                             <p class="font-medium text-gray-800 whitespace-nowrap">JavaScript</p>
                         </td>
                         <td class="px-6 py-4">
@@ -107,9 +100,6 @@
                         <td class="px-6 py-4">
                             <p class="font-medium text-gray-800 whitespace-nowrap">02 Jan 2026, Kamis</p>
                             <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ahmad Wijaya</p>
                         </td>
                         <td class="px-6 py-4">
                             <p class="font-medium text-gray-800 whitespace-nowrap">React.js</p>

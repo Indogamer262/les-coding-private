@@ -2,91 +2,74 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Jadwal Les</h2>
-            <p class="text-sm text-gray-600 mt-1">Pilih jadwal dan pantau pertemuan Anda</p>
-        </div>
-    </div>
-                            <div class="flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                                <span>Ahmad Wijaya</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="cancelSchedule(1)" class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors">
-                        Batalkan
-                    </button>
-                </div>
-                <div class="bg-white rounded-lg p-3 border border-blue-200">
-                    <p class="text-xs text-blue-800"><strong>Pertemuan berikutnya:</strong> Senin, 06 Jan 2026</p>
-                </div>
-            </div>
-
-            <!-- Schedule Card 2 -->
-            <div class="border-2 border-purple-200 bg-purple-50 rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-semibold">Rabu</span>
-                            <span class="text-lg font-bold text-gray-800">16:00 - 18:00</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">React.js Development</h3>
-                        <div class="flex items-center gap-3 text-sm text-gray-600">
-                            <div class="flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
-                                <span>Ahmad Wijaya</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="cancelSchedule(2)" class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors">
-                        Batalkan
-                    </button>
-                </div>
-                <div class="bg-white rounded-lg p-3 border border-purple-200">
-                    <p class="text-xs text-purple-800"><strong>Pertemuan berikutnya:</strong> Rabu, 08 Jan 2026</p>
-                </div>
-            </div>
+            <h1 class="text-2xl font-bold text-gray-800">Jadwal Mengajar</h1>
+            <p class="text-sm text-gray-600 mt-1">Jadwal les untuk pengajar</p>
         </div>
     </div>
 
-    <!-- Available Schedules -->
+    <!-- Schedules Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-800">Jadwal Tersedia</h2>
-                <div class="flex gap-2">
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="all">Semua Mata Pelajaran</option>
-                        <option value="python">Python</option>
-                        <option value="javascript">JavaScript</option>
-                        <option value="react">React.js</option>
+            <h2 class="text-lg font-semibold text-gray-800">Daftar Jadwal</h2>
+            <div class="mt-4 flex flex-wrap items-end gap-3">
+                <div class="w-40">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Periode</label>
+                    <select id="filterPeriode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
+                        <option value="all">Semua Periode</option>
+                        <option value="today">Hari Ini</option>
+                        <option value="week">Minggu Ini</option>
+                        <option value="month" selected>Bulan Ini</option>
                     </select>
+                </div>
+                <div class="w-36">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Urutkan</label>
+                    <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
+                        <option value="terbaru">Terbaru</option>
+                        <option value="terlama">Terlama</option>
+                    </select>
+                </div>
+                <div class="flex-1"></div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
+                    <input type="text" id="searchMuridPembayaran" placeholder="Cari mata pelajaran atau murid..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto p-6">
             <table class="w-full text-left text-sm">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
+                        <th class="px-6 py-4">Tanggal</th>
                         <th class="px-6 py-4">Hari & Waktu</th>
-                        <th class="px-6 py-4">Pengajar</th>
                         <th class="px-6 py-4">Mata Pelajaran</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+                        <th class="px-6 py-4">Pengajar</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
-                    <!-- Row 1 -->
-                    <tr class="hover:bg-gray-50 transition-colors">
+                <tbody class="divide-y divide-gray-100" id="schedulesTableBody">
+                    <!-- Row 1 - Filled Schedule -->
+                    <tr class="hover:bg-gray-50 transition-colors" data-schedule-id="1">
+                        <td class="px-6 py-4">
+                            <p class="font-medium text-gray-800 whitespace-nowrap">06 Jan 2026</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div>
+                                <p class="font-medium text-gray-800">Senin</p>
+                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="font-medium text-gray-800 whitespace-nowrap">Python</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
+                        </td>
+                    </tr>
+
+                    <!-- Row 2 - Empty Schedule (no student) -->
+                    <tr class="hover:bg-gray-50 transition-colors" data-schedule-id="2">
+                        <td class="px-6 py-4">
+                            <p class="font-medium text-gray-800 whitespace-nowrap">07 Jan 2026</p>
+                        </td>
                         <td class="px-6 py-4">
                             <div>
                                 <p class="font-medium text-gray-800">Selasa</p>
@@ -94,146 +77,165 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center font-semibold text-purple-600 text-xs">
-                                    DK
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Dewi Kusuma</p>
-                                    <p class="text-xs text-gray-500">#PGJ002</p>
-                                </div>
-                            </div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">JavaScript</p>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">JavaScript</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Tersedia</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="selectSchedule(1)" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                                    Pilih Jadwal
-                                </button>
-                            </div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
                         </td>
                     </tr>
 
-                    <!-- Row 2 -->
-                    <tr class="hover:bg-gray-50 transition-colors">
+                    <!-- Row 3 - Another filled schedule -->
+                    <tr class="hover:bg-gray-50 transition-colors" data-schedule-id="3">
+                        <td class="px-6 py-4">
+                            <p class="font-medium text-gray-800 whitespace-nowrap">08 Jan 2026</p>
+                        </td>
                         <td class="px-6 py-4">
                             <div>
-                                <p class="font-medium text-gray-800">Kamis</p>
-                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
+                                <p class="font-medium text-gray-800">Rabu</p>
+                                <p class="text-sm text-gray-600">16:00 - 18:00</p>
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center font-semibold text-emerald-600 text-xs">
-                                    EP
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Eko Prasetyo</p>
-                                    <p class="text-xs text-gray-500">#PGJ003</p>
-                                </div>
-                            </div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">React.js</p>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Python</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Tersedia</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="selectSchedule(2)" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                                    Pilih Jadwal
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 -->
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Jumat</p>
-                                <p class="text-sm text-gray-600">09:00 - 11:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center font-semibold text-purple-600 text-xs">
-                                    DK
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Dewi Kusuma</p>
-                                    <p class="text-xs text-gray-500">#PGJ002</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">HTML & CSS</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Tersedia</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="selectSchedule(3)" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
-                                    Pilih Jadwal
-                                </button>
-                            </div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">Ani Susanti</p>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 
-    <!-- Info Box -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <div class="flex items-start gap-4">
-            <div class="bg-blue-100 p-3 rounded-lg flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+<!-- Schedule Modal -->
+<div id="scheduleModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4">
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 class="text-xl font-semibold text-gray-800" id="scheduleModalTitle">Buat Jadwal Baru</h3>
+            <button type="button" onclick="closeScheduleModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
+            </button>
+        </div>
+        <form id="scheduleForm" class="p-6 space-y-4" onsubmit="handleScheduleSubmit(event)">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Pengajar</label>
+                    <select name="pengajar" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">-- Pilih Pengajar --</option>
+                        <option value="1">Ahmad Wijaya</option>
+                        <option value="2">Dewi Kusuma</option>
+                        <option value="3">Eko Prasetyo</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
+                    <select name="mataPelajaran" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">-- Pilih Mata Pelajaran --</option>
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="html-css">HTML & CSS</option>
+                        <option value="react">React.js</option>
+                        <option value="nodejs">Node.js</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <h3 class="font-semibold text-blue-900 mb-2">Informasi Penting</h3>
-                <ul class="space-y-2 text-sm text-blue-800">
-                    <li class="flex items-start gap-2">
-                        <span class="text-blue-600">•</span>
-                        <span>Sistem otomatis menggunakan paket dengan masa aktif paling pendek saat Anda memilih jadwal</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-blue-600">•</span>
-                        <span>Pastikan Anda memiliki paket aktif sebelum memilih jadwal</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-blue-600">•</span>
-                        <span>Anda dapat membatalkan jadwal maksimal 24 jam sebelum pertemuan</span>
-                    </li>
-                </ul>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
+                    <input type="date" name="tanggal" id="scheduleTanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required onchange="updateHariFromTanggal(this.value)">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Hari</label>
+                    <input type="text" name="hari" id="scheduleHari" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600" placeholder="Otomatis dari tanggal" readonly>
+                </div>
             </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jam Mulai</label>
+                    <input type="time" name="jamMulai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jam Selesai</label>
+                    <input type="time" name="jamSelesai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+            </div>
+        </form>
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+            <button type="button" onclick="closeScheduleModal()" class="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">Batal</button>
+            <button type="submit" form="scheduleForm" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">Simpan</button>
         </div>
     </div>
 </div>
 
 <script>
-function selectSchedule(id) {
-    if (confirm('Pilih jadwal ini? Sistem akan otomatis menggunakan paket dengan masa aktif paling pendek.')) {
-        alert('Jadwal berhasil dipilih! Sisa pertemuan Anda telah dikurangi.');
-        location.reload();
+const hariNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+function updateHariFromTanggal(dateValue) {
+    if (!dateValue) {
+        document.getElementById('scheduleHari').value = '';
+        return;
     }
+    const date = new Date(dateValue);
+    const dayIndex = date.getDay();
+    document.getElementById('scheduleHari').value = hariNames[dayIndex];
 }
 
-function cancelSchedule(id) {
-    if (confirm('Batalkan jadwal ini? Kuota pertemuan akan dikembalikan ke paket Anda.')) {
-        alert('Jadwal berhasil dibatalkan!');
-        location.reload();
+function applyFilters() {
+    const searchValue = document.getElementById('searchMuridPembayaran').value.toLowerCase();
+    const rows = document.querySelectorAll('#schedulesTableBody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const matchesSearch = text.includes(searchValue);
+        row.style.display = matchesSearch ? '' : 'none';
+    });
+}
+
+function searchSchedules(value) {
+    const searchValue = value.toLowerCase();
+    const rows = document.querySelectorAll('#schedulesTableBody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchValue) ? '' : 'none';
+    });
+}
+
+function openScheduleModal() {
+    document.getElementById('scheduleForm').reset();
+    document.getElementById('scheduleHari').value = '';
+    document.getElementById('scheduleModal').classList.remove('hidden');
+    document.getElementById('scheduleModal').classList.add('flex');
+    document.getElementById('scheduleModalTitle').textContent = 'Buat Jadwal Baru';
+}
+
+function editSchedule(id) {
+    document.getElementById('scheduleModal').classList.remove('hidden');
+    document.getElementById('scheduleModal').classList.add('flex');
+    document.getElementById('scheduleModalTitle').textContent = 'Edit Jadwal';
+    // Pre-fill form with schedule data (mock)
+}
+
+function closeScheduleModal() {
+    document.getElementById('scheduleModal').classList.add('hidden');
+    document.getElementById('scheduleModal').classList.remove('flex');
+}
+
+function handleScheduleSubmit(event) {
+    event.preventDefault();
+    alert('Jadwal berhasil disimpan!');
+    closeScheduleModal();
+}
+
+function deleteSchedule(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus jadwal ini?')) {
+        const row = document.querySelector(`tr[data-schedule-id="${id}"]`);
+        if (row) row.remove();
+        alert('Jadwal berhasil dihapus!');
     }
 }
 </script>
