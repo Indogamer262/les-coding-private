@@ -18,170 +18,42 @@
 
     <!-- Accounts Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 class="text-lg font-semibold text-gray-800">Daftar Akun</h2>
-            <div class="mt-4 flex flex-wrap items-end gap-3">
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Akun</label>
-                    <select id="filterRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua</option>
+
+            <!-- Filters -->
+            <div id="akunDtFilters" class="hidden flex flex-wrap items-center gap-3">
+                <div class="w-48 flex items-center gap-2">
+                    <label class="text-xs font-medium text-gray-600 whitespace-nowrap">Role</label>
+                    <select id="filterRole" class="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" selected>Semua</option>
                         <option value="murid">Murid</option>
                         <option value="pengajar">Pengajar</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Status</label>
-                    <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua</option>
+                <div class="w-48 flex items-center gap-2">
+                    <label class="text-xs font-medium text-gray-600 whitespace-nowrap">Status</label>
+                    <select id="filterStatus" class="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" selected>Semua</option>
                         <option value="active">Aktif</option>
                         <option value="inactive">Nonaktif</option>
                     </select>
                 </div>
-                <div class="flex-1"></div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
-                    <input type="text" id="searchAccount" placeholder="Cari nama atau email..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
-                </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-6 py-4">ID</th>
-                        <th class="px-6 py-4">Nama</th>
-                        <th class="px-6 py-4">Email</th>
-                        <th class="px-6 py-4 text-center">Role</th>
-                        <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+        <div class="px-6 py-6">
+            <table id="tableAkunAdmin" class="display w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3">ID</th>
+                        <th class="px-6 py-3">Nama</th>
+                        <th class="px-6 py-3">Email</th>
+                        <th class="px-6 py-3">Role</th>
+                        <th class="px-6 py-3">Status</th>
+                        <th class="px-6 py-3">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100" id="accountsTableBody">
-                    <!-- Sample Row 1 - Murid Active -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="murid" data-status="active" data-account-id="1">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">USR-0001</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div>
-                                    <p class="font-medium text-gray-800">Budi Santoso</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">budi.santoso@gmail.com</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Murid</span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="account-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editAccount(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleStatus(1, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 2 - Pengajar Active -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="pengajar" data-status="active" data-account-id="2">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">USR-0002</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div>
-                                    <p class="font-medium text-gray-800">Ahmad Wijaya</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">ahmad.wijaya@gmail.com</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">Pengajar</span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="account-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editAccount(2)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleStatus(2, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 3 - Murid Inactive -->
-                    <tr class="hover:bg-gray-50 transition-colors opacity-60" data-role="murid" data-status="inactive" data-account-id="3">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">USR-0003</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div>
-                                    <p class="font-medium text-gray-800">Siti Rahma</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">siti.rahma@gmail.com</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Murid</span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="account-status-badge px-4 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Nonaktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editAccount(3)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleStatus(3, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors" title="Aktifkan">
-                                    Aktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 4 - Admin Active -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="admin" data-status="active" data-account-id="4">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">USR-0004</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div>
-                                    <p class="font-medium text-gray-800">Admin 1</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">admin1@gmail.com</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="px-4 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Admin</span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="account-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editAccount(4)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleStatus(4, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
@@ -237,40 +109,65 @@
 </div>
 
 <script>
-function applyFilters() {
-    const roleFilter = document.getElementById('filterRole').value;
-    const statusFilter = document.getElementById('filterStatus').value;
-    const searchQuery = document.getElementById('searchAccount').value.toLowerCase();
-    const rows = document.querySelectorAll('#accountsTableBody tr');
-    
-    rows.forEach(row => {
-        const role = row.getAttribute('data-role');
-        const status = row.getAttribute('data-status');
-        const text = row.textContent.toLowerCase();
-        
-        let visible = true;
-        
-        // Role filter
-        if (roleFilter !== 'all' && role !== roleFilter) {
-            visible = false;
-        }
-        
-        // Status filter
-        if (statusFilter !== 'all' && status !== statusFilter) {
-            visible = false;
-        }
-        
-        // Search filter
-        if (searchQuery && !text.includes(searchQuery)) {
-            visible = false;
-        }
-        
-        row.style.display = visible ? '' : 'none';
-    });
+let tableAkunAdmin;
+let selectedRoleFilter = 'all';
+let selectedStatusFilter = 'all';
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
-// Expose refresh hook for other handlers (e.g., toggle status)
-window.refreshAccountsTable = applyFilters;
+function roleLabel(role) {
+    if (role === 'pengajar') return 'Pengajar';
+    if (role === 'admin') return 'Admin';
+    return 'Murid';
+}
+
+function applyFilters() {
+    if (!tableAkunAdmin) return;
+    tableAkunAdmin.draw();
+}
+
+const akunAdminData = [
+    {
+        account_id: 1,
+        id: 'USR-0001',
+        nama: 'Budi Santoso',
+        email: 'budi.santoso@gmail.com',
+        role: 'murid',
+        status: 'active'
+    },
+    {
+        account_id: 2,
+        id: 'USR-0002',
+        nama: 'Ahmad Wijaya',
+        email: 'ahmad.wijaya@gmail.com',
+        role: 'pengajar',
+        status: 'active'
+    },
+    {
+        account_id: 3,
+        id: 'USR-0003',
+        nama: 'Siti Rahma',
+        email: 'siti.rahma@gmail.com',
+        role: 'murid',
+        status: 'inactive'
+    },
+    {
+        account_id: 4,
+        id: 'USR-0004',
+        nama: 'Admin 1',
+        email: 'admin1@gmail.com',
+        role: 'admin',
+        status: 'active'
+    }
+];
 
 function openAddAccountModal() {
     openAccountModal('Tambah Akun Baru');
@@ -320,6 +217,155 @@ document.addEventListener('DOMContentLoaded', () => {
             closeAccountModal();
         }
     });
+
+    // DataTable dengan tampilan standar jQuery DataTables
+    tableAkunAdmin = $('#tableAkunAdmin').DataTable({
+        data: akunAdminData,
+        columns: [
+            {
+                data: 'id',
+                render: (data, type) => {
+                    if (type === 'display') {
+                        return `<span class="font-mono text-sm font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'nama',
+                render: (data, type) => {
+                    if (type === 'display') {
+                        return `<span class="font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'email',
+                render: (data, type) => {
+                    if (type === 'display') {
+                        return `<span class="text-gray-700">${escapeHtml(data)}</span>`;
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'role',
+                className: 'text-center',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    const label = roleLabel(data);
+                    const cls = data === 'admin'
+                        ? 'bg-purple-100 text-purple-700'
+                        : (data === 'pengajar' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700');
+                    return `<span class="px-4 py-1 ${cls} rounded-full text-xs font-medium">${label}</span>`;
+                }
+            },
+            {
+                data: 'status',
+                className: 'text-center',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    const isActive = data === 'active';
+                    const label = isActive ? 'Aktif' : 'Nonaktif';
+                    const cls = isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
+                    return `<span class="account-status-badge px-4 py-1 rounded-full text-xs font-medium ${cls}">${label}</span>`;
+                }
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: (data, type, row) => {
+                    if (type !== 'display') return '';
+                    const isActive = row.status === 'active';
+                    const toggleLabel = isActive ? 'Nonaktifkan' : 'Aktifkan';
+                    const toggleTitle = toggleLabel;
+                    const toggleClass = isActive
+                        ? 'bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50'
+                        : 'bg-blue-600 text-white hover:bg-blue-700';
+
+                    return `
+                        <div class="flex items-center justify-center gap-2">
+                            <button type="button" onclick="editAccount(${row.account_id})" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">Edit</button>
+                            <button type="button" onclick="toggleStatus(${row.account_id}, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium ${toggleClass} transition-colors" title="${toggleTitle}">${toggleLabel}</button>
+                        </div>
+                    `;
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-role', data.role);
+            row.setAttribute('data-status', data.status);
+            row.setAttribute('data-account-id', String(data.account_id));
+            if (data.status !== 'active') $(row).addClass('opacity-60');
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada data yang cocok",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[0, 'asc']]
+    });
+
+    // Custom filter (Role + Status)
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
+        if (!settings?.nTable || settings.nTable.id !== 'tableAkunAdmin') return true;
+        if (!tableAkunAdmin) return true;
+
+        const row = tableAkunAdmin.row(dataIndex).data();
+        if (!row) return true;
+
+        const roleOk = selectedRoleFilter === 'all' || row.role === selectedRoleFilter;
+        const statusOk = selectedStatusFilter === 'all' || row.status === selectedStatusFilter;
+        return roleOk && statusOk;
+    });
+
+    const roleSelect = document.getElementById('filterRole');
+    const statusSelect = document.getElementById('filterStatus');
+
+    if (roleSelect) {
+        selectedRoleFilter = roleSelect.value || 'all';
+        roleSelect.addEventListener('change', () => {
+            selectedRoleFilter = roleSelect.value || 'all';
+            applyFilters();
+        });
+    }
+
+    if (statusSelect) {
+        selectedStatusFilter = statusSelect.value || 'all';
+        statusSelect.addEventListener('change', () => {
+            selectedStatusFilter = statusSelect.value || 'all';
+            applyFilters();
+        });
+    }
+
+    // Apply initial filters
+    applyFilters();
+
+    // Pindahkan filter select ke area "Tampilkan ... data"
+    const wrapper = document.getElementById('tableAkunAdmin_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('akunDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
 });
 
 function toggleStatus(id, btnEl) {
@@ -335,7 +381,7 @@ function toggleStatus(id, btnEl) {
     }
 
     row.setAttribute('data-status', newStatus);
-    row.classList.toggle('opacity-60', newStatus !== 'active');
+    $(row).toggleClass('opacity-60', newStatus !== 'active');
 
     const badge = row.querySelector('.account-status-badge');
     if (badge) {
@@ -366,8 +412,16 @@ function toggleStatus(id, btnEl) {
         btnEl.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
     }
 
-    if (typeof window.refreshAccountsTable === 'function') {
-        window.refreshAccountsTable();
+    // Update data di DataTable
+    if (tableAkunAdmin) {
+        const dtRow = tableAkunAdmin.row(row);
+        if (dtRow) {
+            const current = dtRow.data();
+            if (current) {
+                current.status = newStatus;
+                dtRow.data(current).invalidate();
+            }
+        }
     }
 
     alert('Status berhasil diubah!');

@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+            <table id="tableJadwalPengajar" class="w-full text-left text-sm">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">Tanggal</th>
@@ -238,4 +238,7 @@ function deleteSchedule(id) {
         alert('Jadwal berhasil dihapus!');
     }
 }
+
+// Initialize DataTable
+let tableJadwalPengajar = new DataTable('#tableJadwalPengajar');
 </script>

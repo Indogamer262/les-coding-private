@@ -47,10 +47,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-table, tr, td, th {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
 
 /* Utilities */
 .flex {
@@ -406,6 +402,8 @@ table, tr, td, th {
 }
 
 .text-gray-600 {
+
+    font-size: 0.875rem;
     color: #4b5563;
 }
 

@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+            <table id="tableAbsensiAdmin" class="w-full text-left text-sm">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">Tanggal</th>
@@ -233,4 +233,7 @@ function handleAbsensiSubmit(event) {
     alert('Absensi berhasil disimpan!');
     closeAbsensiModal();
 }
+
+// Initialize DataTable
+let tableAbsensiAdmin = new DataTable('#tableAbsensiAdmin');
 </script>

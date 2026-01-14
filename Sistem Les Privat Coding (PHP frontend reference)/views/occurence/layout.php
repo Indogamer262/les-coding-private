@@ -12,6 +12,7 @@
     <title><?= htmlspecialchars($title ?? 'Sistem Les Privat Coding') ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css">
 </head>
 <body>
     <div class="flex h-screen bg-gray-50">
@@ -26,6 +27,8 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
     <script>
         const sidebar = document.querySelector('.sidebar');
         const mainContent = document.getElementById('main-content');

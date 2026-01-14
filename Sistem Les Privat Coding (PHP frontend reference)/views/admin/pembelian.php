@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+            <table id="tablePembelianAdmin" class="w-full text-left text-sm">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-5 py-4 whitespace-nowrap text-center w-56">ID Pembelian</th>
@@ -296,4 +296,7 @@ document.addEventListener('keydown', (e) => {
         if (modal && !modal.classList.contains('hidden')) closeDetailModal();
     }
 });
+
+// Initialize DataTable
+let tablePembelianAdmin = new DataTable('#tablePembelianAdmin');
 </script>

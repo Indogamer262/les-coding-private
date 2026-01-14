@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+            <table id="tableLogAdmin" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">ID Log</th>
@@ -33,91 +33,6 @@
                         <th class="px-6 py-4">ID Akun</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100" id="logTableBody">
-                    <!-- Sample Row 1 - Admin -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="admin" data-log-id="1">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">LOG-0001</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">13 Jan 2026, 09:15</td>
-                        <td class="px-6 py-4">
-                            <p class="text-gray-800">Admin menambahkan paket baru "Paket 16 Pertemuan"</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm text-gray-700">USR-0001</span>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 2 - Murid -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="murid" data-log-id="2">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">LOG-0002</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">13 Jan 2026, 08:45</td>
-                        <td class="px-6 py-4">
-                            <p class="text-gray-800">Murid Budi Santoso melakukan pembelian paket</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm text-gray-700">USR-0012</span>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 3 - Pengajar -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="pengajar" data-log-id="3">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">LOG-0003</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">12 Jan 2026, 16:30</td>
-                        <td class="px-6 py-4">
-                            <p class="text-gray-800">Pengajar Ahmad Wijaya mengisi absensi jadwal JDW-0045</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm text-gray-700">USR-0005</span>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 4 - Admin -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="admin" data-log-id="4">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">LOG-0004</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">12 Jan 2026, 14:20</td>
-                        <td class="px-6 py-4">
-                            <p class="text-gray-800">Admin memverifikasi pembayaran PL-0015</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm text-gray-700">USR-0001</span>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 5 - Murid -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="murid" data-log-id="5">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">LOG-0005</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">12 Jan 2026, 10:00</td>
-                        <td class="px-6 py-4">
-                            <p class="text-gray-800">Murid Ani Susanti login ke sistem</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm text-gray-700">USR-0018</span>
-                        </td>
-                    </tr>
-
-                    <!-- Sample Row 6 - Pengajar -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-role="pengajar" data-log-id="6">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm font-medium text-gray-800">LOG-0006</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700 whitespace-nowrap">11 Jan 2026, 15:45</td>
-                        <td class="px-6 py-4">
-                            <p class="text-gray-800">Pengajar Dewi Kusuma memperbarui profil</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-sm text-gray-700">USR-0007</span>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
@@ -125,6 +40,75 @@
 
 <script>
 let selectedLogFilter = 'semua';
+let tableLogAdmin;
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Logs: dummy dibuat sendiri (sesuai permintaan)
+const logAdminData = [
+    {
+        log_id: 1,
+        id_log: 'LOG-0001',
+        tanggal: '2026-01-13T09:15:00',
+        tanggal_display: '13 Jan 2026, 09:15',
+        aktivitas: 'Admin menambahkan paket baru "Paket 16 Pertemuan"',
+        id_akun: 'USR-0001',
+        role: 'admin'
+    },
+    {
+        log_id: 2,
+        id_log: 'LOG-0002',
+        tanggal: '2026-01-13T08:45:00',
+        tanggal_display: '13 Jan 2026, 08:45',
+        aktivitas: 'Murid Budi Santoso melakukan pembelian paket',
+        id_akun: 'USR-0012',
+        role: 'murid'
+    },
+    {
+        log_id: 3,
+        id_log: 'LOG-0003',
+        tanggal: '2026-01-12T16:30:00',
+        tanggal_display: '12 Jan 2026, 16:30',
+        aktivitas: 'Pengajar Ahmad Wijaya mengisi absensi jadwal JDW-0045',
+        id_akun: 'USR-0005',
+        role: 'pengajar'
+    },
+    {
+        log_id: 4,
+        id_log: 'LOG-0004',
+        tanggal: '2026-01-12T14:20:00',
+        tanggal_display: '12 Jan 2026, 14:20',
+        aktivitas: 'Admin memverifikasi pembayaran PL-0015',
+        id_akun: 'USR-0001',
+        role: 'admin'
+    },
+    {
+        log_id: 5,
+        id_log: 'LOG-0005',
+        tanggal: '2026-01-12T10:00:00',
+        tanggal_display: '12 Jan 2026, 10:00',
+        aktivitas: 'Murid Ani Susanti login ke sistem',
+        id_akun: 'USR-0018',
+        role: 'murid'
+    },
+    {
+        log_id: 6,
+        id_log: 'LOG-0006',
+        tanggal: '2026-01-11T15:45:00',
+        tanggal_display: '11 Jan 2026, 15:45',
+        aktivitas: 'Pengajar Dewi Kusuma memperbarui profil',
+        id_akun: 'USR-0007',
+        role: 'pengajar'
+    }
+];
 
 function setLogFilter(filter) {
     selectedLogFilter = filter;
@@ -150,23 +134,86 @@ function updateLogFilterButtons() {
 }
 
 function applyFilters() {
+    if (!tableLogAdmin) return;
+
     const searchInput = document.getElementById('searchLog');
-    const searchValue = (searchInput ? searchInput.value : '').toLowerCase();
-    const rows = document.querySelectorAll('#logTableBody tr');
+    const searchValue = (searchInput ? searchInput.value : '');
 
-    rows.forEach(row => {
-        const rowRole = row.getAttribute('data-role');
-        const aktivitas = row.querySelector('td:nth-child(3) p');
-        const aktivitasText = aktivitas ? aktivitas.textContent.toLowerCase() : '';
-
-        const matchesFilter = selectedLogFilter === 'semua' || rowRole === selectedLogFilter;
-        const matchesSearch = aktivitasText.includes(searchValue);
-        row.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
-    });
+    // Cari hanya berdasarkan kolom Aktivitas
+    const escape = $.fn.dataTable.util.escapeRegex;
+    tableLogAdmin
+        .column(2)
+        .search(searchValue ? escape(searchValue) : '', false, true)
+        .draw();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     updateLogFilterButtons();
+
+    // Custom filter untuk Role
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        if (!tableLogAdmin || settings.nTable !== tableLogAdmin.table().node()) return true;
+        if (selectedLogFilter === 'semua') return true;
+        const rowData = tableLogAdmin.row(dataIndex).data();
+        return rowData && rowData.role === selectedLogFilter;
+    });
+
+    tableLogAdmin = $('#tableLogAdmin').DataTable({
+        data: logAdminData,
+        columns: [
+            {
+                data: 'id_log',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    return `<span class="font-mono text-sm font-medium text-gray-800">${escapeHtml(val)}</span>`;
+                }
+            },
+            {
+                data: 'tanggal_display',
+                render: (val, type, row) => {
+                    // gunakan ISO untuk sorting
+                    if (type === 'sort' || type === 'type') return row.tanggal;
+                    return `<span class="text-gray-700 whitespace-nowrap">${escapeHtml(val)}</span>`;
+                }
+            },
+            {
+                data: 'aktivitas',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    return `<p class="text-gray-800">${escapeHtml(val)}</p>`;
+                }
+            },
+            {
+                data: 'id_akun',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    return `<span class="font-mono text-sm text-gray-700">${escapeHtml(val)}</span>`;
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-role', data.role);
+            row.setAttribute('data-log-id', String(data.log_id));
+        },
+        dom: 'rt<"dt-bottom"ip>',
+        language: {
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada data yang cocok",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        ordering: true,
+        order: [[1, 'desc']]
+    });
+
     applyFilters();
 });
 </script>

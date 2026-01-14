@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+            <table id="tableKehadiranMurid" class="w-full text-left text-sm">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">Tanggal & Waktu</th>
@@ -136,4 +136,7 @@ function applyFilters() {
         row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
     });
 }
+
+// Initialize DataTable
+let tableKehadiranMurid = new DataTable('#tableKehadiranMurid');
 </script>

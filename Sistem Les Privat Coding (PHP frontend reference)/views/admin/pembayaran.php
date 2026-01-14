@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+            <table id="tablePembayaranAdmin" class="w-full text-left text-sm">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4 whitespace-nowrap">ID Pembelian</th>
@@ -327,6 +327,9 @@ function showSuccessToast() {
         }, 300);
     }, 3000);
 }
+
+// Initialize DataTable
+let tablePembayaranAdmin = new DataTable('#tablePembayaranAdmin');
 </script>
 
 <style>
