@@ -2,240 +2,235 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Jadwal Mengajar</h1>
-            <p class="text-sm text-gray-600 mt-1">Jadwal les untuk pengajar</p>
+            <h1 class="text-2xl font-bold text-gray-800">Jadwal Les Saya</h1>
+            <p class="text-sm text-gray-600 mt-1">Daftar jadwal les yang sudah dipesan</p>
         </div>
     </div>
 
     <!-- Schedules Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 class="text-lg font-semibold text-gray-800">Daftar Jadwal</h2>
-            <div class="mt-4 flex flex-wrap items-end gap-3">
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Periode</label>
-                    <select id="filterPeriode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua Periode</option>
+
+            <!-- Filters -->
+            <div id="jadwalMuridDtFilters" class="hidden flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Periode</label>
+                    <select id="filterPeriode" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Semua</option>
                         <option value="today">Hari Ini</option>
-                        <option value="week">Minggu Ini</option>
-                        <option value="month" selected>Bulan Ini</option>
+                        <option value="week" selected>Minggu Ini</option>
+                        <option value="month">Bulan Ini</option>
                     </select>
                 </div>
-                <div class="w-36">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Urutkan</label>
-                    <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="terbaru">Terbaru</option>
-                        <option value="terlama">Terlama</option>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Status</label>
+                    <select id="filterStatus" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" selected>Semua</option>
+                        <option value="selesai">Selesai</option>
+                        <option value="mendatang">Mendatang</option>
                     </select>
-                </div>
-                <div class="flex-1"></div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
-                    <input type="text" id="searchMuridPembayaran" placeholder="Cari mata pelajaran atau murid..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-6 py-4">Tanggal</th>
-                        <th class="px-6 py-4">Hari & Waktu</th>
-                        <th class="px-6 py-4">Mata Pelajaran</th>
-                        <th class="px-6 py-4">Pengajar</th>
+        <div class="px-6 py-6">
+            <table id="tableJadwalMurid" class="display w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3">Tanggal</th>
+                        <th class="px-6 py-3">Hari & Waktu</th>
+                        <th class="px-6 py-3">Mata Pelajaran</th>
+                        <th class="px-6 py-3">Pengajar</th>
+                        <th class="px-6 py-3 text-center">Status</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100" id="schedulesTableBody">
-                    <!-- Row 1 - Filled Schedule -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-schedule-id="1">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">06 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Senin</p>
-                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Python</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 - Empty Schedule (no student) -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-schedule-id="2">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">07 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Selasa</p>
-                                <p class="text-sm text-gray-600">10:00 - 12:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">JavaScript</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 - Another filled schedule -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-schedule-id="3">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">08 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Rabu</p>
-                                <p class="text-sm text-gray-600">16:00 - 18:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">React.js</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ani Susanti</p>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<!-- Schedule Modal -->
-<div id="scheduleModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4">
-        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-xl font-semibold text-gray-800" id="scheduleModalTitle">Buat Jadwal Baru</h3>
-            <button type="button" onclick="closeScheduleModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <form id="scheduleForm" class="p-6 space-y-4" onsubmit="handleScheduleSubmit(event)">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Pengajar</label>
-                    <select name="pengajar" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                        <option value="">-- Pilih Pengajar --</option>
-                        <option value="1">Ahmad Wijaya</option>
-                        <option value="2">Dewi Kusuma</option>
-                        <option value="3">Eko Prasetyo</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
-                    <select name="mataPelajaran" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                        <option value="">-- Pilih Mata Pelajaran --</option>
-                        <option value="python">Python</option>
-                        <option value="javascript">JavaScript</option>
-                        <option value="html-css">HTML & CSS</option>
-                        <option value="react">React.js</option>
-                        <option value="nodejs">Node.js</option>
-                    </select>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
-                    <input type="date" name="tanggal" id="scheduleTanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required onchange="updateHariFromTanggal(this.value)">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Hari</label>
-                    <input type="text" name="hari" id="scheduleHari" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600" placeholder="Otomatis dari tanggal" readonly>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Jam Mulai</label>
-                    <input type="time" name="jamMulai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Jam Selesai</label>
-                    <input type="time" name="jamSelesai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-            </div>
-        </form>
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
-            <button type="button" onclick="closeScheduleModal()" class="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">Batal</button>
-            <button type="submit" form="scheduleForm" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">Simpan</button>
-        </div>
-    </div>
-</div>
-
 <script>
-const hariNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+let tableJadwalMurid;
+let selectedPeriodeFilter = 'week';
+let selectedStatusFilter = 'all';
 
-function updateHariFromTanggal(dateValue) {
-    if (!dateValue) {
-        document.getElementById('scheduleHari').value = '';
-        return;
-    }
-    const date = new Date(dateValue);
-    const dayIndex = date.getDay();
-    document.getElementById('scheduleHari').value = hariNames[dayIndex];
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
+
+// Dummy data for jadwal murid
+const jadwalMuridData = [
+    {
+        jadwal_id: 1,
+        tanggal: '2026-01-06',
+        tanggal_display: '06 Jan 2026',
+        hari: 'Senin',
+        waktu: '14:00 - 16:00',
+        mapel: 'Python',
+        pengajar: 'Ahmad Wijaya',
+        status: 'selesai'
+    },
+    {
+        jadwal_id: 2,
+        tanggal: '2026-01-07',
+        tanggal_display: '07 Jan 2026',
+        hari: 'Selasa',
+        waktu: '10:00 - 12:00',
+        mapel: 'JavaScript',
+        pengajar: 'Dewi Kusuma',
+        status: 'selesai'
+    },
+    {
+        jadwal_id: 3,
+        tanggal: '2026-01-08',
+        tanggal_display: '08 Jan 2026',
+        hari: 'Rabu',
+        waktu: '16:00 - 18:00',
+        mapel: 'React.js',
+        pengajar: 'Ahmad Wijaya',
+        status: 'mendatang'
+    },
+    {
+        jadwal_id: 4,
+        tanggal: '2026-01-10',
+        tanggal_display: '10 Jan 2026',
+        hari: 'Jumat',
+        waktu: '14:00 - 16:00',
+        mapel: 'Node.js',
+        pengajar: 'Eko Prasetyo',
+        status: 'mendatang'
+    }
+];
 
 function applyFilters() {
-    const searchValue = document.getElementById('searchMuridPembayaran').value.toLowerCase();
-    const rows = document.querySelectorAll('#schedulesTableBody tr');
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        const matchesSearch = text.includes(searchValue);
-        row.style.display = matchesSearch ? '' : 'none';
+    if (!tableJadwalMurid) return;
+    tableJadwalMurid.draw();
+}
+
+function getStatusBadge(status) {
+    const isSelesai = status === 'selesai';
+    const label = isSelesai ? 'Selesai' : 'Mendatang';
+    const cls = isSelesai ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700';
+    return `<span class="px-4 py-1 rounded-full text-xs font-medium ${cls}">${label}</span>`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Custom filter for status
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
+        if (!settings?.nTable || settings.nTable.id !== 'tableJadwalMurid') return true;
+        if (!tableJadwalMurid) return true;
+
+        const row = tableJadwalMurid.row(dataIndex).data();
+        if (!row) return true;
+
+        const statusOk = selectedStatusFilter === 'all' || row.status === selectedStatusFilter;
+        return statusOk;
     });
-}
 
-function searchSchedules(value) {
-    const searchValue = value.toLowerCase();
-    const rows = document.querySelectorAll('#schedulesTableBody tr');
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchValue) ? '' : 'none';
+    tableJadwalMurid = $('#tableJadwalMurid').DataTable({
+        data: jadwalMuridData,
+        columns: [
+            {
+                data: 'tanggal_display',
+                render: (data, type, row) => {
+                    if (type === 'sort' || type === 'type') return row.tanggal;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: null,
+                render: (data, type, row) => {
+                    if (type !== 'display') return row.hari + ' ' + row.waktu;
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800">${escapeHtml(row.hari)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(row.waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'mapel',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'pengajar',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'status',
+                className: 'text-center',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return getStatusBadge(data);
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-jadwal-id', String(data.jadwal_id));
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada jadwal ditemukan",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[0, 'desc']]
     });
-}
 
-function openScheduleModal() {
-    document.getElementById('scheduleForm').reset();
-    document.getElementById('scheduleHari').value = '';
-    document.getElementById('scheduleModal').classList.remove('hidden');
-    document.getElementById('scheduleModal').classList.add('flex');
-    document.getElementById('scheduleModalTitle').textContent = 'Buat Jadwal Baru';
-}
-
-function editSchedule(id) {
-    document.getElementById('scheduleModal').classList.remove('hidden');
-    document.getElementById('scheduleModal').classList.add('flex');
-    document.getElementById('scheduleModalTitle').textContent = 'Edit Jadwal';
-    // Pre-fill form with schedule data (mock)
-}
-
-function closeScheduleModal() {
-    document.getElementById('scheduleModal').classList.add('hidden');
-    document.getElementById('scheduleModal').classList.remove('flex');
-}
-
-function handleScheduleSubmit(event) {
-    event.preventDefault();
-    alert('Jadwal berhasil disimpan!');
-    closeScheduleModal();
-}
-
-function deleteSchedule(id) {
-    if (confirm('Apakah Anda yakin ingin menghapus jadwal ini?')) {
-        const row = document.querySelector(`tr[data-schedule-id="${id}"]`);
-        if (row) row.remove();
-        alert('Jadwal berhasil dihapus!');
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tableJadwalMurid_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('jadwalMuridDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
     }
-}
+
+    const periodeSelect = document.getElementById('filterPeriode');
+    const statusSelect = document.getElementById('filterStatus');
+
+    if (periodeSelect) {
+        selectedPeriodeFilter = periodeSelect.value || 'week';
+        periodeSelect.addEventListener('change', () => {
+            selectedPeriodeFilter = periodeSelect.value || 'week';
+            applyFilters();
+        });
+    }
+
+    if (statusSelect) {
+        selectedStatusFilter = statusSelect.value || 'all';
+        statusSelect.addEventListener('change', () => {
+            selectedStatusFilter = statusSelect.value || 'all';
+            applyFilters();
+        });
+    }
+
+    applyFilters();
+});
 </script>

@@ -21,17 +21,17 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between gap-4 flex-wrap">
                 <h2 class="text-lg font-semibold text-gray-800">Daftar Paket</h2>
-                <div class="flex items-center gap-3 flex-wrap">
-                    <div class="inline-flex rounded-lg border border-gray-300 overflow-hidden">
-                        <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white">Aktif</button>
-                        <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
-                    </div>
-                    <input type="text" id="searchPackage" placeholder="Cari nama paket..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
-                </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+        <!-- Filter buttons will be moved here via JS -->
+        <div id="paketDtFilters" class="hidden flex items-center gap-3 flex-wrap">
+            <div class="h-9 inline-flex rounded-lg border border-gray-300 overflow-hidden">
+                <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white">Aktif</button>
+                <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
+            </div>
+        </div>
+        <div class="px-6 py-6">
+            <table id="tablePaketAdmin" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">Nama Paket</th>
@@ -41,70 +41,6 @@
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100" id="packagesTableBody">
-                    <tr class="hover:bg-gray-50 transition-colors" data-status="active" data-package-id="1">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">Paket 4 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Rp 250.000</td>
-                        <td class="px-6 py-4 text-center text-gray-700">4</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editPackage(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="togglePackageStatus(1, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-gray-50 transition-colors" data-status="active" data-package-id="2">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">Paket 8 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Rp 450.000</td>
-                        <td class="px-6 py-4 text-center text-gray-700">8</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editPackage(2)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="togglePackageStatus(2, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-gray-50 transition-colors opacity-60" data-status="inactive" data-package-id="3">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">Paket 12 Pertemuan</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Rp 600.000</td>
-                        <td class="px-6 py-4 text-center text-gray-700">12</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Nonaktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editPackage(3)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="togglePackageStatus(3, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors" title="Aktifkan">
-                                    Aktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
@@ -154,6 +90,30 @@
 
 <script>
 let selectedStatusFilter = 'active';
+let tablePaketAdmin;
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatRupiah(amount) {
+    const num = Number(amount || 0);
+    return 'Rp ' + num.toLocaleString('id-ID');
+}
+
+// Dummy data mengikuti nama kolom dari DB `katalogpaket`
+// - id_paket, nama_paket, jml_pertemuan, masa_aktif_hari, harga, status_dijual (1 dijual, 0 tidak)
+const paketAdminData = [
+    { id_paket: 1, nama_paket: 'Paket 4 Pertemuan', jml_pertemuan: 4, masa_aktif_hari: 14, harga: 250000, status_dijual: 1, status: 'active' },
+    { id_paket: 2, nama_paket: 'Paket 8 Pertemuan', jml_pertemuan: 8, masa_aktif_hari: 28, harga: 450000, status_dijual: 1, status: 'active' },
+    { id_paket: 3, nama_paket: 'Paket 12 Pertemuan', jml_pertemuan: 12, masa_aktif_hari: 45, harga: 600000, status_dijual: 0, status: 'inactive' }
+];
 
 function setStatusFilter(status) {
     selectedStatusFilter = status;
@@ -167,28 +127,17 @@ function updateStatusFilterButtons() {
     if (!activeBtn || !inactiveBtn) return;
 
     if (selectedStatusFilter === 'active') {
-        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
-        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
     } else {
-        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
-        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
     }
 }
 
 function applyFilters() {
-    const searchInput = document.getElementById('searchPackage');
-    const searchValue = (searchInput ? searchInput.value : '').toLowerCase();
-    const rows = document.querySelectorAll('#packagesTableBody tr');
-
-    rows.forEach(row => {
-        const rowStatus = row.getAttribute('data-status');
-        const namaPaket = row.querySelector('td:first-child p');
-        const nameText = namaPaket ? namaPaket.textContent.toLowerCase() : '';
-
-        const matchesStatus = rowStatus === selectedStatusFilter;
-        const matchesSearch = nameText.includes(searchValue);
-        row.style.display = (matchesStatus && matchesSearch) ? '' : 'none';
-    });
+    if (!tablePaketAdmin) return;
+    tablePaketAdmin.draw();
 }
 
 function openAddPackageModal() {
@@ -249,51 +198,129 @@ function searchPackages(value) {
 }
 
 function togglePackageStatus(id, btnEl) {
-    const row = btnEl ? btnEl.closest('tr') : document.querySelector('[data-package-id="' + id + '"]');
-    if (!row) return;
-    
-    const currentStatus = row.getAttribute('data-status');
+    if (!tablePaketAdmin) return;
+    const rowNode = btnEl ? btnEl.closest('tr') : null;
+    const dtRow = rowNode ? tablePaketAdmin.row(rowNode) : null;
+    const current = dtRow ? dtRow.data() : null;
+    if (!current) return;
+
+    const currentStatus = current.status;
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     const action = newStatus === 'active' ? 'mengaktifkan' : 'menonaktifkan';
-    
-    if (!confirm('Apakah Anda yakin ingin ' + action + ' paket ini?')) {
-        return;
-    }
+    if (!confirm('Apakah Anda yakin ingin ' + action + ' paket ini?')) return;
 
-    row.setAttribute('data-status', newStatus);
-    row.classList.toggle('opacity-60', newStatus !== 'active');
-
-    const badge = row.querySelector('.package-status-badge');
-    if (badge) {
-        if (newStatus === 'active') {
-            badge.textContent = 'Aktif';
-            badge.classList.remove('bg-gray-100', 'text-gray-700');
-            badge.classList.add('bg-green-100', 'text-green-700');
-        } else {
-            badge.textContent = 'Nonaktif';
-            badge.classList.remove('bg-green-100', 'text-green-700');
-            badge.classList.add('bg-gray-100', 'text-gray-700');
-        }
-    }
-    
-    // Update button text and style
-    btnEl.classList.remove(
-        'bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50',
-        'bg-blue-600', 'text-white', 'hover:bg-blue-700'
-    );
-
-    if (newStatus === 'active') {
-        btnEl.textContent = 'Nonaktifkan';
-        btnEl.title = 'Nonaktifkan';
-        btnEl.classList.add('bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50');
-    } else {
-        btnEl.textContent = 'Aktifkan';
-        btnEl.title = 'Aktifkan';
-        btnEl.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-    }
+    current.status = newStatus;
+    current.status_dijual = newStatus === 'active' ? 1 : 0;
+    dtRow.data(current).invalidate();
+    tablePaketAdmin.draw(false);
 
     alert('Status berhasil diubah!');
-
-    applyFilters();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Custom filter: status
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        if (!tablePaketAdmin || settings.nTable !== tablePaketAdmin.table().node()) return true;
+        const rowData = tablePaketAdmin.row(dataIndex).data();
+        if (!rowData) return true;
+        return rowData.status === selectedStatusFilter;
+    });
+
+    tablePaketAdmin = $('#tablePaketAdmin').DataTable({
+        data: paketAdminData,
+        columns: [
+            {
+                data: 'nama_paket',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    return `<p class="font-medium text-gray-800">${escapeHtml(val)}</p>`;
+                }
+            },
+            {
+                data: 'harga',
+                render: (val, type) => {
+                    if (type !== 'display') return Number(val || 0);
+                    return `<span class="text-gray-700">${escapeHtml(formatRupiah(val))}</span>`;
+                }
+            },
+            {
+                data: 'jml_pertemuan',
+                className: 'text-center',
+                render: (val, type) => {
+                    if (type !== 'display') return Number(val || 0);
+                    return `<span class="text-gray-700">${escapeHtml(val)}</span>`;
+                }
+            },
+            {
+                data: 'status',
+                className: 'text-center',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    const isActive = val === 'active';
+                    const label = isActive ? 'Aktif' : 'Nonaktif';
+                    const cls = isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
+                    return `<span class="package-status-badge px-4 py-1 rounded-full text-xs font-medium ${cls}">${label}</span>`;
+                }
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: (data, type, row) => {
+                    if (type !== 'display') return '';
+                    const isActive = row.status === 'active';
+                    const toggleLabel = isActive ? 'Nonaktifkan' : 'Aktifkan';
+                    const toggleClass = isActive
+                        ? 'bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50'
+                        : 'bg-blue-600 text-white hover:bg-blue-700';
+
+                    return `
+                        <div class="flex items-center justify-center gap-2">
+                            <button type="button" onclick="editPackage(${row.id_paket})" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">Edit</button>
+                            <button type="button" onclick="togglePackageStatus(${row.id_paket}, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium ${toggleClass} transition-colors" title="${toggleLabel}">${toggleLabel}</button>
+                        </div>
+                    `;
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-status', data.status);
+            row.setAttribute('data-package-id', String(data.id_paket));
+            if (data.status !== 'active') $(row).addClass('opacity-60');
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada data yang cocok",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[0, 'asc']]
+    });
+
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tablePaketAdmin_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('paketDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
+
+    updateStatusFilterButtons();
+    applyFilters();
+});
 </script>

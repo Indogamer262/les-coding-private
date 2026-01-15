@@ -47,10 +47,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-table, tr, td, th {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
 
 /* Utilities */
 .flex {
@@ -406,6 +402,8 @@ table, tr, td, th {
 }
 
 .text-gray-600 {
+
+    font-size: 0.875rem;
     color: #4b5563;
 }
 
@@ -875,6 +873,10 @@ table, tr, td, th {
     height: 2.5rem;
 }
 
+.h-9 {
+    height: 1.625rem;
+}
+
 .w-10 {
     width: 2.5rem;
 }
@@ -902,6 +904,14 @@ table, tr, td, th {
 
 .bg-orange-300 {
     background-color: #fdba74;
+}
+
+.bg-red-600 {
+    background-color: #dc2626;
+}
+
+.bg-red-700 {
+    background-color: #b91c1c;
 }
 
 /* Additional border colors */
@@ -979,4 +989,110 @@ table, tr, td, th {
 /* Tracking wide utility */
 .tracking-wide {
     letter-spacing: 0.025em;
+}
+
+/* ===== Extra utilities used by views (subset of Tailwind-like classes) ===== */
+
+/* Positioning helpers */
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.top-0 {
+    top: 0;
+}
+
+.right-0 {
+    right: 0;
+}
+
+/* Display helpers */
+.inline-flex {
+    display: inline-flex;
+}
+
+/* Text helpers */
+.whitespace-nowrap {
+    white-space: nowrap;
+}
+
+.font-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Corner helpers */
+.rounded-bl-lg {
+    border-bottom-left-radius: var(--radius);
+}
+
+/* Spacing helpers */
+.space-y-3>*+* {
+    margin-top: 0.75rem;
+}
+
+/* Missing color utilities (used by badges/buttons/icons) */
+.bg-orange-600 {
+    background-color: #ea580c;
+}
+
+.bg-red-100 {
+    background-color: #fee2e2;
+}
+
+.text-red-700 {
+    color: #b91c1c;
+}
+
+.text-green-500 {
+    color: #22c55e;
+}
+
+.hover\:bg-orange-600:hover {
+    background-color: #ea580c;
+}
+
+/* Gradient utilities (only the ones used in Beli Paket) */
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--tw-gradient-stops, #3b82f6, #2563eb));
+}
+
+.from-blue-500 {
+    --tw-gradient-from: #3b82f6;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, #2563eb);
+}
+
+.to-blue-600 {
+    --tw-gradient-to: #2563eb;
+}
+
+.from-blue-600 {
+    --tw-gradient-from: #2563eb;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, #1d4ed8);
+}
+
+.to-blue-700 {
+    --tw-gradient-to: #1d4ed8;
+}
+
+.from-blue-700 {
+    --tw-gradient-from: #1d4ed8;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, #1e3a8a);
+}
+
+.to-blue-800 {
+    --tw-gradient-to: #1e3a8a;
+}
+
+/* Reusable button class (requested for Pilih Jadwal) */
+.btn-orange {
+    background-color: #f97316;
+    color: #ffffff;
+}
+
+.btn-orange:hover {
+    background-color: #ea580c;
 }

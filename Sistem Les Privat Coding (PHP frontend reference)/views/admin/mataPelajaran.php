@@ -20,17 +20,17 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between gap-4 flex-wrap">
                 <h2 class="text-lg font-semibold text-gray-800">Daftar Mata Pelajaran</h2>
-                <div class="flex items-center gap-3 flex-wrap">
-                    <div class="inline-flex rounded-lg border border-gray-300 overflow-hidden">
-                        <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white">Aktif</button>
-                        <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
-                    </div>
-                    <input type="text" id="searchSubject" placeholder="Cari mata pelajaran..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
-                </div>
             </div>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
+        <!-- Filter buttons will be moved here via JS -->
+        <div id="mapelDtFilters" class="hidden flex items-center gap-3 flex-wrap">
+            <div class="inline-flex rounded-lg border border-gray-300 overflow-hidden">
+                <button type="button" id="filterStatusActive" onclick="setStatusFilter('active')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white">Aktif</button>
+                <button type="button" id="filterStatusInactive" onclick="setStatusFilter('inactive')" class="h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50">Nonaktif</button>
+            </div>
+        </div>
+        <div class="px-6 py-6">
+            <table id="tableMapelAdmin" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
                         <th class="px-6 py-4">Nama Mata Pelajaran</th>
@@ -39,112 +39,6 @@
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100" id="subjectsTableBody">
-                    <!-- Row 1 -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-status="active" data-subject-id="1">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">Python</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Pemrograman Python dasar hingga lanjutan</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="subject-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editSubject(1)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleSubjectStatus(1, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-status="active" data-subject-id="2">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">JavaScript</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Pemrograman web dengan JavaScript</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="subject-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editSubject(2)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleSubjectStatus(2, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-status="active" data-subject-id="3">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">HTML & CSS</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Dasar-dasar pembuatan website</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="subject-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editSubject(3)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleSubjectStatus(3, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 4 -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-status="active" data-subject-id="4">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">React.js</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Framework JavaScript untuk membangun UI</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="subject-status-badge px-4 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Aktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editSubject(4)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleSubjectStatus(4, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors" title="Nonaktifkan">
-                                    Nonaktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 5 - Nonaktif -->
-                    <tr class="hover:bg-gray-50 transition-colors opacity-60" data-status="inactive" data-subject-id="5">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800">Node.js</p>
-                        </td>
-                        <td class="px-6 py-4 text-gray-700">Backend development dengan Node.js</td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="subject-status-badge px-4 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Nonaktif</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="editSubject(5)" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="toggleSubjectStatus(5, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors" title="Aktifkan">
-                                    Aktifkan
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
@@ -188,6 +82,27 @@
 
 <script>
 let selectedStatusFilter = 'active';
+let tableMapelAdmin;
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Dummy data mengikuti nama kolom dari DB `mata_pelajaran`
+// - id_mapel, nama_mapel, deskripsiMapel, status (1 aktif, 0 nonaktif)
+const mapelAdminData = [
+    { id_mapel: 1, nama_mapel: 'Python', deskripsiMapel: 'Pemrograman Python dasar hingga lanjutan', status_db: 1, status: 'active' },
+    { id_mapel: 2, nama_mapel: 'JavaScript', deskripsiMapel: 'Pemrograman web dengan JavaScript', status_db: 1, status: 'active' },
+    { id_mapel: 3, nama_mapel: 'HTML & CSS', deskripsiMapel: 'Dasar-dasar pembuatan website', status_db: 1, status: 'active' },
+    { id_mapel: 4, nama_mapel: 'React.js', deskripsiMapel: 'Framework JavaScript untuk membangun UI', status_db: 1, status: 'active' },
+    { id_mapel: 5, nama_mapel: 'Node.js', deskripsiMapel: 'Backend development dengan Node.js', status_db: 0, status: 'inactive' }
+];
 
 function setStatusFilter(status) {
     selectedStatusFilter = status;
@@ -201,34 +116,17 @@ function updateStatusFilterButtons() {
     if (!activeBtn || !inactiveBtn) return;
 
     if (selectedStatusFilter === 'active') {
-        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
-        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
     } else {
-        activeBtn.className = 'px-4 py-2 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
-        inactiveBtn.className = 'px-4 py-2 text-sm font-medium bg-blue-600 text-white';
+        activeBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-white text-gray-700 hover:bg-gray-50';
+        inactiveBtn.className = 'h-9 px-4 inline-flex items-center justify-center text-sm font-medium bg-blue-600 text-white';
     }
 }
 
 function applyFilters() {
-    const searchInput = document.getElementById('searchSubject');
-    const searchValue = (searchInput ? searchInput.value : '').toLowerCase();
-    const rows = document.querySelectorAll('#subjectsTableBody tr');
-
-    rows.forEach(row => {
-        const rowStatus = row.getAttribute('data-status');
-        const namaMapel = row.querySelector('td:first-child p');
-        const nameText = namaMapel ? namaMapel.textContent.toLowerCase() : '';
-
-        const matchesStatus = rowStatus === selectedStatusFilter;
-        const matchesSearch = nameText.includes(searchValue);
-        row.style.display = (matchesStatus && matchesSearch) ? '' : 'none';
-    });
-}
-
-function searchSubjects(value) {
-    const input = document.getElementById('searchSubject');
-    if (input) input.value = value;
-    applyFilters();
+    if (!tableMapelAdmin) return;
+    tableMapelAdmin.draw();
 }
 
 function openAddSubjectModal() {
@@ -264,52 +162,24 @@ function editSubject(id) {
 }
 
 function toggleSubjectStatus(id, btnEl) {
-    const row = btnEl ? btnEl.closest('tr') : document.querySelector('[data-subject-id="' + id + '"]');
-    if (!row) return;
-    
-    const currentStatus = row.getAttribute('data-status');
+    if (!tableMapelAdmin) return;
+
+    const rowNode = btnEl ? btnEl.closest('tr') : null;
+    const dtRow = rowNode ? tableMapelAdmin.row(rowNode) : null;
+    const current = dtRow ? dtRow.data() : null;
+    if (!current) return;
+
+    const currentStatus = current.status;
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     const action = newStatus === 'active' ? 'mengaktifkan' : 'menonaktifkan';
-    
-    if (!confirm('Apakah Anda yakin ingin ' + action + ' mata pelajaran ini?')) {
-        return;
-    }
+    if (!confirm('Apakah Anda yakin ingin ' + action + ' mata pelajaran ini?')) return;
 
-    row.setAttribute('data-status', newStatus);
-    row.classList.toggle('opacity-60', newStatus !== 'active');
-
-    const badge = row.querySelector('.subject-status-badge');
-    if (badge) {
-        if (newStatus === 'active') {
-            badge.textContent = 'Aktif';
-            badge.classList.remove('bg-gray-100', 'text-gray-700');
-            badge.classList.add('bg-green-100', 'text-green-700');
-        } else {
-            badge.textContent = 'Nonaktif';
-            badge.classList.remove('bg-green-100', 'text-green-700');
-            badge.classList.add('bg-gray-100', 'text-gray-700');
-        }
-    }
-    
-    // Update button text and style
-    btnEl.classList.remove(
-        'bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50',
-        'bg-blue-600', 'text-white', 'hover:bg-blue-700'
-    );
-
-    if (newStatus === 'active') {
-        btnEl.textContent = 'Nonaktifkan';
-        btnEl.title = 'Nonaktifkan';
-        btnEl.classList.add('bg-gray-100', 'text-gray-800', 'border', 'border-gray-300', 'hover:bg-gray-50');
-    } else {
-        btnEl.textContent = 'Aktifkan';
-        btnEl.title = 'Aktifkan';
-        btnEl.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-    }
+    current.status = newStatus;
+    current.status_db = newStatus === 'active' ? 1 : 0;
+    dtRow.data(current).invalidate();
+    tableMapelAdmin.draw(false);
 
     alert('Status berhasil diubah!');
-
-    applyFilters();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -326,6 +196,99 @@ document.addEventListener('DOMContentLoaded', () => {
             closeSubjectModal();
         }
     });
+
+    // Custom filter: status
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        if (!tableMapelAdmin || settings.nTable !== tableMapelAdmin.table().node()) return true;
+        const rowData = tableMapelAdmin.row(dataIndex).data();
+        if (!rowData) return true;
+        return rowData.status === selectedStatusFilter;
+    });
+
+    tableMapelAdmin = $('#tableMapelAdmin').DataTable({
+        data: mapelAdminData,
+        columns: [
+            {
+                data: 'nama_mapel',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    return `<p class="font-medium text-gray-800">${escapeHtml(val)}</p>`;
+                }
+            },
+            {
+                data: 'deskripsiMapel',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    return `<span class="text-gray-700">${escapeHtml(val)}</span>`;
+                }
+            },
+            {
+                data: 'status',
+                className: 'text-center',
+                render: (val, type) => {
+                    if (type !== 'display') return val;
+                    const isActive = val === 'active';
+                    const label = isActive ? 'Aktif' : 'Nonaktif';
+                    const cls = isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
+                    return `<span class="subject-status-badge px-4 py-1 rounded-full text-xs font-medium ${cls}">${label}</span>`;
+                }
+            },
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: (data, type, row) => {
+                    if (type !== 'display') return '';
+                    const isActive = row.status === 'active';
+                    const toggleLabel = isActive ? 'Nonaktifkan' : 'Aktifkan';
+                    const toggleClass = isActive
+                        ? 'bg-gray-100 text-gray-800 border border-gray-300 hover:bg-gray-50'
+                        : 'bg-blue-600 text-white hover:bg-blue-700';
+                    return `
+                        <div class="flex items-center justify-center gap-2">
+                            <button type="button" onclick="editSubject(${row.id_mapel})" class="inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors" title="Edit">Edit</button>
+                            <button type="button" onclick="toggleSubjectStatus(${row.id_mapel}, this)" class="status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium ${toggleClass} transition-colors" title="${toggleLabel}">${toggleLabel}</button>
+                        </div>
+                    `;
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-status', data.status);
+            row.setAttribute('data-subject-id', String(data.id_mapel));
+            if (data.status !== 'active') $(row).addClass('opacity-60');
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada data yang cocok",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[0, 'asc']]
+    });
+
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tableMapelAdmin_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('mapelDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
 
     updateStatusFilterButtons();
     applyFilters();

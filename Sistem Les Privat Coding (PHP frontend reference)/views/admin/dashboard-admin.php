@@ -84,14 +84,14 @@
         </div>
     </div>
 
-    <!-- Jadwal Terisi Minggu Ini Section -->
+    <!-- Jadwal Terisi Section -->
     <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 class="text-lg font-semibold text-gray-800">Jadwal Terisi Minggu Ini</h2>
+            <h2 class="text-lg font-semibold text-gray-800">Jadwal Terisi</h2>
             <a href="dashboard.php?page=jadwalLes" class="text-sm text-blue-600 font-medium hover:underline">Lihat Semua</a>
         </div>
-        <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm border-collapse">
+        <div class="px-6 py-6">
+            <table id="tableDashboardJadwal" class="display w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead>
                     <tr class="bg-gray-50 text-xs uppercase text-gray-600 font-semibold tracking-wide border-b border-gray-200">
                         <th class="px-6 py-4">Tanggal</th>
@@ -101,65 +101,138 @@
                         <th class="px-6 py-4">Murid</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">06 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Senin</p>
-                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Ahmad Wijaya</td>
-                        <td class="px-6 py-4 text-gray-600">Python</td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Budi Santoso</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">08 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Rabu</p>
-                                <p class="text-sm text-gray-600">16:00 - 18:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Ahmad Wijaya</td>
-                        <td class="px-6 py-4 text-gray-600">React.js</td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Ani Susanti</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">09 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Kamis</p>
-                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Eko Prasetyo</td>
-                        <td class="px-6 py-4 text-gray-600">Python</td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Dedi Prasetyo</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">10 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Jumat</p>
-                                <p class="text-sm text-gray-600">09:00 - 11:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Dewi Kusuma</td>
-                        <td class="px-6 py-4 text-gray-600">HTML & CSS</td>
-                        <td class="px-6 py-4 font-medium text-gray-800">Siti Rahma</td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Dummy data untuk jadwal terisi
+const dashboardJadwalData = [
+    {
+        tanggal: '2026-01-06',
+        tanggal_display: '06 Jan 2026',
+        hari: 'Senin',
+        waktu: '14:00 - 16:00',
+        pengajar: 'Ahmad Wijaya',
+        mapel: 'Python',
+        murid: 'Budi Santoso'
+    },
+    {
+        tanggal: '2026-01-08',
+        tanggal_display: '08 Jan 2026',
+        hari: 'Rabu',
+        waktu: '16:00 - 18:00',
+        pengajar: 'Ahmad Wijaya',
+        mapel: 'React.js',
+        murid: 'Ani Susanti'
+    },
+    {
+        tanggal: '2026-01-09',
+        tanggal_display: '09 Jan 2026',
+        hari: 'Kamis',
+        waktu: '14:00 - 16:00',
+        pengajar: 'Eko Prasetyo',
+        mapel: 'Python',
+        murid: 'Dedi Prasetyo'
+    },
+    {
+        tanggal: '2026-01-10',
+        tanggal_display: '10 Jan 2026',
+        hari: 'Jumat',
+        waktu: '09:00 - 11:00',
+        pengajar: 'Dewi Kusuma',
+        mapel: 'HTML & CSS',
+        murid: 'Siti Rahma'
+    },
+    // Contoh data di luar bulan ini (sekarang tetap tampil karena tidak difilter)
+    {
+        tanggal: '2026-02-02',
+        tanggal_display: '02 Feb 2026',
+        hari: 'Senin',
+        waktu: '14:00 - 16:00',
+        pengajar: 'Eko Prasetyo',
+        mapel: 'Python',
+        murid: 'Dedi Prasetyo'
+    }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    $('#tableDashboardJadwal').DataTable({
+        data: dashboardJadwalData,
+        columns: [
+            {
+                data: 'tanggal_display',
+                render: (data, type, row) => {
+                    if (type === 'sort' || type === 'type') return row.tanggal;
+                    return `<p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</p>`;
+                }
+            },
+            {
+                data: null,
+                render: (data, type, row) => {
+                    if (type !== 'display') return row.hari + ' ' + row.waktu;
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800">${escapeHtml(row.hari)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(row.waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'pengajar',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'mapel',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="text-gray-600">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'murid',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            }
+        ],
+        createdRow: (row) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+        },
+        ordering: true,
+        order: [[0, 'asc']],
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada jadwal terisi",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        responsive: true
+    });
+});
+</script>
