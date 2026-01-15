@@ -58,6 +58,29 @@
             $conn->close();
         }
 
+        // reading single value
+        public function readSingleValue($query) {
+            // Create connection
+            $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+            
+            // Check connection
+            if ($conn->connect_error) {
+                throw new Exception($conn->connect_error);
+            }
+
+            // execute reading query
+            $result = $conn->query($query);
+
+            if ($result->num_rows > 0) {
+                // return data of single value
+                $row = $result->fetch_array(MYSQLI_NUM);
+                return $row[0];
+            }
+            else {
+                return null;
+            }
+            $conn->close();
+        }
         
     }
 ?>

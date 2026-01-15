@@ -62,5 +62,40 @@
             
             return $usn;
         }
+
+        public function getValueStatistic($type) {
+            if($type == "jumlahMurid") {
+                return $this->db->readSingleValue("SELECT FC_getTotalMurid()");
+            }
+            else if ($type == "jumlahPengajar") {
+                return $this->db->readSingleValue("SELECT FC_getTotalPengajar()");
+            }
+            else if ($type == "totalPendapatanBulan") {
+                return $this->db->readSingleValue("SELECT FC_getPendapatanBulanIni()");
+            }
+            else if ($type == "pembelianPaketBelumLunas") {
+                return $this->db->readSingleValue("SELECT FC_getTotalPembelianPaket()");
+            }
+            else {
+                return null;
+            }
+        }
+
+        public function renderTableBody($roles, $type) {
+            if($roles == "admin") {
+                if($type == "dashboard") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardAdmin_JadwalTerisi");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['hari'] . "<br>". $row['waktu'] ."</td>" .
+                            "<td>" . $row['nama_pengajar'] . "</td>" .
+                            "<td>" . $row['nama_pengajar'] . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>";
+                    }
+                }
+            }
+        }
     }
 ?>
