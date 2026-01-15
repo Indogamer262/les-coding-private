@@ -815,32 +815,150 @@ JOIN admin a ON l.id_akun = a.id_admin;
 
 -- [01] SP_TambahAkun (admin)
 DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_TambahAkun`$$
-CREATE PROCEDURE `SP_TambahAkun`(
+
+DROP PROCEDURE IF EXISTS SP_TambahAkun$$
+CREATE PROCEDURE SP_TambahAkun(
   IN p_role VARCHAR(20),
-  IN p_id VARCHAR(10),
   IN p_nama VARCHAR(255),
   IN p_email VARCHAR(255),
   IN p_password VARCHAR(255)
 )
 BEGIN
+  DECLARE v_last_id INT;
+  DECLARE v_new_id VARCHAR(10);
+
+  -- Cek email sudah ada atau belum (global)
+  IF EXISTS (
+    SELECT 1 FROM murid WHERE email = p_email
+    UNION
+    SELECT 1 FROM pengajar WHERE email = p_email
+    UNION
+    SELECT 1 FROM admin WHERE email = p_email
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Email sudah terdaftar';
+  END IF;
+
+  -- ROLE: MURID
   IF LOWER(p_role) = 'murid' THEN
+
+    SELECT IFNULL(MAX(CAST(SUBSTRING(id_murid, 2) AS UNSIGNED)), 0)
+    INTO v_last_id
+    FROM murid;
+
+    SET v_new_id = CONCAT('M', LPAD(v_last_id + 1, 5, '0'));
+
     INSERT INTO murid (id_murid, nama_murid, email, password, status)
-    VALUES (p_id, p_nama, p_email, p_password, 1);
+    VALUES (v_new_id, p_nama, p_email, p_password, 1);
+
+  -- ROLE: PENGAJAR
   ELSEIF LOWER(p_role) = 'pengajar' THEN
+
+    SELECT IFNULL(MAX(CAST(SUBSTRING(id_pengajar, 2) AS UNSIGNED)), 0)
+    INTO v_last_id
+    FROM pengajar;
+
+    SET v_new_id = CONCAT('P', LPAD(v_last_id + 1, 5, '0'));
+
     INSERT INTO pengajar (id_pengajar, nama_pengajar, email, password, status)
-    VALUES (p_id, p_nama, p_email, p_password, 1);
+    VALUES (v_new_id, p_nama, p_email, p_password, 1);
+
+  -- ROLE: ADMIN
   ELSEIF LOWER(p_role) = 'admin' THEN
+
+    SELECT IFNULL(MAX(CAST(SUBSTRING(id_admin, 2) AS UNSIGNED)), 0)
+    INTO v_last_id
+    FROM admin;
+
+    SET v_new_id = CONCAT('A', LPAD(v_last_id + 1, 5, '0'));
+
     INSERT INTO admin (id_admin, nama_admin, password, email, status)
-    VALUES (p_id, p_nama, p_password, p_email, 1);
+    VALUES (v_new_id, p_nama, p_password, p_email, 1);
+
   ELSE
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Role tidak valid';
   END IF;
+
 END$$
 DELIMITER ;
 
--- [02] SP_LihatAkun (admin)
+-- [02] SP_EditAkun (admin)
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS SP_EditAkun$$
+CREATE PROCEDURE SP_EditAkun(
+  IN p_role VARCHAR(20),
+  IN p_id VARCHAR(10),
+  IN p_nama VARCHAR(255),
+  IN p_email VARCHAR(255)
+)
+BEGIN
+  DECLARE v_count INT;
+
+  -- Cek email sudah dipakai akun lain atau belum
+  IF EXISTS (
+    SELECT 1 FROM murid WHERE email = p_email AND id_murid <> p_id
+    UNION
+    SELECT 1 FROM pengajar WHERE email = p_email AND id_pengajar <> p_id
+    UNION
+    SELECT 1 FROM admin WHERE email = p_email AND id_admin <> p_id
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Email sudah digunakan oleh akun lain';
+  END IF;
+
+  -- ROLE: MURID
+  IF LOWER(p_role) = 'murid' THEN
+
+    SELECT COUNT(*) INTO v_count FROM murid WHERE id_murid = p_id;
+    IF v_count = 0 THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'ID murid tidak ditemukan';
+    END IF;
+
+    UPDATE murid
+    SET nama_murid = p_nama,
+        email = p_email
+    WHERE id_murid = p_id;
+
+  -- ROLE: PENGAJAR
+  ELSEIF LOWER(p_role) = 'pengajar' THEN
+
+    SELECT COUNT(*) INTO v_count FROM pengajar WHERE id_pengajar = p_id;
+    IF v_count = 0 THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'ID pengajar tidak ditemukan';
+    END IF;
+
+    UPDATE pengajar
+    SET nama_pengajar = p_nama,
+        email = p_email
+    WHERE id_pengajar = p_id;
+
+  -- ROLE: ADMIN
+  ELSEIF LOWER(p_role) = 'admin' THEN
+
+    SELECT COUNT(*) INTO v_count FROM admin WHERE id_admin = p_id;
+    IF v_count = 0 THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'ID admin tidak ditemukan';
+    END IF;
+
+    UPDATE admin
+    SET nama_admin = p_nama,
+        email = p_email
+    WHERE id_admin = p_id;
+
+  ELSE
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Role tidak valid';
+  END IF;
+
+END$$
+DELIMITER ;
+
+-- [03] SP_LihatAkun (admin)
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `SP_LihatAkun`$$
 CREATE PROCEDURE `SP_LihatAkun`(
@@ -881,50 +999,83 @@ BEGIN
 END$$
 DELIMITER ;
 
--- [03] SP_EditAkun (admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_EditAkun`$$
-CREATE PROCEDURE `SP_EditAkun`(
-  IN p_role VARCHAR(20),
-  IN p_id VARCHAR(10),
-  IN p_nama VARCHAR(255),
-  IN p_email VARCHAR(255)
-)
-BEGIN
-  IF LOWER(p_role) = 'murid' THEN
-    UPDATE murid SET nama_murid = p_nama, email = p_email WHERE id_murid = p_id;
-  ELSEIF LOWER(p_role) = 'pengajar' THEN
-    UPDATE pengajar SET nama_pengajar = p_nama, email = p_email WHERE id_pengajar = p_id;
-  ELSEIF LOWER(p_role) = 'admin' THEN
-    UPDATE admin SET nama_admin = p_nama, email = p_email WHERE id_admin = p_id;
-  ELSE
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Role tidak valid';
-  END IF;
-END$$
-DELIMITER ;
+-- Cara Pakai di PHP (mysqli)
+-- $role   = $_GET['role']   ?? 'SEMUA';
+-- $status = $_GET['status'] ?? 'AKTIF';
+
+-- $stmt = $conn->prepare("CALL SP_LihatAkun(?, ?)");
+-- $stmt->bind_param("ss", $role, $status);
+-- $stmt->execute();
+
+-- $result = $stmt->get_result();
+
+-- while ($row = $result->fetch_assoc()) {
+--     echo $row['id_akun'];
+--     echo $row['nama'];
+--     echo $row['email'];
+--     echo $row['role_akun'];
+--     echo $row['status'];
+-- }
+
 
 -- [04] SP_UbahStatusAkun (admin)
 DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_UbahStatusAkun`$$
-CREATE PROCEDURE `SP_UbahStatusAkun`(
+
+DROP PROCEDURE IF EXISTS SP_UbahStatusAkun$$
+CREATE PROCEDURE SP_UbahStatusAkun(
   IN p_role VARCHAR(20),
   IN p_id VARCHAR(10),
-  IN p_status BOOLEAN
+  IN p_status TINYINT(1)
 )
 BEGIN
+  DECLARE v_count INT;
+
   IF LOWER(p_role) = 'murid' THEN
+
+    SELECT COUNT(*) INTO v_count FROM murid WHERE id_murid = p_id;
+    IF v_count = 0 THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'ID murid tidak ditemukan';
+    END IF;
+
     UPDATE murid SET status = p_status WHERE id_murid = p_id;
+
   ELSEIF LOWER(p_role) = 'pengajar' THEN
+
+    SELECT COUNT(*) INTO v_count FROM pengajar WHERE id_pengajar = p_id;
+    IF v_count = 0 THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'ID pengajar tidak ditemukan';
+    END IF;
+
     UPDATE pengajar SET status = p_status WHERE id_pengajar = p_id;
+
   ELSEIF LOWER(p_role) = 'admin' THEN
+
+    SELECT COUNT(*) INTO v_count FROM admin WHERE id_admin = p_id;
+    IF v_count = 0 THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'ID admin tidak ditemukan';
+    END IF;
+
     UPDATE admin SET status = p_status WHERE id_admin = p_id;
+
   ELSE
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Role tidak valid';
   END IF;
+
 END$$
 DELIMITER ;
+
+-- Flow di PHP (contoh singkat)
+-- $role = $_POST['role'];
+-- $id   = $_POST['id'];
+-- $status = $_POST['status']; // 1 atau 0
+
+-- $stmt = $conn->prepare("CALL SP_UbahStatusAkun(?, ?, ?)");
+-- $stmt->bind_param("ssi", $role, $id, $status);
+-- $stmt->execute();
 
 -- [05] SP_TambahPaketLes (admin)
 DELIMITER $$
