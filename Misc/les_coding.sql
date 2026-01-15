@@ -40,8 +40,8 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id_admin`, `nama_admin`, `password`, `email`, `status`) VALUES
 ('A00001', 'Gavin Malik Setiawan', '$2y$10$3ReuY0KcUSANi6NvPpl8e.7Fj6z0iXBr5PTvaiCzJahmRqdmuqgTq', 'gavin@gavin.com', 1),
-('A001', 'Admin One', '123', 'admin1@mail.com', 1),
-('A002', 'Admin Two', '123', 'admin2@mail.com', 1);
+('A00002', 'Admin One', '123', 'admin1@mail.com', 1),
+('A00003', 'Admin Two', '123', 'admin2@mail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -60,10 +60,10 @@ CREATE TABLE `diajar` (
 --
 
 INSERT INTO `diajar` (`id_diajar`, `id_mapel`, `id_pengajar`) VALUES
-(1, 'MP001', 'P001'),
-(2, 'MP002', 'P001'),
-(3, 'MP003', 'P002'),
-(4, 'MP005', 'P004');
+(1, 'MP00001', 'P00001'),
+(2, 'MP00002', 'P00001'),
+(3, 'MP00003', 'P00002'),
+(4, 'MP00005', 'P00004');
 
 -- --------------------------------------------------------
 
@@ -89,36 +89,36 @@ CREATE TABLE `jadwal` (
 --
 
 INSERT INTO `jadwal` (`kode_jadwal`, `id_mapel`, `id_pengajar`, `id_murid`, `id_pembelian`, `deskripsiMateri`, `tanggal`, `jam_mulai`, `jam_akhir`, `status_kehadiran`) VALUES
-('JD001', 'MP001', 'P001', 'M001', 'PB001', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '08:00:00', '09:00:00', 1),
-('JD002', 'MP001', 'P001', 'M001', 'PB001', NULL, '2026-01-13', '08:00:00', '09:00:00', 0),
-('JD003', 'MP002', 'P001', 'M002', 'PB003', NULL, '2026-01-14', '09:00:00', '10:00:00', 0),
-('JD004', 'MP002', 'P001', NULL, NULL, NULL, '2026-01-14', '10:00:00', '11:00:00', NULL),
-('JD005', 'MP003', 'P002', 'M003', 'PB006', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
-('JD006', 'MP003', 'P002', 'M003', 'PB006', NULL, '2026-01-04', '08:00:00', '09:00:00', 0),
-('JD007', 'MP005', 'P004', 'M004', 'PB014', 'Materi', '2025-12-25', '08:00:00', '09:00:00', 1),
-('JD008', 'MP005', 'P004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-25', '09:00:00', '10:00:00', NULL),
-('JD009', 'MP001', 'P001', 'M005', 'PB008', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '13:00:00', '14:00:00', 1),
-('JD010', 'MP001', 'P001', 'M006', 'PB010', NULL, '2025-12-14', '08:00:00', '09:00:00', 0),
-('JD011', 'MP002', 'P001', 'M001', 'PB001', 'Percabangan dan Perulangan', '2026-01-09', '08:00:00', '09:00:00', 1),
-('JD012', 'MP002', 'P001', 'M002', 'PB003', NULL, '2026-01-07', '08:00:00', '09:00:00', 0),
-('JD013', 'MP003', 'P002', 'M003', 'PB006', 'Form, Table, dan Layout Web', '2025-12-30', '08:00:00', '09:00:00', 1),
-('JD014', 'MP005', 'P004', 'M005', 'PB008', 'Pengenalan Database dan Tabel', '2026-01-12', '08:00:00', '09:00:00', 0),
-('JD015', 'MP001', 'P001', NULL, NULL, NULL, '2026-01-12', '10:00:00', '11:00:00', NULL),
-('JD016', 'MP001', 'P001', 'M001', 'PB001', 'Percabangan dan Perulangan', '2026-01-15', '08:00:00', '09:00:00', 0),
-('JD017', 'MP002', 'P001', 'M002', 'PB003', NULL, '2026-01-16', '08:00:00', '09:00:00', 0),
-('JD018', 'MP003', 'P002', NULL, NULL, NULL, '2026-01-17', '08:00:00', '09:00:00', NULL),
-('JD019', 'MP005', 'P004', 'M003', 'PB006', 'JOIN dan Query Lanjutan', '2026-01-14', '15:00:00', '16:00:00', 1),
-('JD020', 'MP005', 'P004', 'M005', 'PB008', 'Pengenalan Database dan Tabel', '2026-01-08', '15:00:00', '16:00:00', 0),
-('JD021', 'MP001', 'P001', 'M002', 'PB003', 'Variabel, Tipe Data, dan Operator', '2026-01-06', '08:00:00', '09:00:00', 1),
-('JD022', 'MP002', 'P001', 'M003', 'PB006', 'Sorting dan Searching', '2026-01-02', '08:00:00', '09:00:00', 1),
-('JD023', 'MP003', 'P002', 'M004', 'PB014', NULL, '2025-12-20', '08:00:00', '09:00:00', 0),
-('JD024', 'MP005', 'P004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-20', '09:00:00', '10:00:00', NULL),
-('JD025', 'MP001', 'P001', 'M005', 'PB008', 'Variabel, Tipe Data, dan Operator', '2025-12-15', '08:00:00', '09:00:00', 1),
-('JD026', 'MP002', 'P001', 'M006', 'PB010', NULL, '2025-12-15', '08:00:00', '09:00:00', 0),
-('JD027', 'MP003', 'P002', 'M001', 'PB001', 'Fungsi dan Prosedur', '2026-01-10', '08:00:00', '09:00:00', 1),
-('JD028', 'MP005', 'P004', 'M002', 'PB003', 'Pengenalan Database dan Tabel', '2026-01-05', '08:00:00', '09:00:00', 0),
-('JD029', 'MP001', 'P001', NULL, NULL, NULL, '2025-12-31', '10:00:00', '11:00:00', NULL),
-('JD030', 'MP002', 'P001', 'M003', 'PB006', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1);
+('JD00001', 'MP00001', 'P00001', 'M00001', 'PB00001', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '08:00:00', '09:00:00', 1),
+('JD00002', 'MP00001', 'P00001', 'M00001', 'PB00001', NULL, '2026-01-13', '08:00:00', '09:00:00', 0),
+('JD00003', 'MP00002', 'P00001', 'M00002', 'PB00003', NULL, '2026-01-14', '09:00:00', '10:00:00', 0),
+('JD00004', 'MP00002', 'P00001', NULL, NULL, NULL, '2026-01-14', '10:00:00', '11:00:00', NULL),
+('JD00005', 'MP00003', 'P00002', 'M00003', 'PB00006', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
+('JD00006', 'MP00003', 'P00002', 'M00003', 'PB00006', NULL, '2026-01-04', '08:00:00', '09:00:00', 0),
+('JD00007', 'MP00005', 'P00004', 'M00004', 'PB00014', 'Materi', '2025-12-25', '08:00:00', '09:00:00', 1),
+('JD00008', 'MP00005', 'P00004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-25', '09:00:00', '10:00:00', NULL),
+('JD00009', 'MP00001', 'P00001', 'M00005', 'PB00008', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '13:00:00', '14:00:00', 1),
+('JD00010', 'MP00001', 'P00001', 'M00006', 'PB00010', NULL, '2025-12-14', '08:00:00', '09:00:00', 0),
+('JD00011', 'MP00002', 'P00001', 'M00001', 'PB00001', 'Percabangan dan Perulangan', '2026-01-09', '08:00:00', '09:00:00', 1),
+('JD00012', 'MP00002', 'P00001', 'M00002', 'PB00003', NULL, '2026-01-07', '08:00:00', '09:00:00', 0),
+('JD00013', 'MP00003', 'P00002', 'M00003', 'PB00006', 'Form, Table, dan Layout Web', '2025-12-30', '08:00:00', '09:00:00', 1),
+('JD00014', 'MP00005', 'P00004', 'M00005', 'PB00008', 'Pengenalan Database dan Tabel', '2026-01-12', '08:00:00', '09:00:00', 0),
+('JD00015', 'MP00001', 'P00001', NULL, NULL, NULL, '2026-01-12', '10:00:00', '11:00:00', NULL),
+('JD00016', 'MP00001', 'P00001', 'M00001', 'PB00001', 'Percabangan dan Perulangan', '2026-01-15', '08:00:00', '09:00:00', 0),
+('JD00017', 'MP00002', 'P00001', 'M00002', 'PB00003', NULL, '2026-01-16', '08:00:00', '09:00:00', 0),
+('JD00018', 'MP00003', 'P00002', NULL, NULL, NULL, '2026-01-17', '08:00:00', '09:00:00', NULL),
+('JD00019', 'MP00005', 'P00004', 'M00003', 'PB00006', 'JOIN dan Query Lanjutan', '2026-01-14', '15:00:00', '16:00:00', 1),
+('JD00020', 'MP00005', 'P00004', 'M00005', 'PB00008', 'Pengenalan Database dan Tabel', '2026-01-08', '15:00:00', '16:00:00', 0),
+('JD00021', 'MP00001', 'P00001', 'M00002', 'PB00003', 'Variabel, Tipe Data, dan Operator', '2026-01-06', '08:00:00', '09:00:00', 1),
+('JD00022', 'MP00002', 'P00001', 'M00003', 'PB00006', 'Sorting dan Searching', '2026-01-02', '08:00:00', '09:00:00', 1),
+('JD00023', 'MP00003', 'P00002', 'M00004', 'PB00014', NULL, '2025-12-20', '08:00:00', '09:00:00', 0),
+('JD00024', 'MP00005', 'P00004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-20', '09:00:00', '10:00:00', NULL),
+('JD00025', 'MP00001', 'P00001', 'M00005', 'PB00008', 'Variabel, Tipe Data, dan Operator', '2025-12-15', '08:00:00', '09:00:00', 1),
+('JD00026', 'MP00002', 'P00001', 'M00006', 'PB00010', NULL, '2025-12-15', '08:00:00', '09:00:00', 0),
+('JD00027', 'MP00003', 'P00002', 'M00001', 'PB00001', 'Fungsi dan Prosedur', '2026-01-10', '08:00:00', '09:00:00', 1),
+('JD00028', 'MP00005', 'P00004', 'M00002', 'PB00003', 'Pengenalan Database dan Tabel', '2026-01-05', '08:00:00', '09:00:00', 0),
+('JD00029', 'MP00001', 'P00001', NULL, NULL, NULL, '2025-12-31', '10:00:00', '11:00:00', NULL),
+('JD00030', 'MP00002', 'P00001', 'M00003', 'PB00006', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -140,12 +140,12 @@ CREATE TABLE `katalogpaket` (
 --
 
 INSERT INTO `katalogpaket` (`id_paket`, `nama_paket`, `jml_pertemuan`, `masa_aktif_hari`, `harga`, `status_dijual`) VALUES
-('PK001', 'Paket 4x', 4, 30, 400000.00, 1),
-('PK002', 'Paket 8x', 8, 60, 700000.00, 1),
-('PK003', 'Paket 12x', 12, 90, 1000000.00, 1),
-('PK004', 'Paket 4x Promo', 4, 30, 300000.00, 0),
-('PK005', 'Paket 6x', 6, 45, 550000.00, 1),
-('PK006', 'Paket Lama', 10, 60, 800000.00, 0);
+('PK00001', 'Paket 4x', 4, 30, 400000.00, 1),
+('PK00002', 'Paket 8x', 8, 60, 700000.00, 1),
+('PK00003', 'Paket 12x', 12, 90, 1000000.00, 1),
+('PK00004', 'Paket 4x Promo', 4, 30, 300000.00, 0),
+('PK00005', 'Paket 6x', 6, 45, 550000.00, 1),
+('PK00006', 'Paket Lama', 10, 60, 800000.00, 0);
 
 -- --------------------------------------------------------
 
@@ -178,12 +178,12 @@ CREATE TABLE `mata_pelajaran` (
 --
 
 INSERT INTO `mata_pelajaran` (`id_mapel`, `nama_mapel`, `deskripsiMapel`, `status`) VALUES
-('MP001', 'Dasar Pemrograman', 'Belajar logika dasar, variabel, dan alur program', 1),
-('MP002', 'Web Development', 'Belajar HTML, CSS, dan dasar JavaScript', 1),
-('MP003', 'PHP & MySQL', 'Membangun website dinamis dengan PHP dan database MySQL', 1),
-('MP004', 'Java OOP', 'Belajar pemrograman berorientasi objek menggunakan Java', 0),
-('MP005', 'Python Programming', 'Belajar Python untuk pemula sampai menengah', 1),
-('MP006', 'Algoritma & Struktur Data', 'Belajar algoritma, array, stack, queue, dan sorting', 0);
+('MP00001', 'Dasar Pemrograman', 'Belajar logika dasar, variabel, dan alur program', 1),
+('MP00002', 'Web Development', 'Belajar HTML, CSS, dan dasar JavaScript', 1),
+('MP00003', 'PHP & MySQL', 'Membangun website dinamis dengan PHP dan database MySQL', 1),
+('MP00004', 'Java OOP', 'Belajar pemrograman berorientasi objek menggunakan Java', 0),
+('MP00005', 'Python Programming', 'Belajar Python untuk pemula sampai menengah', 1),
+('MP00006', 'Algoritma & Struktur Data', 'Belajar algoritma, array, stack, queue, dan sorting', 0);
 
 -- --------------------------------------------------------
 
@@ -204,12 +204,12 @@ CREATE TABLE `murid` (
 --
 
 INSERT INTO `murid` (`id_murid`, `nama_murid`, `email`, `password`, `status`) VALUES
-('M001', 'Andika Saputra', 'andika.saputra@gmail.com', '123', 1),
-('M002', 'Budi Hartono', 'budi.hartono@gmail.com', '123', 1),
-('M003', 'Caca Ramadhani', 'caca.ramadhani@gmail.com', '123', 1),
-('M004', 'Doni Kurniawan', 'doni.kurniawan@gmail.com', '123', 0),
-('M005', 'Eka Puspita', 'eka.puspita@gmail.com', '123', 1),
-('M006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '123', 0);
+('M00001', 'Andika Saputra', 'andika.saputra@gmail.com', '123', 1),
+('M00002', 'Budi Hartono', 'budi.hartono@gmail.com', '123', 1),
+('M00003', 'Caca Ramadhani', 'caca.ramadhani@gmail.com', '123', 1),
+('M00004', 'Doni Kurniawan', 'doni.kurniawan@gmail.com', '123', 0),
+('M00005', 'Eka Puspita', 'eka.puspita@gmail.com', '123', 1),
+('M00006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '123', 0);
 
 -- --------------------------------------------------------
 
@@ -233,21 +233,21 @@ CREATE TABLE `paketdibeli` (
 --
 
 INSERT INTO `paketdibeli` (`id_pembelian`, `id_murid`, `id_paket`, `tgl_pemesanan`, `tgl_pembayaran`, `gambar_bukti_pembayaran`, `tgl_kedaluwarsa`, `pertemuan_terpakai`) VALUES
-('PB001', 'M001', 'PK001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB002', 'M001', 'PK002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 0),
-('PB003', 'M002', 'PK001', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB004', 'M002', 'PK003', '2025-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-04-14 21:38:00', 0),
-('PB005', 'M003', 'PK002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
-('PB006', 'M003', 'PK001', '2025-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB007', 'M004', 'PK005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
-('PB008', 'M005', 'PK001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB009', 'M005', 'PK002', '2026-01-07 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 0),
-('PB010', 'M006', 'PK003', '2025-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-04-14 21:38:00', 2),
-('PB011', 'M001', 'PK005', '2026-01-13 21:38:00', NULL, NULL, NULL, 0),
-('PB012', 'M002', 'PK005', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-28 21:38:00', 0),
-('PB013', 'M003', 'PK001', '2026-01-09 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 0),
-('PB014', 'M004', 'PK002', '2025-11-15 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 2),
-('PB015', 'M005', 'PK003', '2026-01-14 21:38:00', NULL, NULL, NULL, 0);
+('PB00001', 'M00001', 'PK00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
+('PB00002', 'M00001', 'PK00002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 0),
+('PB00003', 'M00002', 'PK00001', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
+('PB00004', 'M00002', 'PK00003', '2025-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-04-14 21:38:00', 0),
+('PB00005', 'M00003', 'PK00002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
+('PB00006', 'M00003', 'PK00001', '2025-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
+('PB00007', 'M00004', 'PK00005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
+('PB00008', 'M00005', 'PK00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
+('PB00009', 'M00005', 'PK00002', '2026-01-07 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 0),
+('PB00010', 'M00006', 'PK00003', '2025-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-04-14 21:38:00', 2),
+('PB00011', 'M00001', 'PK00005', '2026-01-13 21:38:00', NULL, NULL, NULL, 0),
+('PB00012', 'M00002', 'PK00005', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-28 21:38:00', 0),
+('PB00013', 'M00003', 'PK00001', '2026-01-09 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 0),
+('PB00014', 'M00004', 'PK00002', '2025-11-15 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 2),
+('PB00015', 'M00005', 'PK00003', '2026-01-14 21:38:00', NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -268,10 +268,10 @@ CREATE TABLE `pengajar` (
 --
 
 INSERT INTO `pengajar` (`id_pengajar`, `nama_pengajar`, `email`, `password`, `status`) VALUES
-('P001', 'Dr. Budi Santoso, S.Kom', 'budi.santoso@gmail.com', '123', 1),
-('P002', 'Andi Pratama, M.T.', 'andi.pratama@gmail.com', '123', 1),
-('P003', 'Citra Lestari, M.Kom', 'citra.lestari@gmail.com', '123', 0),
-('P004', 'Dewi Anggraini, S.Kom', 'dewi.anggraini@gmail.com', '123', 1);
+('P00001', 'Dr. Budi Santoso, S.Kom', 'budi.santoso@gmail.com', '123', 1),
+('P00002', 'Andi Pratama, M.T.', 'andi.pratama@gmail.com', '123', 1),
+('P00003', 'Citra Lestari, M.Kom', 'citra.lestari@gmail.com', '123', 0),
+('P00004', 'Dewi Anggraini, S.Kom', 'dewi.anggraini@gmail.com', '123', 1);
 
 --
 -- Indexes for dumped tables
@@ -495,6 +495,7 @@ DELIMITER ;
 -- [08] FC_getTotalJadwalMingguIniMurid (dashboard murid)
 DELIMITER $$
 DROP FUNCTION IF EXISTS `FC_getTotalJadwalMingguIniMurid`$$
+
 CREATE FUNCTION `FC_getTotalJadwalMingguIniMurid`(p_id_murid VARCHAR(10))
 RETURNS INT
 READS SQL DATA
@@ -527,6 +528,7 @@ DELIMITER ;
 -- [10] FC_getTotalMuridDiajar (dashboard pengajar)
 DELIMITER $$
 DROP FUNCTION IF EXISTS `FC_getTotalMuridDiajar`$$
+
 CREATE FUNCTION `FC_getTotalMuridDiajar`(p_id_pengajar VARCHAR(10))
 RETURNS INT
 READS SQL DATA
@@ -542,6 +544,7 @@ DELIMITER ;
 -- Jadwal terisi untuk pengajar hari ini.
 DELIMITER $$
 DROP FUNCTION IF EXISTS `FC_getTotalJadwalHariIniPengajar`$$
+
 CREATE FUNCTION `FC_getTotalJadwalHariIniPengajar`(p_id_pengajar VARCHAR(10))
 RETURNS INT
 READS SQL DATA
@@ -558,6 +561,7 @@ DELIMITER ;
 -- Jadwal terisi untuk pengajar minggu ini.
 DELIMITER $$
 DROP FUNCTION IF EXISTS `FC_getTotalJadwalMingguIniPengajar`$$
+
 CREATE FUNCTION `FC_getTotalJadwalMingguIniPengajar`(p_id_pengajar VARCHAR(10))
 RETURNS INT
 READS SQL DATA
@@ -577,6 +581,7 @@ DELIMITER ;
 -- [13] FC_getTotalJadwalMurid (util)
 DELIMITER $$
 DROP FUNCTION IF EXISTS `FC_getTotalJadwalMurid`$$
+
 CREATE FUNCTION `FC_getTotalJadwalMurid`(p_id_murid VARCHAR(10))
 RETURNS INT
 READS SQL DATA
@@ -606,18 +611,21 @@ DELIMITER ;
 
 -- [01] view_DashboardAdmin_JadwalTerisi (admin dashboard)
 DROP VIEW IF EXISTS `view_DashboardAdmin_JadwalTerisi`;
+
 CREATE VIEW `view_DashboardAdmin_JadwalTerisi` AS
 SELECT
   j.kode_jadwal,
-  j.id_pengajar,
+  j.tanggal,
+  DAYNAME(j.tanggal) AS hari,
+  CONCAT(
+    DATE_FORMAT(j.jam_mulai, '%H:%i'),
+    ' - ',
+    DATE_FORMAT(j.jam_akhir, '%H:%i')
+  ) AS waktu,
   p.nama_pengajar,
   mp.nama_mapel,
-  j.id_murid,
   m.nama_murid,
   j.deskripsiMateri,
-  j.tanggal,
-  j.jam_mulai,
-  j.jam_akhir,
   j.status_kehadiran
 FROM jadwal j
 JOIN murid m ON j.id_murid = m.id_murid
@@ -627,87 +635,120 @@ WHERE j.id_murid IS NOT NULL;
 
 -- [02] view_DashboardMurid_JadwalMendatang (murid dashboard)
 DROP VIEW IF EXISTS `view_DashboardMurid_JadwalMendatang`;
+
 CREATE VIEW `view_DashboardMurid_JadwalMendatang` AS
 SELECT
   j.kode_jadwal,
   j.id_murid,
   m.nama_murid,
+
   j.tanggal,
-  j.jam_mulai,
-  j.jam_akhir,
+  DAYNAME(j.tanggal) AS hari,
+
+  CONCAT(
+    DATE_FORMAT(j.jam_mulai, '%H:%i'),
+    ' - ',
+    DATE_FORMAT(j.jam_akhir, '%H:%i')
+  ) AS waktu,
+
   j.id_mapel,
   mp.nama_mapel,
+
   j.id_pengajar,
   p.nama_pengajar
+
 FROM jadwal j
 JOIN murid m ON j.id_murid = m.id_murid
 JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
 JOIN pengajar p ON j.id_pengajar = p.id_pengajar
+
 WHERE j.id_murid IS NOT NULL
   AND j.tanggal >= CURDATE();
 
+
 -- [03] view_DashboardPengajar_JadwalMendatang (pengajar dashboard)
 DROP VIEW IF EXISTS `view_DashboardPengajar_JadwalMendatang`;
+
 CREATE VIEW `view_DashboardPengajar_JadwalMendatang` AS
 SELECT
   j.kode_jadwal,
+
   j.id_pengajar,
   p.nama_pengajar,
+
   j.tanggal,
-  j.jam_mulai,
-  j.jam_akhir,
+  DAYNAME(j.tanggal) AS hari,
+
+  CONCAT(
+    DATE_FORMAT(j.jam_mulai, '%H:%i'),
+    ' - ',
+    DATE_FORMAT(j.jam_akhir, '%H:%i')
+  ) AS waktu,
+
   j.id_mapel,
   mp.nama_mapel,
+
   j.id_murid,
   m.nama_murid
+
 FROM jadwal j
 JOIN pengajar p ON j.id_pengajar = p.id_pengajar
 JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
 JOIN murid m ON j.id_murid = m.id_murid
+
 WHERE j.id_murid IS NOT NULL
   AND j.tanggal >= CURDATE();
 
 -- [04] view_MataPelajaranAktif (admin)
 DROP VIEW IF EXISTS `view_MataPelajaranAktif`;
+
 CREATE VIEW `view_MataPelajaranAktif` AS
 SELECT
   id_mapel,
   nama_mapel,
-  deskripsiMapel
+  deskripsiMapel,
+  status
 FROM mata_pelajaran
 WHERE status = 1;
 
 -- [05] view_MataPelajaranNonaktif (admin)
 DROP VIEW IF EXISTS `view_MataPelajaranNonaktif`;
+
 CREATE VIEW `view_MataPelajaranNonaktif` AS
 SELECT
   id_mapel,
   nama_mapel,
-  deskripsiMapel
+  deskripsiMapel,
+  status
 FROM mata_pelajaran
 WHERE status = 0;
 
 -- [06] view_PaketLesAktif (admin)
 DROP VIEW IF EXISTS `view_PaketLesAktif`;
+
 CREATE VIEW `view_PaketLesAktif` AS
 SELECT
   id_paket,
   nama_paket,
   jml_pertemuan,
   masa_aktif_hari,
-  harga
+  harga,
+  status_dijual
 FROM katalogpaket
 WHERE status_dijual = 1;
 
+
 -- [07] view_PaketLesNonaktif (admin)
 DROP VIEW IF EXISTS `view_PaketLesNonaktif`;
+
 CREATE VIEW `view_PaketLesNonaktif` AS
 SELECT
   id_paket,
   nama_paket,
   jml_pertemuan,
   masa_aktif_hari,
-  harga
+  harga,
+  status_dijual
 FROM katalogpaket
 WHERE status_dijual = 0;
 
@@ -722,41 +763,51 @@ SELECT
   id_akun
 FROM log_sistem;
 
--- [09] view_logMurid (admin)
-DROP VIEW IF EXISTS `view_logMurid`;
-CREATE VIEW `view_logMurid` AS
-SELECT
-  l.id_log,
-  l.tanggal,
-  l.aktivitas,
-  l.id_akun,
-  m.nama_murid
-FROM log_sistem l
-JOIN murid m ON l.id_akun = m.id_murid;
+-- [09] view_LogSistem (admin)
+DROP VIEW IF EXISTS `view_LogSistem`;
 
--- [10] view_logPengajar (admin)
-DROP VIEW IF EXISTS `view_logPengajar`;
-CREATE VIEW `view_logPengajar` AS
+CREATE VIEW `view_LogSistem` AS
 SELECT
   l.id_log,
   l.tanggal,
   l.aktivitas,
   l.id_akun,
-  p.nama_pengajar
+  'Murid' AS role,
+  m.nama_murid AS nama_pengguna
 FROM log_sistem l
-JOIN pengajar p ON l.id_akun = p.id_pengajar;
+JOIN murid m ON l.id_akun = m.id_murid
 
--- [11] view_logAdmin (admin)
-DROP VIEW IF EXISTS `view_logAdmin`;
-CREATE VIEW `view_logAdmin` AS
+UNION ALL
+
 SELECT
   l.id_log,
   l.tanggal,
   l.aktivitas,
   l.id_akun,
-  a.nama_admin
+  'Pengajar' AS role,
+  p.nama_pengajar AS nama_pengguna
+FROM log_sistem l
+JOIN pengajar p ON l.id_akun = p.id_pengajar
+
+UNION ALL
+
+SELECT
+  l.id_log,
+  l.tanggal,
+  l.aktivitas,
+  l.id_akun,
+  'Admin' AS role,
+  a.nama_admin AS nama_pengguna
 FROM log_sistem l
 JOIN admin a ON l.id_akun = a.id_admin;
+
+-- Ambil semua:
+-- SELECT * FROM view_LogSistem ORDER BY tanggal DESC;
+
+-- Filter role:
+-- SELECT * FROM view_LogSistem WHERE role = 'Murid';
+-- SELECT * FROM view_LogSistem WHERE role = 'Pengajar';
+-- SELECT * FROM view_LogSistem WHERE role = 'Admin';
 
 -- --------------------------------------------------------
 -- Stored Procedures
