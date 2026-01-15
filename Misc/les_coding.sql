@@ -15,458 +15,255 @@ SET time_zone = "+00:00";
 -- Database: `les_coding`
 --
 
--- --------------------------------------------------------
+/* =========================================================
+   DATABASE SISTEM LES – FORMAT KODE BARU
+   MySQL 8.x
+   PREFIX-YYMMXXX (AKUN & TRANSAKSI)
+   PREFIX-XXXXX   (MASTER DATA)
+   ========================================================= */
 
---
--- Struktur dari tabel `admin`
---
+SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE TABLE `admin` (
-  `id_admin` varchar(10) NOT NULL,
-  `nama_admin` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL
+/* =========================================================
+   TABEL AKUN
+   ========================================================= */
+
+CREATE TABLE admin (
+  id_admin VARCHAR(20) NOT NULL,
+  nama_admin VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  status TINYINT(1) NOT NULL,
+  PRIMARY KEY (id_admin)
+) ENGINE=InnoDB;
+
+CREATE TABLE log_sistem ( 
+  id_log bigint(20) UNSIGNED NOT NULL,
+  tanggal datetime NOT NULL, aktivitas text NOT NULL, 
+  id_akun varchar(10) NOT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data untuk tabel `admin`
---
+CREATE TABLE murid (
+  id_murid VARCHAR(20) NOT NULL,
+  nama_murid VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  status TINYINT(1) NOT NULL,
+  PRIMARY KEY (id_murid)
+) ENGINE=InnoDB;
 
-INSERT INTO `admin` (`id_admin`, `nama_admin`, `password`, `email`, `status`) VALUES
-('A00001', 'Gavin Malik Setiawan', '$2y$10$3ReuY0KcUSANi6NvPpl8e.7Fj6z0iXBr5PTvaiCzJahmRqdmuqgTq', 'gavin@gavin.com', 1),
-('A001', 'Admin One', '123', 'admin1@mail.com', 1),
-('A002', 'Admin Two', '123', 'admin2@mail.com', 1);
+CREATE TABLE pengajar (
+  id_pengajar VARCHAR(20) NOT NULL,
+  nama_pengajar VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  status TINYINT(1) NOT NULL,
+  PRIMARY KEY (id_pengajar)
+) ENGINE=InnoDB;
 
---
--- Trigger `admin`
---
--- --------------------------------------------------------
+/* =========================================================
+   MASTER DATA
+   ========================================================= */
 
---
--- Struktur dari tabel `diajar`
---
+CREATE TABLE katalogpaket (
+  id_paket VARCHAR(20) NOT NULL,
+  nama_paket VARCHAR(255) NOT NULL,
+  jml_pertemuan INT NOT NULL,
+  masa_aktif_hari INT NOT NULL,
+  harga DECIMAL(12,2) NOT NULL,
+  status_dijual TINYINT(1) NOT NULL,
+  PRIMARY KEY (id_paket)
+) ENGINE=InnoDB;
 
-CREATE TABLE `diajar` (
-  `id_diajar` bigint(20) NOT NULL,
-  `id_mapel` varchar(10) NOT NULL,
-  `id_pengajar` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE mata_pelajaran (
+  id_mapel VARCHAR(20) NOT NULL,
+  nama_mapel VARCHAR(255) NOT NULL,
+  deskripsiMapel TEXT NOT NULL,
+  status TINYINT(1) NOT NULL,
+  PRIMARY KEY (id_mapel)
+) ENGINE=InnoDB;
 
---
--- Dumping data untuk tabel `diajar`
---
+/* =========================================================
+   TRANSAKSI
+   ========================================================= */
 
-INSERT INTO `diajar` (`id_diajar`, `id_mapel`, `id_pengajar`) VALUES
-(1, 'MP001', 'P001'),
-(2, 'MP002', 'P001'),
-(3, 'MP003', 'P002'),
-(4, 'MP005', 'P004');
+CREATE TABLE paketdibeli (
+  id_pembelian VARCHAR(20) NOT NULL,
+  id_murid VARCHAR(20) NOT NULL,
+  id_paket VARCHAR(20) NOT NULL,
+  tgl_pemesanan DATETIME NOT NULL,
+  tgl_pembayaran DATETIME DEFAULT NULL,
+  gambar_bukti_pembayaran TEXT DEFAULT NULL,
+  tgl_kedaluwarsa DATETIME DEFAULT NULL,
+  pertemuan_terpakai INT NOT NULL,
+  PRIMARY KEY (id_pembelian),
+  CONSTRAINT fk_paketdibeli_murid
+    FOREIGN KEY (id_murid) REFERENCES murid(id_murid),
+  CONSTRAINT fk_paketdibeli_paket
+    FOREIGN KEY (id_paket) REFERENCES katalogpaket(id_paket)
+) ENGINE=InnoDB;
 
--- --------------------------------------------------------
+CREATE TABLE jadwal (
+  kode_jadwal VARCHAR(20) NOT NULL,
+  id_mapel VARCHAR(20),
+  id_pengajar VARCHAR(20),
+  id_murid VARCHAR(20),
+  id_pembelian VARCHAR(20),
+  deskripsiMateri TEXT,
+  tanggal DATE NOT NULL,
+  jam_mulai TIME NOT NULL,
+  jam_akhir TIME NOT NULL,
+  status_kehadiran TINYINT(1),
+  PRIMARY KEY (kode_jadwal),
+  CONSTRAINT fk_jadwal_mapel
+    FOREIGN KEY (id_mapel) REFERENCES mata_pelajaran(id_mapel),
+  CONSTRAINT fk_jadwal_pengajar
+    FOREIGN KEY (id_pengajar) REFERENCES pengajar(id_pengajar),
+  CONSTRAINT fk_jadwal_murid
+    FOREIGN KEY (id_murid) REFERENCES murid(id_murid),
+  CONSTRAINT fk_jadwal_pembelian
+    FOREIGN KEY (id_pembelian) REFERENCES paketdibeli(id_pembelian)
+) ENGINE=InnoDB;
 
---
--- Struktur dari tabel `jadwal`
---
+CREATE TABLE diajar (
+  id_diajar BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id_mapel VARCHAR(20) NOT NULL,
+  id_pengajar VARCHAR(20) NOT NULL,
+  CONSTRAINT fk_diajar_mapel
+    FOREIGN KEY (id_mapel) REFERENCES mata_pelajaran(id_mapel),
+  CONSTRAINT fk_diajar_pengajar
+    FOREIGN KEY (id_pengajar) REFERENCES pengajar(id_pengajar)
+) ENGINE=InnoDB;
 
-CREATE TABLE `jadwal` (
-  `kode_jadwal` varchar(10) NOT NULL,
-  `id_mapel` varchar(10) DEFAULT NULL,
-  `id_pengajar` varchar(10) DEFAULT NULL,
-  `id_murid` varchar(10) DEFAULT NULL,
-  `id_pembelian` varchar(10) DEFAULT NULL,
-  `deskripsiMateri` text DEFAULT NULL,
-  `tanggal` date NOT NULL,
-  `jam_mulai` time NOT NULL,
-  `jam_akhir` time NOT NULL,
-  `status_kehadiran` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/* =========================================================
+   INSERT DATA – FORMAT BARU
+   ========================================================= */
 
---
--- Dumping data untuk tabel `jadwal`
---
+/* =========================================================
+   ADMIN
+   ========================================================= */
+INSERT INTO admin (id_admin, nama_admin, password, email, status) VALUES
+('A-2601001', 'Gavin Malik Setiawan', '$2y$10$3ReuY0KcUSANi6NvPpl8e.7Fj6z0iXBr5PTvaiCzJahmRqdmuqgTq', 'gavin@gavin.com', 1),
+('A-2601002', 'Admin One', '123', 'admin1@mail.com', 1),
+('A-2601003', 'Admin Two', '123', 'admin2@mail.com', 1);
 
-INSERT INTO `jadwal` (`kode_jadwal`, `id_mapel`, `id_pengajar`, `id_murid`, `id_pembelian`, `deskripsiMateri`, `tanggal`, `jam_mulai`, `jam_akhir`, `status_kehadiran`) VALUES
-('JD001', 'MP001', 'P001', 'M001', 'PB001', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '08:00:00', '09:00:00', 1),
-('JD002', 'MP001', 'P001', 'M001', 'PB001', NULL, '2026-01-13', '08:00:00', '09:00:00', 0),
-('JD003', 'MP002', 'P001', 'M002', 'PB003', NULL, '2026-01-14', '09:00:00', '10:00:00', 0),
-('JD004', 'MP002', 'P001', NULL, NULL, NULL, '2026-01-14', '10:00:00', '11:00:00', NULL),
-('JD005', 'MP003', 'P002', 'M003', 'PB006', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
-('JD006', 'MP003', 'P002', 'M003', 'PB006', NULL, '2026-01-04', '08:00:00', '09:00:00', 0),
-('JD007', 'MP005', 'P004', 'M004', 'PB014', 'Materi', '2025-12-25', '08:00:00', '09:00:00', 1),
-('JD008', 'MP005', 'P004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-25', '09:00:00', '10:00:00', NULL),
-('JD009', 'MP001', 'P001', 'M005', 'PB008', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '13:00:00', '14:00:00', 1),
-('JD010', 'MP001', 'P001', 'M006', 'PB010', NULL, '2025-12-14', '08:00:00', '09:00:00', 0),
-('JD011', 'MP002', 'P001', 'M001', 'PB001', 'Percabangan dan Perulangan', '2026-01-09', '08:00:00', '09:00:00', 1),
-('JD012', 'MP002', 'P001', 'M002', 'PB003', NULL, '2026-01-07', '08:00:00', '09:00:00', 0),
-('JD013', 'MP003', 'P002', 'M003', 'PB006', 'Form, Table, dan Layout Web', '2025-12-30', '08:00:00', '09:00:00', 1),
-('JD014', 'MP005', 'P004', 'M005', 'PB008', 'Pengenalan Database dan Tabel', '2026-01-12', '08:00:00', '09:00:00', 0),
-('JD015', 'MP001', 'P001', NULL, NULL, NULL, '2026-01-12', '10:00:00', '11:00:00', NULL),
-('JD016', 'MP001', 'P001', 'M001', 'PB001', 'Percabangan dan Perulangan', '2026-01-15', '08:00:00', '09:00:00', 0),
-('JD017', 'MP002', 'P001', 'M002', 'PB003', NULL, '2026-01-16', '08:00:00', '09:00:00', 0),
-('JD018', 'MP003', 'P002', NULL, NULL, NULL, '2026-01-17', '08:00:00', '09:00:00', NULL),
-('JD019', 'MP005', 'P004', 'M003', 'PB006', 'JOIN dan Query Lanjutan', '2026-01-14', '15:00:00', '16:00:00', 1),
-('JD020', 'MP005', 'P004', 'M005', 'PB008', 'Pengenalan Database dan Tabel', '2026-01-08', '15:00:00', '16:00:00', 0),
-('JD021', 'MP001', 'P001', 'M002', 'PB003', 'Variabel, Tipe Data, dan Operator', '2026-01-06', '08:00:00', '09:00:00', 1),
-('JD022', 'MP002', 'P001', 'M003', 'PB006', 'Sorting dan Searching', '2026-01-02', '08:00:00', '09:00:00', 1),
-('JD023', 'MP003', 'P002', 'M004', 'PB014', NULL, '2025-12-20', '08:00:00', '09:00:00', 0),
-('JD024', 'MP005', 'P004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-20', '09:00:00', '10:00:00', NULL),
-('JD025', 'MP001', 'P001', 'M005', 'PB008', 'Variabel, Tipe Data, dan Operator', '2025-12-15', '08:00:00', '09:00:00', 1),
-('JD026', 'MP002', 'P001', 'M006', 'PB010', NULL, '2025-12-15', '08:00:00', '09:00:00', 0),
-('JD027', 'MP003', 'P002', 'M001', 'PB001', 'Fungsi dan Prosedur', '2026-01-10', '08:00:00', '09:00:00', 1),
-('JD028', 'MP005', 'P004', 'M002', 'PB003', 'Pengenalan Database dan Tabel', '2026-01-05', '08:00:00', '09:00:00', 0),
-('JD029', 'MP001', 'P001', NULL, NULL, NULL, '2025-12-31', '10:00:00', '11:00:00', NULL),
-('JD030', 'MP002', 'P001', 'M003', 'PB006', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1);
+/* =========================================================
+   MURID
+   ========================================================= */
+INSERT INTO murid (id_murid, nama_murid, email, password, status) VALUES
+('M-2601001', 'Andika Saputra', 'andika.saputra@gmail.com', '123', 1),
+('M-2601002', 'Budi Hartono', 'budi.hartono@gmail.com', '123', 1),
+('M-2601003', 'Caca Ramadhani', 'caca.ramadhani@gmail.com', '123', 1),
+('M-2601004', 'Doni Kurniawan', 'doni.kurniawan@gmail.com', '123', 0),
+('M-2601005', 'Eka Puspita', 'eka.puspita@gmail.com', '123', 1),
+('M-2601006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '123', 0);
 
---
--- Trigger `jadwal`
---
+/* =========================================================
+   MATA PELAJARAN
+   ========================================================= */
+INSERT INTO mata_pelajaran (id_mapel, nama_mapel, deskripsiMapel, status) VALUES
+('MP-00001', 'Dasar Pemrograman', 'Belajar logika dasar, variabel, dan alur program', 1),
+('MP-00002', 'Web Development', 'Belajar HTML, CSS, dan dasar JavaScript', 1),
+('MP-00003', 'PHP & MySQL', 'Membangun website dinamis dengan PHP dan database MySQL', 1),
+('MP-00004', 'Java OOP', 'Belajar pemrograman berorientasi objek menggunakan Java', 0),
+('MP-00005', 'Python Programming', 'Belajar Python untuk pemula sampai menengah', 1),
+('MP-00006', 'Algoritma & Struktur Data', 'Belajar algoritma, array, stack, queue, dan sorting', 0);
 
--- --------------------------------------------------------
+/* =========================================================
+   KATALOG PAKET
+   ========================================================= */
+INSERT INTO katalogpaket (id_paket, nama_paket, jml_pertemuan, masa_aktif_hari, harga, status_dijual) VALUES
+('PK-00001', 'Paket 4x', 4, 30, 400000.00, 1),
+('PK-00002', 'Paket 8x', 8, 60, 700000.00, 1),
+('PK-00003', 'Paket 12x', 12, 90, 1000000.00, 1),
+('PK-00004', 'Paket 4x Promo', 4, 30, 300000.00, 0),
+('PK-00005', 'Paket 6x', 6, 45, 550000.00, 1),
+('PK-00006', 'Paket Lama', 10, 60, 800000.00, 0);
 
---
--- Struktur dari tabel `katalogpaket`
---
 
-CREATE TABLE `katalogpaket` (
-  `id_paket` varchar(10) NOT NULL,
-  `nama_paket` varchar(255) NOT NULL,
-  `jml_pertemuan` int(11) NOT NULL,
-  `masa_aktif_hari` int(11) NOT NULL,
-  `harga` decimal(12,2) NOT NULL,
-  `status_dijual` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/* =========================================================
+   PAKET DIBELI
+   ========================================================= */
+INSERT INTO paketdibeli (id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pembayaran, gambar_bukti_pembayaran, tgl_kedaluwarsa, pertemuan_terpakai) VALUES
+('PB-2601001', 'M-2601001', 'PK-00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2601002', 'M-2601001', 'PK-00002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-03-15 21:38:00', 0),
+('PB-2601003', 'M-2601002', 'PK-00001', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2512001', 'M-2601002', 'PK-00003', '2025-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 0),
+('PB-2601004', 'M-2601003', 'PK-00002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
+('PB-2512002', 'M-2601003', 'PK-00001', '2025-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2601005', 'M-2601004', 'PK-00005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
+('PB-2601006', 'M-2601005', 'PK-00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2601007', 'M-2601005', 'PK-00002', '2026-01-07 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-03-15 21:38:00', 0),
+('PB-2512003', 'M-2601006', 'PK-00003', '2025-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 2);
 
---
--- Dumping data untuk tabel `katalogpaket`
---
-
-INSERT INTO `katalogpaket` (`id_paket`, `nama_paket`, `jml_pertemuan`, `masa_aktif_hari`, `harga`, `status_dijual`) VALUES
-('PK001', 'Paket 4x', 4, 30, 400000.00, 1),
-('PK002', 'Paket 8x', 8, 60, 700000.00, 1),
-('PK003', 'Paket 12x', 12, 90, 1000000.00, 1),
-('PK004', 'Paket 4x Promo', 4, 30, 300000.00, 0),
-('PK005', 'Paket 6x', 6, 45, 550000.00, 1),
-('PK006', 'Paket Lama', 10, 60, 800000.00, 0);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `log_sistem`
---
-
-CREATE TABLE `log_sistem` (
-  `id_log` bigint(20) UNSIGNED NOT NULL,
-  `tanggal` datetime NOT NULL,
-  `aktivitas` text NOT NULL,
-  `id_akun` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `mata_pelajaran`
---
-
-CREATE TABLE `mata_pelajaran` (
-  `id_mapel` varchar(10) NOT NULL,
-  `nama_mapel` varchar(255) NOT NULL,
-  `deskripsiMapel` text NOT NULL,
-  `status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `mata_pelajaran`
---
-
-INSERT INTO `mata_pelajaran` (`id_mapel`, `nama_mapel`, `deskripsiMapel`, `status`) VALUES
-('MP001', 'Dasar Pemrograman', 'Belajar logika dasar, variabel, dan alur program', 1),
-('MP002', 'Web Development', 'Belajar HTML, CSS, dan dasar JavaScript', 1),
-('MP003', 'PHP & MySQL', 'Membangun website dinamis dengan PHP dan database MySQL', 1),
-('MP004', 'Java OOP', 'Belajar pemrograman berorientasi objek menggunakan Java', 0),
-('MP005', 'Python Programming', 'Belajar Python untuk pemula sampai menengah', 1),
-('MP006', 'Algoritma & Struktur Data', 'Belajar algoritma, array, stack, queue, dan sorting', 0);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `murid`
---
-
-CREATE TABLE `murid` (
-  `id_murid` varchar(10) NOT NULL,
-  `nama_murid` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `murid`
---
-
-INSERT INTO `murid` (`id_murid`, `nama_murid`, `email`, `password`, `status`) VALUES
-('M001', 'Andika Saputra', 'andika.saputra@gmail.com', '123', 1),
-('M002', 'Budi Hartono', 'budi.hartono@gmail.com', '123', 1),
-('M003', 'Caca Ramadhani', 'caca.ramadhani@gmail.com', '123', 1),
-('M004', 'Doni Kurniawan', 'doni.kurniawan@gmail.com', '123', 0),
-('M005', 'Eka Puspita', 'eka.puspita@gmail.com', '123', 1),
-('M006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '123', 0);
-
---
--- Trigger `murid`
---
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `paketdibeli`
---
-
-CREATE TABLE `paketdibeli` (
-  `id_pembelian` varchar(10) NOT NULL,
-  `id_murid` varchar(10) NOT NULL,
-  `id_paket` varchar(10) NOT NULL,
-  `tgl_pemesanan` datetime NOT NULL,
-  `tgl_pembayaran` datetime DEFAULT NULL,
-  `gambar_bukti_pembayaran` text DEFAULT NULL,
-  `tgl_kedaluwarsa` datetime DEFAULT NULL,
-  `pertemuan_terpakai` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `paketdibeli`
---
-
-INSERT INTO `paketdibeli` (`id_pembelian`, `id_murid`, `id_paket`, `tgl_pemesanan`, `tgl_pembayaran`, `gambar_bukti_pembayaran`, `tgl_kedaluwarsa`, `pertemuan_terpakai`) VALUES
-('PB001', 'M001', 'PK001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB002', 'M001', 'PK002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 0),
-('PB003', 'M002', 'PK001', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB004', 'M002', 'PK003', '2025-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-04-14 21:38:00', 0),
-('PB005', 'M003', 'PK002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
-('PB006', 'M003', 'PK001', '2025-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB007', 'M004', 'PK005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
-('PB008', 'M005', 'PK001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 4),
-('PB009', 'M005', 'PK002', '2026-01-07 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 0),
-('PB010', 'M006', 'PK003', '2025-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-04-14 21:38:00', 2),
-('PB011', 'M001', 'PK005', '2026-01-13 21:38:00', NULL, NULL, NULL, 0),
-('PB012', 'M002', 'PK005', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-28 21:38:00', 0),
-('PB013', 'M003', 'PK001', '2026-01-09 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-02-13 21:38:00', 0),
-('PB014', 'M004', 'PK002', '2025-11-15 21:38:00', '2026-01-14 21:38:00', 'bukti_20260114213800782000.jpg', '2026-03-15 21:38:00', 2),
-('PB015', 'M005', 'PK003', '2026-01-14 21:38:00', NULL, NULL, NULL, 0);
-
---
--- Trigger `paketdibeli`
---
+/* =========================================================
+   JADWAL
+   ========================================================= */
+INSERT INTO jadwal (kode_jadwal, id_mapel, id_pengajar, id_murid, id_pembelian, deskripsiMateri, tanggal, jam_mulai, jam_akhir, status_kehadiran) VALUES
+('JD-2601001', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '08:00:00', '09:00:00', 1),
+('JD-2601002', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', NULL, '2026-01-13', '08:00:00', '09:00:00', 0),
+('JD-2601003', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-14', '09:00:00', '10:00:00', 0),
+('JD-2601004', 'MP-00002', 'P-2601001', NULL, NULL, NULL, '2026-01-14', '10:00:00', '11:00:00', NULL),
+('JD-2512001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2025-12-25', '08:00:00', '09:00:00', 1),
+('JD-2601005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
+('JD-2601006', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', NULL, '2026-01-04', '08:00:00', '09:00:00', 0),
+('JD-2512002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2025-12-25', '08:00:00', '09:00:00', 1),
+('JD-2512003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-25', '09:00:00', '10:00:00', NULL),
+('JD-2601007', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '13:00:00', '14:00:00', 1),
+('JD-2512004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2025-12-14', '08:00:00', '09:00:00', 0),
+('JD-2601008', 'MP-00002', 'P-2601001', 'M-2601001', 'PB-2601001', 'Percabangan dan Perulangan', '2026-01-09', '08:00:00', '09:00:00', 1),
+('JD-2601009', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-07', '08:00:00', '09:00:00', 0),
+('JD-2512005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Form, Table, dan Layout Web', '2025-12-30', '08:00:00', '09:00:00', 1),
+('JD-2601010', 'MP-00005', 'P-2601004', 'M-2601005', 'PB-2601006', 'Pengenalan Database dan Tabel', '2026-01-12', '08:00:00', '09:00:00', 0),
+('JD-2601011', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-01-12', '10:00:00', '11:00:00', NULL),
+('JD-2601012', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', 'Percabangan dan Perulangan', '2026-01-15', '08:00:00', '09:00:00', 0),
+('JD-2601013', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-16', '08:00:00', '09:00:00', 0),
+('JD-2601014', 'MP-00003', 'P-2601002', NULL, NULL, NULL, '2026-01-17', '08:00:00', '09:00:00', NULL),
+('JD-2601015', 'MP-00005', 'P-2601004', 'M-2601003', 'PB-2512002', 'JOIN dan Query Lanjutan', '2026-01-14', '15:00:00', '16:00:00', 1),
+('JD-2601016', 'MP-00005', 'P-2601004', 'M-2601005', 'PB-2601006', 'Pengenalan Database dan Tabel', '2026-01-08', '15:00:00', '16:00:00', 0),
+('JD-2601017', 'MP-00001', 'P-2601001', 'M-2601002', 'PB-2601003', 'Variabel, Tipe Data, dan Operator', '2026-01-06', '08:00:00', '09:00:00', 1),
+('JD-2601018', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2512002', 'Sorting dan Searching', '2026-01-02', '08:00:00', '09:00:00', 1),
+('JD-2512006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2512003', NULL, '2025-12-20', '08:00:00', '09:00:00', 0),
+('JD-2512007', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-20', '09:00:00', '10:00:00', NULL),
+('JD-2512008', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2025-12-15', '08:00:00', '09:00:00', 1),
+('JD-2512009', 'MP-00002', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2025-12-15', '08:00:00', '09:00:00', 0),
+('JD-2601019', 'MP-00003', 'P-2601002', 'M-2601001', 'PB-2601001', 'Fungsi dan Prosedur', '2026-01-10', '08:00:00', '09:00:00', 1),
+('JD-2601020', 'MP-00005', 'P-2601004', 'M-2601002', 'PB-2601003', 'Pengenalan Database dan Tabel', '2026-01-05', '08:00:00', '09:00:00', 0),
+('JD-2512010', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2025-12-31', '10:00:00', '11:00:00', NULL),
+('JD-2601021', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2512002', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1);
 
 -- --------------------------------------------------------
-
---
--- Struktur dari tabel `pengajar`
---
-
-CREATE TABLE `pengajar` (
-  `id_pengajar` varchar(10) NOT NULL,
-  `nama_pengajar` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `pengajar`
---
-
-INSERT INTO `pengajar` (`id_pengajar`, `nama_pengajar`, `email`, `password`, `status`) VALUES
-('P001', 'Dr. Budi Santoso, S.Kom', 'budi.santoso@gmail.com', '123', 1),
-('P002', 'Andi Pratama, M.T.', 'andi.pratama@gmail.com', '123', 1),
-('P003', 'Citra Lestari, M.Kom', 'citra.lestari@gmail.com', '123', 0),
-('P004', 'Dewi Anggraini, S.Kom', 'dewi.anggraini@gmail.com', '123', 1);
-
+-- PENGAJAR
 -- --------------------------------------------------------
 
---
--- Struktur untuk view `view_DashboardAdmin_JadwalTerisi`
---
-DROP TABLE IF EXISTS `view_DashboardAdmin_JadwalTerisi`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_DashboardAdmin_JadwalTerisi`  AS SELECT `j`.`kode_jadwal` AS `kode_jadwal`, `j`.`id_pengajar` AS `id_pengajar`, `p`.`nama_pengajar` AS `nama_pengajar`, `mp`.`nama_mapel` AS `nama_mapel`, `j`.`id_murid` AS `id_murid`, `m`.`nama_murid` AS `nama_murid`, `j`.`deskripsiMateri` AS `deskripsiMateri`, `j`.`tanggal` AS `tanggal`, `j`.`jam_mulai` AS `jam_mulai`, `j`.`jam_akhir` AS `jam_akhir`, `j`.`status_kehadiran` AS `status_kehadiran` FROM (((`jadwal` `j` join `murid` `m` on(`j`.`id_murid` = `m`.`id_murid`)) join `pengajar` `p` on(`j`.`id_pengajar` = `p`.`id_pengajar`)) join `mata_pelajaran` `mp` on(`j`.`id_mapel` = `mp`.`id_mapel`)) WHERE `j`.`id_murid` is not null ;
-
--- --------------------------------------------------------
-
---
--- Struktur untuk view `view_DashboardMurid_JadwalMendatang`
---
-DROP TABLE IF EXISTS `view_DashboardMurid_JadwalMendatang`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_DashboardMurid_JadwalMendatang`  AS SELECT `j`.`kode_jadwal` AS `kode_jadwal`, `j`.`id_murid` AS `id_murid`, `m`.`nama_murid` AS `nama_murid`, `j`.`tanggal` AS `tanggal`, `j`.`jam_mulai` AS `jam_mulai`, `j`.`jam_akhir` AS `jam_akhir`, `j`.`id_mapel` AS `id_mapel`, `mp`.`nama_mapel` AS `nama_mapel`, `j`.`id_pengajar` AS `id_pengajar`, `p`.`nama_pengajar` AS `nama_pengajar` FROM (((`jadwal` `j` join `murid` `m` on(`j`.`id_murid` = `m`.`id_murid`)) join `mata_pelajaran` `mp` on(`j`.`id_mapel` = `mp`.`id_mapel`)) join `pengajar` `p` on(`j`.`id_pengajar` = `p`.`id_pengajar`)) WHERE `j`.`id_murid` is not null AND `j`.`tanggal` >= curdate() ;
+INSERT INTO pengajar (id_pengajar, nama_pengajar, email, password, status) VALUES
+('P-2601001', 'Pengajar Andi', 'andi.pengajar@mail.com', '123', 1),
+('P-2601002', 'Pengajar Bima', 'bima.pengajar@mail.com', '123', 1),
+('P-2601003', 'Pengajar Citra', 'citra.pengajar@mail.com', '123', 0),
+('P-2601004', 'Pengajar Dewa', 'dewa.pengajar@mail.com', '123', 1);
 
 -- --------------------------------------------------------
-
---
--- Struktur untuk view `view_DashboardPengajar_JadwalMendatang`
---
-DROP TABLE IF EXISTS `view_DashboardPengajar_JadwalMendatang`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_DashboardPengajar_JadwalMendatang`  AS SELECT `j`.`kode_jadwal` AS `kode_jadwal`, `j`.`id_pengajar` AS `id_pengajar`, `p`.`nama_pengajar` AS `nama_pengajar`, `j`.`tanggal` AS `tanggal`, `j`.`jam_mulai` AS `jam_mulai`, `j`.`jam_akhir` AS `jam_akhir`, `j`.`id_mapel` AS `id_mapel`, `mp`.`nama_mapel` AS `nama_mapel`, `j`.`id_murid` AS `id_murid`, `m`.`nama_murid` AS `nama_murid` FROM (((`jadwal` `j` join `pengajar` `p` on(`j`.`id_pengajar` = `p`.`id_pengajar`)) join `mata_pelajaran` `mp` on(`j`.`id_mapel` = `mp`.`id_mapel`)) join `murid` `m` on(`j`.`id_murid` = `m`.`id_murid`)) WHERE `j`.`id_murid` is not null AND `j`.`tanggal` >= curdate() ;
-
+-- DIAJAR
 -- --------------------------------------------------------
 
---
--- Struktur untuk view `view_logAdmin`
---
-DROP TABLE IF EXISTS `view_logAdmin`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_logAdmin`  AS SELECT `l`.`id_log` AS `id_log`, `l`.`tanggal` AS `tanggal`, `l`.`aktivitas` AS `aktivitas`, `l`.`id_akun` AS `id_akun`, `a`.`nama_admin` AS `nama_admin` FROM (`log_sistem` `l` join `admin` `a` on(`l`.`id_akun` = `a`.`id_admin`)) ;
-
--- --------------------------------------------------------
-
---
--- Struktur untuk view `view_logMurid`
---
-DROP TABLE IF EXISTS `view_logMurid`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_logMurid`  AS SELECT `l`.`id_log` AS `id_log`, `l`.`tanggal` AS `tanggal`, `l`.`aktivitas` AS `aktivitas`, `l`.`id_akun` AS `id_akun`, `m`.`nama_murid` AS `nama_murid` FROM (`log_sistem` `l` join `murid` `m` on(`l`.`id_akun` = `m`.`id_murid`)) ;
+INSERT INTO diajar (id_diajar, id_mapel, id_pengajar) VALUES
+(1, 'MP-00001', 'P-2601001'),
+(2, 'MP-00002', 'P-2601001'),
+(3, 'MP-00003', 'P-2601002'),
+(4, 'MP-00005', 'P-2601004');
 
 -- --------------------------------------------------------
-
---
--- Struktur untuk view `view_logPengajar`
---
-DROP TABLE IF EXISTS `view_logPengajar`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_logPengajar`  AS SELECT `l`.`id_log` AS `id_log`, `l`.`tanggal` AS `tanggal`, `l`.`aktivitas` AS `aktivitas`, `l`.`id_akun` AS `id_akun`, `p`.`nama_pengajar` AS `nama_pengajar` FROM (`log_sistem` `l` join `pengajar` `p` on(`l`.`id_akun` = `p`.`id_pengajar`)) ;
-
+-- LOG_SISTEM
 -- --------------------------------------------------------
 
---
--- Struktur untuk view `view_logSemua`
---
-DROP TABLE IF EXISTS `view_logSemua`;
+INSERT INTO log_sistem (id_log, tanggal, aktivitas, id_akun) VALUES
+(1, '2026-01-14 21:40:00', 'Admin menambahkan data jadwal', 'A-00001'),
+(2, '2026-01-14 21:42:00', 'Murid melakukan pembelian paket', 'M-2601001'),
+(3, '2026-01-14 21:45:00', 'Admin memverifikasi pembayaran', 'A-00001'),
+(4, '2026-01-15 08:05:00', 'Pengajar mengisi materi jadwal', 'P-2601001');
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_logSemua`  AS SELECT `log_sistem`.`id_log` AS `id_log`, `log_sistem`.`tanggal` AS `tanggal`, `log_sistem`.`aktivitas` AS `aktivitas`, `log_sistem`.`id_akun` AS `id_akun` FROM `log_sistem` ;
 
--- --------------------------------------------------------
-
---
--- Struktur untuk view `view_MataPelajaranAktif`
---
-DROP TABLE IF EXISTS `view_MataPelajaranAktif`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_MataPelajaranAktif`  AS SELECT `mata_pelajaran`.`id_mapel` AS `id_mapel`, `mata_pelajaran`.`nama_mapel` AS `nama_mapel`, `mata_pelajaran`.`deskripsiMapel` AS `deskripsiMapel` FROM `mata_pelajaran` WHERE `mata_pelajaran`.`status` = 1 ;
-
--- --------------------------------------------------------
-
---
--- Struktur untuk view `view_MataPelajaranNonaktif`
---
-DROP TABLE IF EXISTS `view_MataPelajaranNonaktif`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_MataPelajaranNonaktif`  AS SELECT `mata_pelajaran`.`id_mapel` AS `id_mapel`, `mata_pelajaran`.`nama_mapel` AS `nama_mapel`, `mata_pelajaran`.`deskripsiMapel` AS `deskripsiMapel` FROM `mata_pelajaran` WHERE `mata_pelajaran`.`status` = 0 ;
-
--- --------------------------------------------------------
-
---
--- Struktur untuk view `view_PaketLesAktif`
---
-DROP TABLE IF EXISTS `view_PaketLesAktif`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_PaketLesAktif`  AS SELECT `katalogpaket`.`id_paket` AS `id_paket`, `katalogpaket`.`nama_paket` AS `nama_paket`, `katalogpaket`.`jml_pertemuan` AS `jml_pertemuan`, `katalogpaket`.`masa_aktif_hari` AS `masa_aktif_hari`, `katalogpaket`.`harga` AS `harga` FROM `katalogpaket` WHERE `katalogpaket`.`status_dijual` = 1 ;
-
--- --------------------------------------------------------
-
---
--- Struktur untuk view `view_PaketLesNonaktif`
---
-DROP TABLE IF EXISTS `view_PaketLesNonaktif`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_PaketLesNonaktif`  AS SELECT `katalogpaket`.`id_paket` AS `id_paket`, `katalogpaket`.`nama_paket` AS `nama_paket`, `katalogpaket`.`jml_pertemuan` AS `jml_pertemuan`, `katalogpaket`.`masa_aktif_hari` AS `masa_aktif_hari`, `katalogpaket`.`harga` AS `harga` FROM `katalogpaket` WHERE `katalogpaket`.`status_dijual` = 0 ;
-
---
--- Indexes for dumped tables
---
-
---
--- Indeks untuk tabel `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id_admin`);
-
---
--- Indeks untuk tabel `diajar`
---
-ALTER TABLE `diajar`
-  ADD PRIMARY KEY (`id_diajar`),
-  ADD KEY `diajar_id_pengajar_foreign` (`id_pengajar`),
-  ADD KEY `diajar_id_mapel_foreign` (`id_mapel`) USING BTREE;
-
---
--- Indeks untuk tabel `jadwal`
---
-ALTER TABLE `jadwal`
-  ADD PRIMARY KEY (`kode_jadwal`),
-  ADD KEY `jadwal_id_mapel_index` (`id_mapel`),
-  ADD KEY `jadwal_id_murid_index` (`id_murid`),
-  ADD KEY `fk_jadwal_paketdibeli` (`id_pembelian`),
-  ADD KEY `idx_jadwal_pengajar` (`id_pengajar`);
-
---
--- Indeks untuk tabel `katalogpaket`
---
-ALTER TABLE `katalogpaket`
-  ADD PRIMARY KEY (`id_paket`);
-
---
--- Indeks untuk tabel `log_sistem`
---
-ALTER TABLE `log_sistem`
-  ADD PRIMARY KEY (`id_log`);
-
---
--- Indeks untuk tabel `mata_pelajaran`
---
-ALTER TABLE `mata_pelajaran`
-  ADD PRIMARY KEY (`id_mapel`);
-
---
--- Indeks untuk tabel `murid`
---
-ALTER TABLE `murid`
-  ADD PRIMARY KEY (`id_murid`);
-
---
--- Indeks untuk tabel `paketdibeli`
---
-ALTER TABLE `paketdibeli`
-  ADD PRIMARY KEY (`id_pembelian`),
-  ADD KEY `paketdibeli_id_murid_index` (`id_murid`),
-  ADD KEY `paketdibeli_id_paket_index` (`id_paket`);
-
---
--- Indeks untuk tabel `pengajar`
---
-ALTER TABLE `pengajar`
-  ADD PRIMARY KEY (`id_pengajar`);
-
---
--- AUTO_INCREMENT untuk tabel yang dibuang
---
-
---
--- AUTO_INCREMENT untuk tabel `diajar`
---
-ALTER TABLE `diajar`
-  MODIFY `id_diajar` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT untuk tabel `log_sistem`
---
-ALTER TABLE `log_sistem`
-  MODIFY `id_log` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- --------------------------------------------------------
 -- Functions
@@ -686,29 +483,6 @@ RETURN (
 )$$
 DELIMITER ;
 
---
--- Ketidakleluasaan untuk tabel `diajar`
---
-ALTER TABLE `diajar`
-  ADD CONSTRAINT `diajar_id_mapel_foreign` FOREIGN KEY (`id_mapel`) REFERENCES `mata_pelajaran` (`id_mapel`),
-  ADD CONSTRAINT `diajar_id_pengajar_foreign` FOREIGN KEY (`id_pengajar`) REFERENCES `pengajar` (`id_pengajar`);
-
---
--- Ketidakleluasaan untuk tabel `jadwal`
---
-ALTER TABLE `jadwal`
-  ADD CONSTRAINT `fk_jadwal_paketdibeli` FOREIGN KEY (`id_pembelian`) REFERENCES `paketdibeli` (`id_pembelian`),
-  ADD CONSTRAINT `fk_jadwal_pengajar` FOREIGN KEY (`id_pengajar`) REFERENCES `pengajar` (`id_pengajar`),
-  ADD CONSTRAINT `jadwal_id_mapel_foreign` FOREIGN KEY (`id_mapel`) REFERENCES `mata_pelajaran` (`id_mapel`),
-  ADD CONSTRAINT `jadwal_id_murid_foreign` FOREIGN KEY (`id_murid`) REFERENCES `murid` (`id_murid`);
-
---
--- Ketidakleluasaan untuk tabel `paketdibeli`
---
-ALTER TABLE `paketdibeli`
-  ADD CONSTRAINT `paketdibeli_id_murid_foreign` FOREIGN KEY (`id_murid`) REFERENCES `murid` (`id_murid`),
-  ADD CONSTRAINT `paketdibeli_id_paket_foreign` FOREIGN KEY (`id_paket`) REFERENCES `katalogpaket` (`id_paket`);
-COMMIT;
 
 -- --------------------------------------------------------
 -- Views
@@ -930,7 +704,10 @@ CREATE PROCEDURE SP_TambahAkun(
 )
 BEGIN
   DECLARE v_last_id INT;
-  DECLARE v_new_id VARCHAR(10);
+  DECLARE v_new_id VARCHAR(20);
+  DECLARE v_ym VARCHAR(4);
+
+  SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
 
   -- Cek email sudah ada atau belum (global)
   IF EXISTS (
@@ -947,11 +724,14 @@ BEGIN
   -- ROLE: MURID
   IF LOWER(p_role) = 'murid' THEN
 
-    SELECT IFNULL(MAX(CAST(SUBSTRING(id_murid, 2) AS UNSIGNED)), 0)
+    SELECT IFNULL(
+      MAX(CAST(RIGHT(id_murid, 3) AS UNSIGNED)), 0
+    )
     INTO v_last_id
-    FROM murid;
+    FROM murid
+    WHERE id_murid LIKE CONCAT('M-', v_ym, '%');
 
-    SET v_new_id = CONCAT('M', LPAD(v_last_id + 1, 5, '0'));
+    SET v_new_id = CONCAT('M-', v_ym, LPAD(v_last_id + 1, 3, '0'));
 
     INSERT INTO murid (id_murid, nama_murid, email, password, status)
     VALUES (v_new_id, p_nama, p_email, p_password, 1);
@@ -959,11 +739,14 @@ BEGIN
   -- ROLE: PENGAJAR
   ELSEIF LOWER(p_role) = 'pengajar' THEN
 
-    SELECT IFNULL(MAX(CAST(SUBSTRING(id_pengajar, 2) AS UNSIGNED)), 0)
+    SELECT IFNULL(
+      MAX(CAST(RIGHT(id_pengajar, 3) AS UNSIGNED)), 0
+    )
     INTO v_last_id
-    FROM pengajar;
+    FROM pengajar
+    WHERE id_pengajar LIKE CONCAT('P-', v_ym, '%');
 
-    SET v_new_id = CONCAT('P', LPAD(v_last_id + 1, 5, '0'));
+    SET v_new_id = CONCAT('P-', v_ym, LPAD(v_last_id + 1, 3, '0'));
 
     INSERT INTO pengajar (id_pengajar, nama_pengajar, email, password, status)
     VALUES (v_new_id, p_nama, p_email, p_password, 1);
@@ -971,11 +754,14 @@ BEGIN
   -- ROLE: ADMIN
   ELSEIF LOWER(p_role) = 'admin' THEN
 
-    SELECT IFNULL(MAX(CAST(SUBSTRING(id_admin, 2) AS UNSIGNED)), 0)
+    SELECT IFNULL(
+      MAX(CAST(RIGHT(id_admin, 3) AS UNSIGNED)), 0
+    )
     INTO v_last_id
-    FROM admin;
+    FROM admin
+    WHERE id_admin LIKE CONCAT('A-', v_ym, '%');
 
-    SET v_new_id = CONCAT('A', LPAD(v_last_id + 1, 5, '0'));
+    SET v_new_id = CONCAT('A-', v_ym, LPAD(v_last_id + 1, 3, '0'));
 
     INSERT INTO admin (id_admin, nama_admin, password, email, status)
     VALUES (v_new_id, p_nama, p_password, p_email, 1);
@@ -994,7 +780,7 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS SP_EditAkun$$
 CREATE PROCEDURE SP_EditAkun(
   IN p_role VARCHAR(20),
-  IN p_id VARCHAR(10),
+  IN p_id VARCHAR(20),
   IN p_nama VARCHAR(255),
   IN p_email VARCHAR(255)
 )
@@ -1129,7 +915,7 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS SP_UbahStatusAkun$$
 CREATE PROCEDURE SP_UbahStatusAkun(
   IN p_role VARCHAR(20),
-  IN p_id VARCHAR(10),
+  IN p_id VARCHAR(20),
   IN p_status TINYINT(1)
 )
 BEGIN
