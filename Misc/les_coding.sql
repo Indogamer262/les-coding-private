@@ -186,19 +186,10 @@ INSERT INTO murid (id_murid, nama_murid, email, password, status) VALUES
 ('M-2601003', 'Caca Ramadhani', 'caca.ramadhani@gmail.com', '123', 1),
 ('M-2601004', 'Doni Kurniawan', 'doni.kurniawan@gmail.com', '123', 0),
 ('M-2601005', 'Eka Puspita', 'eka.puspita@gmail.com', '123', 1),
-('M-2601006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '123', 0);
-
-INSERT INTO murid (id_murid, nama_murid, email, password, status) VALUES
--- Murid belum pernah beli paket sama sekali
+('M-2601006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '123', 0),
 ('M-2601007', 'Gilang Pratama', 'gilang@gmail.com', '123', 1),
-
--- Murid punya paket tapi SUDAH KEDALUWARSA
 ('M-2601008', 'Hendra Wijaya', 'hendra@gmail.com', '123', 1),
-
--- Murid punya paket LUNAS tapi kuota = 0
 ('M-2601009', 'Intan Permata', 'intan@gmail.com', '123', 1),
-
--- Murid punya paket tapi BELUM LUNAS
 ('M-2601010', 'Joko Santoso', 'joko@gmail.com', '123', 1);
 
 /* =========================================================
@@ -227,7 +218,9 @@ INSERT INTO katalogpaket (id_paket, nama_paket, jml_pertemuan, masa_aktif_hari, 
 /* =========================================================
    PAKET DIBELI
    ========================================================= */
-INSERT INTO paketdibeli (id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pembayaran, gambar_bukti_pembayaran, tgl_kedaluwarsa, pertemuan_terpakai) VALUES
+INSERT INTO paketdibeli
+(id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pembayaran, gambar_bukti_pembayaran, tgl_kedaluwarsa, pertemuan_terpakai)
+VALUES
 ('PB-2601001', 'M-2601001', 'PK-00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
 ('PB-2601002', 'M-2601001', 'PK-00002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-03-15 21:38:00', 0),
 ('PB-2601003', 'M-2601002', 'PK-00001', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
@@ -237,70 +230,22 @@ INSERT INTO paketdibeli (id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pe
 ('PB-2601005', 'M-2601004', 'PK-00005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
 ('PB-2601006', 'M-2601005', 'PK-00001', '2026-01-14 21:38:00', NULL, 'bukti.jpg', '2026-02-13 21:38:00', 4),
 ('PB-2601007', 'M-2601005', 'PK-00002', '2026-01-07 21:38:00', NULL, 'bukti.jpg', '2026-03-15 21:38:00', 0),
-('PB-2612003', 'M-2601006', 'PK-00003', '2026-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 2);
+('PB-2612003', 'M-2601006', 'PK-00003', '2026-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 2),
+('PB-2601011', 'M-2601002', 'PK-00002', DATE_SUB(NOW(), INTERVAL 5 DAY), NOW(), 'bukti.jpg', DATE_ADD(NOW(), INTERVAL 40 DAY), 2),
+('PB-2601012', 'M-2601009', 'PK-00001', DATE_SUB(NOW(), INTERVAL 10 DAY), NOW(), 'bukti.jpg', DATE_ADD(NOW(), INTERVAL 20 DAY), 4),
+('PB-2601013', 'M-2601008', 'PK-00002', DATE_SUB(NOW(), INTERVAL 100 DAY), NOW(), 'bukti.jpg', DATE_SUB(NOW(), INTERVAL 10 DAY), 3),
+('PB-2601014', 'M-2601010', 'PK-00003', NOW(), NULL, NULL, NULL, 0),
+('PB-2601015', 'M-2601005', 'PK-00002', DATE_SUB(NOW(), INTERVAL 2 DAY), NULL, 'bukti_pending.jpg', NULL, 0),
 
--- =========================================================
--- TAMBAHAN DATA KHUSUS UNTUK NUTUP SEMUA SKENARIO
--- =========================================================
+-- DATA KHUSUS UNTUK TESTING RIWAYAT MURID (M-2601007)
+-- MENUNGGU_PEMBAYARAN
+('PB-2602001', 'M-2601007', 'PK-00001', DATE_SUB(NOW(), INTERVAL 1 DAY), NULL, NULL, NULL, 0),
 
-INSERT INTO paketdibeli 
-(id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pembayaran, gambar_bukti_pembayaran, tgl_kedaluwarsa, pertemuan_terpakai) 
-VALUES
+-- MENUNGGU_VERIFIKASI
+('PB-2602002', 'M-2601007', 'PK-00002', DATE_SUB(NOW(), INTERVAL 3 DAY), NULL, 'bukti_pending_2601007.jpg', NULL, 0),
 
--- =========================================================
--- LUNAS + AKTIF + ADA SISA
--- Murid: M-2601002 (contoh tambahan paket kedua yang masih ada sisa)
--- =========================================================
-('PB-EDGE-001', 'M-2601002', 'PK-00002',
- DATE_SUB(NOW(), INTERVAL 5 DAY),
- NOW(),
- 'bukti.jpg',
- DATE_ADD(NOW(), INTERVAL 40 DAY),
- 2), -- jml 8, terpakai 2 => sisa masih ada
-
--- =========================================================
--- LUNAS + AKTIF + SISA = 0
--- Murid: M-2601009 (khusus skenario kuota habis)
--- =========================================================
-('PB-2601012', 'M-2601009', 'PK-00001',
- DATE_SUB(NOW(), INTERVAL 10 DAY),
- NOW(),
- 'bukti.jpg',
- DATE_ADD(NOW(), INTERVAL 20 DAY),
- 4), -- paket 4x, terpakai 4 => HABIS
-
--- =========================================================
--- LUNAS + KEDALUWARSA
--- Murid: M-2601008
--- =========================================================
-('PB-2601013', 'M-2601008', 'PK-00002',
- DATE_SUB(NOW(), INTERVAL 100 DAY),
- NOW(),
- 'bukti.jpg',
- DATE_SUB(NOW(), INTERVAL 10 DAY),
- 3),
-
--- =========================================================
--- BELUM BAYAR + BELUM UPLOAD BUKTI
--- Murid: M-2601010
--- =========================================================
-('PB-2601014', 'M-2601010', 'PK-00003',
- NOW(),
- NULL,
- NULL,
- NULL,
- 0),
-
--- =========================================================
--- BELUM BAYAR + SUDAH UPLOAD BUKTI
--- Murid: M-2601005 (tambah paket kedua)
--- =========================================================
-('PB-2601015', 'M-2601005', 'PK-00002',
- DATE_SUB(NOW(), INTERVAL 2 DAY),
- NULL,
- 'bukti_pending.jpg',
- NULL,
- 0);
+-- LUNAS
+('PB-2602003', 'M-2601007', 'PK-00003', DATE_SUB(NOW(), INTERVAL 10 DAY), NOW(), 'bukti.jpg', DATE_ADD(NOW(), INTERVAL 80 DAY), 1);
 
 /* =========================================================
    JADWAL
@@ -1500,71 +1445,26 @@ DELIMITER $$
 CREATE PROCEDURE SP_ListPertemuanTerpakai(IN p_id VARCHAR(20))
 BEGIN
   SELECT
-    ROW_NUMBER() OVER (ORDER BY j.tgl_jadwal, j.jam_mulai) AS ke,
+    ROW_NUMBER() OVER (ORDER BY j.tanggal, j.jam_mulai) AS `Ke-`,
+    DATE_FORMAT(j.tanggal, '%d %b %Y') AS `Tanggal`,
     CONCAT(
-      DATE_FORMAT(j.tgl_jadwal, '%d %b %Y'),
-      ' ',
       TIME_FORMAT(j.jam_mulai, '%H:%i'),
       ' - ',
-      TIME_FORMAT(j.jam_selesai, '%H:%i')
-    ) AS tanggal_waktu,
-    g.nama_pengajar,
-    mp.nama_mapel,
-    j.materi
+      TIME_FORMAT(j.jam_akhir, '%H:%i')
+    ) AS `Waktu`,
+    g.nama_pengajar AS `Pengajar`,
+    mp.nama_mapel AS `Mata Pelajaran`,
+    j.deskripsiMateri AS `Materi`
   FROM jadwal j
   JOIN pengajar g ON j.id_pengajar = g.id_pengajar
   JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
   WHERE j.id_pembelian = p_id
-  ORDER BY j.tgl_jadwal, j.jam_mulai;
+    AND j.status_kehadiran = 1
+  ORDER BY j.tanggal, j.jam_mulai;
 END$$
 
 DELIMITER ;
 
--- [17] SP_LihatJadwal_Admin (admin)
--- Menampilkan jadwal sesuai tampilan tabel UI (JOIN + filter)
-DELIMITER $$
-
-DROP PROCEDURE IF EXISTS `SP_LihatJadwal_Admin`$$
-CREATE PROCEDURE `SP_LihatJadwal_Admin`(
-  IN p_periode VARCHAR(20),
-  IN p_status VARCHAR(20),
-  IN p_urut VARCHAR(20)
-)
-BEGIN
-  SELECT
-    j.kode_jadwal,
-    j.tanggal,
-    DAYNAME(j.tanggal) AS hari,
-    j.jam_mulai,
-    j.jam_akhir,
-    mp.nama_mapel,
-    pg.nama_pengajar,
-    m.nama_murid
-  FROM jadwal j
-  LEFT JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
-  LEFT JOIN pengajar pg ON j.id_pengajar = pg.id_pengajar
-  LEFT JOIN murid m ON j.id_murid = m.id_murid
-  WHERE
-    (
-      UPPER(p_periode) = 'SEMUA'
-      OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
-      OR (UPPER(p_periode) = 'MINGGU_INI' AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
-      OR (UPPER(p_periode) = 'BULAN_INI'
-          AND MONTH(j.tanggal) = MONTH(CURDATE())
-          AND YEAR(j.tanggal) = YEAR(CURDATE()))
-    )
-    AND
-    (
-      UPPER(p_status) = 'SEMUA'
-      OR (UPPER(p_status) = 'TERISI' AND j.id_murid IS NOT NULL)
-      OR (UPPER(p_status) = 'KOSONG' AND j.id_murid IS NULL)
-    )
-  ORDER BY
-    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN j.tanggal END DESC,
-    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN j.tanggal END ASC;
-END$$
-
-DELIMITER ;
 
 -- [18] SP_TambahJadwal_Admin (admin)
 -- Digunakan pada form "Buat Jadwal Baru"
@@ -1660,6 +1560,52 @@ CREATE PROCEDURE `SP_HapusJadwal_Admin`(
 BEGIN
   DELETE FROM jadwal
   WHERE kode_jadwal = p_kode_jadwal;
+END$$
+
+DELIMITER ;
+
+-- [17] SP_LihatJadwal_Admin (admin)
+-- Menampilkan jadwal sesuai tampilan tabel UI (JOIN + filter)
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_LihatJadwal_Admin`$$
+CREATE PROCEDURE `SP_LihatJadwal_Admin`(
+  IN p_periode VARCHAR(20),
+  IN p_status VARCHAR(20),
+  IN p_urut VARCHAR(20)
+)
+BEGIN
+  SELECT
+    j.kode_jadwal,
+    j.tanggal,
+    DAYNAME(j.tanggal) AS hari,
+    j.jam_mulai,
+    j.jam_akhir,
+    mp.nama_mapel,
+    pg.nama_pengajar,
+    m.nama_murid
+  FROM jadwal j
+  LEFT JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
+  LEFT JOIN pengajar pg ON j.id_pengajar = pg.id_pengajar
+  LEFT JOIN murid m ON j.id_murid = m.id_murid
+  WHERE
+    (
+      UPPER(p_periode) = 'SEMUA'
+      OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
+      OR (UPPER(p_periode) = 'MINGGU_INI' AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
+      OR (UPPER(p_periode) = 'BULAN_INI'
+          AND MONTH(j.tanggal) = MONTH(CURDATE())
+          AND YEAR(j.tanggal) = YEAR(CURDATE()))
+    )
+    AND
+    (
+      UPPER(p_status) = 'SEMUA'
+      OR (UPPER(p_status) = 'TERISI' AND j.id_murid IS NOT NULL)
+      OR (UPPER(p_status) = 'KOSONG' AND j.id_murid IS NULL)
+    )
+  ORDER BY
+    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN j.tanggal END DESC,
+    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN j.tanggal END ASC;
 END$$
 
 DELIMITER ;
@@ -1861,57 +1807,63 @@ DELIMITER ;
 -- Membuat data pembelian paket (belum dibayar) Saat klik “Beli Paket”
 DROP PROCEDURE IF EXISTS SP_BeliPaket;
 DELIMITER $$
+
 CREATE PROCEDURE SP_BeliPaket(
-IN p_id_murid VARCHAR(20),
-IN p_id_paket VARCHAR(20)
+  IN p_id_murid VARCHAR(20),
+  IN p_id_paket VARCHAR(20)
 )
 BEGIN
-DECLARE v_last INT;
-DECLARE v_id VARCHAR(20);
+  DECLARE v_prefix VARCHAR(10);
+  DECLARE v_last INT DEFAULT 0;
+  DECLARE v_id VARCHAR(20);
 
-IF EXISTS (
-SELECT 1
-FROM paketdibeli
-WHERE id_murid = p_id_murid
-AND id_paket = p_id_paket
-AND tgl_pembayaran IS NOT NULL
-AND tgl_kedaluwarsa >= CURDATE()
-) THEN
-SIGNAL SQLSTATE '45000'
-SET MESSAGE_TEXT = 'Anda masih punya paket aktif yang sama';
-END IF;
+  IF EXISTS (
+    SELECT 1
+    FROM paketdibeli
+    WHERE id_murid = p_id_murid
+      AND id_paket = p_id_paket
+      AND tgl_pembayaran IS NOT NULL
+      AND tgl_kedaluwarsa >= CURDATE()
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Anda masih punya paket aktif yang sama';
+  END IF;
 
-SELECT IFNULL(MAX(CAST(RIGHT(id_pembelian,5) AS UNSIGNED)), 0)
-INTO v_last
-FROM paketdibeli
-WHERE id_pembelian LIKE 'PB-%';
+  SET v_prefix = CONCAT('PB-', DATE_FORMAT(NOW(), '%y%m'));
 
-SET v_id = CONCAT('PB-', LPAD(v_last + 1, 5, '0'));
+  SELECT IFNULL(
+           MAX(CAST(RIGHT(id_pembelian, 3) AS UNSIGNED)),
+           0
+         )
+  INTO v_last
+  FROM paketdibeli
+  WHERE id_pembelian LIKE CONCAT(v_prefix, '%');
 
-INSERT INTO paketdibeli (
-id_pembelian,
-id_murid,
-id_paket,
-tgl_pemesanan,
-pertemuan_terpakai,
-tgl_pembayaran,
-tgl_kedaluwarsa,
-gambar_bukti_pembayaran
-)
-VALUES (
-v_id,
-p_id_murid,
-p_id_paket,
-NOW(),
-0,
-NULL,
-NULL,
-NULL
-);
+  SET v_id = CONCAT(v_prefix, LPAD(v_last + 1, 3, '0'));
+
+  INSERT INTO paketdibeli (
+    id_pembelian,
+    id_murid,
+    id_paket,
+    tgl_pemesanan,
+    pertemuan_terpakai,
+    tgl_pembayaran,
+    tgl_kedaluwarsa,
+    gambar_bukti_pembayaran
+  )
+  VALUES (
+    v_id,
+    p_id_murid,
+    p_id_paket,
+    NOW(),
+    0,
+    NULL,
+    NULL,
+    NULL
+  );
 END$$
+
 DELIMITER ;
-
-
 
 -- [28] SP_UploadBuktiPembayaran (murid)
 -- Upload bukti pembayaran, hanya jika belum lunas
