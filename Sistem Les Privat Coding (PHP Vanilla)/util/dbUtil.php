@@ -24,15 +24,19 @@
                 throw new Exception($conn->connect_error);
             }
 
+            // Set Indonesian day/month names for this session
+            $conn->query("SET lc_time_names = 'id_ID'");
+
             // execute non-reading query
             if ($conn->query($query) === TRUE) {
+                $conn->close();
                 return "success";
             }
             else {
-                return "Error: " . $query . "<br>" . $conn->error;
+                $error = "Error: " . $query . "<br>" . $conn->error;
+                $conn->close();
+                return $error;
             }
-
-            $conn->close();
         }
         
         // reading type
@@ -45,17 +49,28 @@
                 throw new Exception($conn->connect_error);
             }
 
+            // Set Indonesian day/month names for this session
+            $conn->query("SET lc_time_names = 'id_ID'");
+
             // execute reading query
             $result = $conn->query($query);
 
+            if ($result === FALSE) {
+                $error = $conn->error;
+                $conn->close();
+                throw new Exception($error);
+            }
+
             if ($result->num_rows > 0) {
                 // return data of each row
-                return $result->fetch_all(MYSQLI_ASSOC);
+                $rows = $result->fetch_all(MYSQLI_ASSOC);
+                $conn->close();
+                return $rows;
             }
             else {
+                $conn->close();
                 return [];
             }
-            $conn->close();
         }
 
         // reading single value
