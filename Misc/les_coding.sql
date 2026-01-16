@@ -861,8 +861,8 @@ JOIN admin a ON l.id_akun = a.id_admin;
 -- [01] SP_TambahAkun (admin)
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS SP_TambahAkun$$
-CREATE PROCEDURE SP_TambahAkun(
+DROP PROCEDURE IF EXISTS `SP_TambahAkun`$$
+CREATE PROCEDURE `SP_TambahAkun`(
   IN p_role VARCHAR(20),
   IN p_nama VARCHAR(255),
   IN p_email VARCHAR(255),
@@ -1136,33 +1136,40 @@ DELIMITER ;
 
 -- [05] SP_TambahPaketLes (admin)
 DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_TambahPaketLes`$$
-CREATE PROCEDURE `SP_TambahPaketLes`(
-  IN p_id VARCHAR(20),
-  IN p_nama VARCHAR(255),
-  IN p_jml INT,
-  IN p_masa INT,
-  IN p_harga DECIMAL(12,2),
-  IN p_status TINYINT(1)
+
+DROP PROCEDURE IF EXISTS SP_TambahPaketLes$$
+CREATE PROCEDURE SP_TambahPaketLes(
+IN p_nama VARCHAR(255),
+IN p_jml INT,
+IN p_masa INT,
+IN p_harga DECIMAL(12,2),
+IN p_status TINYINT(1)
 )
 BEGIN
-  INSERT INTO katalogpaket (
-    id_paket,
-    nama_paket,
-    jml_pertemuan,
-    masa_aktif_hari,
-    harga,
-    status_dijual
-  )
-  VALUES (
-    p_id,
-    p_nama,
-    p_jml,
-    p_masa,
-    p_harga,
-    p_status
-  );
+DECLARE v_last INT;
+DECLARE v_id VARCHAR(20);
+DECLARE v_ym VARCHAR(4);
+
+IF EXISTS (SELECT 1 FROM katalogpaket WHERE nama_paket = p_nama) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Nama paket sudah ada';
+END IF;
+
+SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
+
+SELECT IFNULL(MAX(CAST(RIGHT(id_paket,3) AS UNSIGNED)),0)
+INTO v_last
+FROM katalogpaket
+WHERE id_paket LIKE CONCAT('PK-', v_ym, '%');
+
+SET v_id = CONCAT('PK-', v_ym, LPAD(v_last+1,3,'0'));
+
+INSERT INTO katalogpaket
+(id_paket, nama_paket, jml_pertemuan, masa_aktif_hari, harga, status_dijual)
+VALUES
+(v_id, p_nama, p_jml, p_masa, p_harga, p_status);
 END$$
+
 DELIMITER ;
 
 
@@ -1204,66 +1211,38 @@ DELIMITER ;
 
 -- [08] SP_TambahMapel (admin)
 DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_TambahMapel`$$
-CREATE PROCEDURE `SP_TambahMapel`(
-  IN p_id VARCHAR(20),
-  IN p_nama VARCHAR(255),
-  IN p_desc TEXT,
-  IN p_status TINYINT(1)
+
+DROP PROCEDURE IF EXISTS SP_TambahMapel$$
+CREATE PROCEDURE SP_TambahMapel(
+IN p_nama VARCHAR(255),
+IN p_desc TEXT,
+IN p_status TINYINT(1)
 )
 BEGIN
-  IF EXISTS(SELECT 1 FROM mata_pelajaran WHERE nama_mapel = p_nama) THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Nama mata pelajaran sudah ada';
-  END IF;
+DECLARE v_last INT;
+DECLARE v_id VARCHAR(20);
+DECLARE v_ym VARCHAR(4);
 
-  INSERT INTO mata_pelajaran (
-    id_mapel,
-    nama_mapel,
-    deskripsiMapel,
-    status
-  )
-  VALUES (
-    p_id,
-    p_nama,
-    p_desc,
-    p_status
-  );
+IF EXISTS (SELECT 1 FROM mata_pelajaran WHERE nama_mapel = p_nama) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Nama mata pelajaran sudah ada';
+END IF;
+
+SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
+
+SELECT IFNULL(MAX(CAST(RIGHT(id_mapel,3) AS UNSIGNED)),0)
+INTO v_last
+FROM mata_pelajaran
+WHERE id_mapel LIKE CONCAT('MP-', v_ym, '%');
+
+SET v_id = CONCAT('MP-', v_ym, LPAD(v_last+1,3,'0'));
+
+INSERT INTO mata_pelajaran
+(id_mapel, nama_mapel, deskripsiMapel, status)
+VALUES
+(v_id, p_nama, p_desc, p_status);
 END$$
-DELIMITER ;
 
--- [08A] SP_TambahDiajar (admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_TambahDiajar`$$
-CREATE PROCEDURE `SP_TambahDiajar`(
-  IN p_id_mapel VARCHAR(20),
-  IN p_id_pengajar VARCHAR(20)
-)
-BEGIN
-  IF EXISTS(
-    SELECT 1 FROM diajar WHERE id_mapel = p_id_mapel AND id_pengajar = p_id_pengajar
-  ) THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Relasi diajar sudah ada';
-  END IF;
-
-  INSERT INTO diajar (id_mapel, id_pengajar)
-  VALUES (p_id_mapel, p_id_pengajar);
-END$$
-DELIMITER ;
-
--- [08B] SP_HapusDiajar (admin)
-DROP PROCEDURE IF EXISTS `SP_HapusDiajar`$$
-DELIMITER $$
-CREATE PROCEDURE `SP_HapusDiajar`(
-  IN p_id_mapel VARCHAR(20),
-  IN p_id_pengajar VARCHAR(20)
-)
-BEGIN
-  DELETE FROM diajar 
-  WHERE id_mapel = p_id_mapel 
-    AND id_pengajar = p_id_pengajar;
-END$$
 DELIMITER ;
 
 -- [09] SP_EditMapel (admin)
@@ -1298,6 +1277,46 @@ BEGIN
   WHERE id_mapel = p_id;
 END$$
 DELIMITER ;
+
+-- [08A] SP_TambahDiajar (admin)
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS SP_TambahDiajar$$
+CREATE PROCEDURE SP_TambahDiajar(
+IN p_id_mapel VARCHAR(20),
+IN p_id_pengajar VARCHAR(20)
+)
+BEGIN
+IF EXISTS (
+SELECT 1 FROM diajar
+WHERE id_mapel = p_id_mapel
+AND id_pengajar = p_id_pengajar
+) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Relasi diajar sudah ada';
+END IF;
+
+INSERT INTO diajar (id_mapel, id_pengajar)
+VALUES (p_id_mapel, p_id_pengajar);
+END$$
+
+DELIMITER ;
+
+-- [08B] SP_HapusDiajar (admin)
+DROP PROCEDURE IF EXISTS `SP_HapusDiajar`$$
+DELIMITER $$
+CREATE PROCEDURE `SP_HapusDiajar`(
+  IN p_id_mapel VARCHAR(20),
+  IN p_id_pengajar VARCHAR(20)
+)
+BEGIN
+  DELETE FROM diajar 
+  WHERE id_mapel = p_id_mapel 
+    AND id_pengajar = p_id_pengajar;
+END$$
+DELIMITER ;
+
+
 
 -- [11] SP_LihatPembelianPaket (admin)
 DROP PROCEDURE IF EXISTS SP_LihatPembelianPaket;
@@ -1560,69 +1579,59 @@ DELIMITER ;
 -- Digunakan pada form "Buat Jadwal Baru"
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS `SP_TambahJadwal_Admin`$$
-CREATE PROCEDURE `SP_TambahJadwal_Admin`(
-  IN p_kode_jadwal VARCHAR(20),
-  IN p_id_mapel VARCHAR(20),
-  IN p_id_pengajar VARCHAR(20),
-  IN p_tanggal DATE,
-  IN p_jam_mulai TIME,
-  IN p_jam_akhir TIME
+DROP PROCEDURE IF EXISTS SP_TambahJadwal_Admin$$
+CREATE PROCEDURE SP_TambahJadwal_Admin(
+IN p_id_mapel VARCHAR(20),
+IN p_id_pengajar VARCHAR(20),
+IN p_tanggal DATE,
+IN p_jam_mulai TIME,
+IN p_jam_akhir TIME
 )
 BEGIN
-  -- Validasi jam
-  IF p_jam_akhir <= p_jam_mulai THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Jam selesai harus lebih besar dari jam mulai';
-  END IF;
+DECLARE v_last INT;
+DECLARE v_kode VARCHAR(20);
+DECLARE v_ym VARCHAR(4);
 
-  -- Validasi pengajar boleh mengajar mapel
-  IF NOT EXISTS (
-    SELECT 1 FROM diajar
-    WHERE id_pengajar = p_id_pengajar
-      AND id_mapel = p_id_mapel
-  ) THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Pengajar tidak mengajar mapel ini';
-  END IF;
+IF p_jam_akhir <= p_jam_mulai THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Jam selesai harus lebih besar dari jam mulai';
+END IF;
 
-  -- Validasi bentrok jadwal pengajar
-  IF EXISTS (
-    SELECT 1
-    FROM jadwal
-    WHERE id_pengajar = p_id_pengajar
-      AND tanggal = p_tanggal
-      AND p_jam_mulai < jam_akhir
-      AND p_jam_akhir > jam_mulai
-  ) THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Pengajar sudah memiliki jadwal pada waktu tersebut';
-  END IF;
+IF NOT EXISTS (
+SELECT 1 FROM diajar
+WHERE id_mapel = p_id_mapel
+AND id_pengajar = p_id_pengajar
+) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Pengajar tidak mengajar mapel ini';
+END IF;
 
-  INSERT INTO jadwal (
-    kode_jadwal,
-    id_mapel,
-    id_pengajar,
-    id_murid,
-    id_pembelian,
-    deskripsiMateri,
-    tanggal,
-    jam_mulai,
-    jam_akhir,
-    status_kehadiran
-  )
-  VALUES (
-    p_kode_jadwal,
-    p_id_mapel,
-    p_id_pengajar,
-    NULL,
-    NULL,
-    NULL,
-    p_tanggal,
-    p_jam_mulai,
-    p_jam_akhir,
-    NULL
-  );
+IF EXISTS (
+SELECT 1 FROM jadwal
+WHERE id_pengajar = p_id_pengajar
+AND tanggal = p_tanggal
+AND p_jam_mulai < jam_akhir
+AND p_jam_akhir > jam_mulai
+) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Pengajar sudah memiliki jadwal bentrok';
+END IF;
+
+SET v_ym = DATE_FORMAT(p_tanggal, '%y%m');
+
+SELECT IFNULL(MAX(CAST(RIGHT(kode_jadwal,3) AS UNSIGNED)),0)
+INTO v_last
+FROM jadwal
+WHERE kode_jadwal LIKE CONCAT('JD-', v_ym, '%');
+
+SET v_kode = CONCAT('JD-', v_ym, LPAD(v_last+1,3,'0'));
+
+INSERT INTO jadwal
+(kode_jadwal, id_mapel, id_pengajar, id_murid, id_pembelian,
+deskripsiMateri, tanggal, jam_mulai, jam_akhir, status_kehadiran)
+VALUES
+(v_kode, p_id_mapel, p_id_pengajar, NULL, NULL,
+NULL, p_tanggal, p_jam_mulai, p_jam_akhir, NULL);
 END$$
 
 DELIMITER ;
