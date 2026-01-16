@@ -1139,35 +1139,35 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS SP_TambahPaketLes$$
 CREATE PROCEDURE SP_TambahPaketLes(
-IN p_nama VARCHAR(255),
-IN p_jml INT,
-IN p_masa INT,
-IN p_harga DECIMAL(12,2),
-IN p_status TINYINT(1)
+  IN p_nama VARCHAR(255),
+  IN p_jml INT,
+  IN p_masa INT,
+  IN p_harga DECIMAL(12,2),
+  IN p_status TINYINT(1)
 )
 BEGIN
-DECLARE v_last INT;
-DECLARE v_id VARCHAR(20);
-DECLARE v_ym VARCHAR(4);
+  DECLARE v_last INT;
+  DECLARE v_id VARCHAR(20);
+  DECLARE v_ym VARCHAR(4);
 
-IF EXISTS (SELECT 1 FROM katalogpaket WHERE nama_paket = p_nama) THEN
-SIGNAL SQLSTATE '45000'
-SET MESSAGE_TEXT = 'Nama paket sudah ada';
-END IF;
+  IF EXISTS (SELECT 1 FROM katalogpaket WHERE nama_paket = p_nama) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Nama paket sudah ada';
+  END IF;
 
-SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
+  SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
 
-SELECT IFNULL(MAX(CAST(RIGHT(id_paket,3) AS UNSIGNED)),0)
-INTO v_last
-FROM katalogpaket
-WHERE id_paket LIKE CONCAT('PK-', v_ym, '%');
+  SELECT IFNULL(MAX(CAST(RIGHT(id_paket, 3) AS UNSIGNED)), 0)
+  INTO v_last
+  FROM katalogpaket
+  WHERE id_paket LIKE CONCAT('PK-', v_ym, '%');
 
-SET v_id = CONCAT('PK-', v_ym, LPAD(v_last+1,3,'0'));
+  SET v_id = CONCAT('PK-', v_ym, LPAD(v_last + 1, 3, '0'));
 
-INSERT INTO katalogpaket
-(id_paket, nama_paket, jml_pertemuan, masa_aktif_hari, harga, status_dijual)
-VALUES
-(v_id, p_nama, p_jml, p_masa, p_harga, p_status);
+  INSERT INTO katalogpaket
+    (id_paket, nama_paket, jml_pertemuan, masa_aktif_hari, harga, status_dijual)
+  VALUES
+    (v_id, p_nama, p_jml, p_masa, p_harga, p_status);
 END$$
 
 DELIMITER ;
@@ -1214,33 +1214,33 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS SP_TambahMapel$$
 CREATE PROCEDURE SP_TambahMapel(
-IN p_nama VARCHAR(255),
-IN p_desc TEXT,
-IN p_status TINYINT(1)
+  IN p_nama VARCHAR(255),
+  IN p_desc TEXT,
+  IN p_status TINYINT(1)
 )
 BEGIN
-DECLARE v_last INT;
-DECLARE v_id VARCHAR(20);
-DECLARE v_ym VARCHAR(4);
+  DECLARE v_last INT;
+  DECLARE v_id VARCHAR(20);
+  DECLARE v_ym VARCHAR(4);
 
-IF EXISTS (SELECT 1 FROM mata_pelajaran WHERE nama_mapel = p_nama) THEN
-SIGNAL SQLSTATE '45000'
-SET MESSAGE_TEXT = 'Nama mata pelajaran sudah ada';
-END IF;
+  IF EXISTS (SELECT 1 FROM mata_pelajaran WHERE nama_mapel = p_nama) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Nama mata pelajaran sudah ada';
+  END IF;
 
-SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
+  SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
 
-SELECT IFNULL(MAX(CAST(RIGHT(id_mapel,3) AS UNSIGNED)),0)
-INTO v_last
-FROM mata_pelajaran
-WHERE id_mapel LIKE CONCAT('MP-', v_ym, '%');
+  SELECT IFNULL(MAX(CAST(RIGHT(id_mapel, 3) AS UNSIGNED)), 0)
+  INTO v_last
+  FROM mata_pelajaran
+  WHERE id_mapel LIKE CONCAT('MP-', v_ym, '%');
 
-SET v_id = CONCAT('MP-', v_ym, LPAD(v_last+1,3,'0'));
+  SET v_id = CONCAT('MP-', v_ym, LPAD(v_last + 1, 3, '0'));
 
-INSERT INTO mata_pelajaran
-(id_mapel, nama_mapel, deskripsiMapel, status)
-VALUES
-(v_id, p_nama, p_desc, p_status);
+  INSERT INTO mata_pelajaran
+    (id_mapel, nama_mapel, deskripsiMapel, status)
+  VALUES
+    (v_id, p_nama, p_desc, p_status);
 END$$
 
 DELIMITER ;
@@ -1868,17 +1868,18 @@ DELIMITER ;
 
 -- [26] SP_BeliPaket (murid)
 -- Membuat data pembelian paket (belum dibayar) Saat klik “Beli Paket”
-
-DROP PROCEDURE IF EXISTS SP_BeliPaket;
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS SP_BeliPaket$$
 CREATE PROCEDURE SP_BeliPaket(
-  IN p_id_pembelian VARCHAR(20),
   IN p_id_murid VARCHAR(20),
   IN p_id_paket VARCHAR(20)
 )
 BEGIN
-  -- Cegah beli paket yang sama jika masih ada yang aktif
+  DECLARE v_last INT;
+  DECLARE v_id VARCHAR(20);
+  DECLARE v_ym VARCHAR(4);
+
   IF EXISTS (
     SELECT 1
     FROM paketdibeli
@@ -1891,6 +1892,15 @@ BEGIN
     SET MESSAGE_TEXT = 'Anda masih punya paket aktif yang sama';
   END IF;
 
+  SET v_ym = DATE_FORMAT(CURDATE(), '%y%m');
+
+  SELECT IFNULL(MAX(CAST(RIGHT(id_pembelian, 3) AS UNSIGNED)), 0)
+  INTO v_last
+  FROM paketdibeli
+  WHERE id_pembelian LIKE CONCAT('PB-', v_ym, '%');
+
+  SET v_id = CONCAT('PB-', v_ym, LPAD(v_last + 1, 3, '0'));
+
   INSERT INTO paketdibeli (
     id_pembelian,
     id_murid,
@@ -1902,7 +1912,7 @@ BEGIN
     gambar_bukti_pembayaran
   )
   VALUES (
-    p_id_pembelian,
+    v_id,
     p_id_murid,
     p_id_paket,
     NOW(),
