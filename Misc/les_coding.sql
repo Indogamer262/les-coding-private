@@ -583,24 +583,32 @@ DROP VIEW IF EXISTS `view_MataPelajaranAktif`;
 
 CREATE VIEW `view_MataPelajaranAktif` AS
 SELECT
-  id_mapel,
-  nama_mapel,
-  deskripsiMapel,
-  status
-FROM mata_pelajaran
-WHERE status = 1;
+  m.id_mapel,
+  m.nama_mapel,
+  m.deskripsiMapel,
+  m.status,
+  GROUP_CONCAT(p.nama_pengajar SEPARATOR ', ') AS daftar_pengajar
+FROM mata_pelajaran m
+LEFT JOIN diajar d ON d.id_mapel = m.id_mapel
+LEFT JOIN pengajar p ON p.id_pengajar = d.id_pengajar
+WHERE m.status = 1
+GROUP BY m.id_mapel;
 
 -- [05] view_MataPelajaranNonaktif (admin)
 DROP VIEW IF EXISTS `view_MataPelajaranNonaktif`;
 
 CREATE VIEW `view_MataPelajaranNonaktif` AS
 SELECT
-  id_mapel,
-  nama_mapel,
-  deskripsiMapel,
-  status
-FROM mata_pelajaran
-WHERE status = 0;
+  m.id_mapel,
+  m.nama_mapel,
+  m.deskripsiMapel,
+  m.status,
+  GROUP_CONCAT(p.nama_pengajar SEPARATOR ', ') AS daftar_pengajar
+FROM mata_pelajaran m
+LEFT JOIN diajar d ON d.id_mapel = m.id_mapel
+LEFT JOIN pengajar p ON p.id_pengajar = d.id_pengajar
+WHERE m.status = 0
+GROUP BY m.id_mapel;
 
 -- [06] view_PaketLesAktif (admin)
 DROP VIEW IF EXISTS `view_PaketLesAktif`;
@@ -1046,6 +1054,11 @@ CREATE PROCEDURE `SP_TambahMapel`(
   IN p_status TINYINT(1)
 )
 BEGIN
+  IF EXISTS(SELECT 1 FROM mata_pelajaran WHERE nama_mapel = p_nama) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Nama mata pelajaran sudah ada';
+  END IF;
+
   INSERT INTO mata_pelajaran (
     id_mapel,
     nama_mapel,
@@ -1061,6 +1074,39 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- [08A] SP_TambahDiajar (admin)
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `SP_TambahDiajar`$$
+CREATE PROCEDURE `SP_TambahDiajar`(
+  IN p_id_mapel VARCHAR(20),
+  IN p_id_pengajar VARCHAR(20)
+)
+BEGIN
+  IF EXISTS(
+    SELECT 1 FROM diajar WHERE id_mapel = p_id_mapel AND id_pengajar = p_id_pengajar
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Relasi diajar sudah ada';
+  END IF;
+
+  INSERT INTO diajar (id_mapel, id_pengajar)
+  VALUES (p_id_mapel, p_id_pengajar);
+END$$
+DELIMITER ;
+
+-- [08B] SP_HapusDiajar (admin)
+DROP PROCEDURE IF EXISTS `SP_HapusDiajar`$$
+CREATE PROCEDURE `SP_HapusDiajar`(
+  IN p_id_mapel VARCHAR(20),
+  IN p_id_pengajar VARCHAR(20)
+)
+BEGIN
+  DELETE FROM diajar 
+  WHERE id_mapel = p_id_mapel 
+    AND id_pengajar = p_id_pengajar;
+END$$
+DELIMITER ;
+
 -- [09] SP_EditMapel (admin)
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `SP_EditMapel`$$
@@ -1072,9 +1118,10 @@ CREATE PROCEDURE `SP_EditMapel`(
 )
 BEGIN
   UPDATE mata_pelajaran
-  SET nama_mapel = p_nama,
-      deskripsiMapel = p_desc,
-      status = p_status
+  SET 
+    nama_mapel = p_nama,
+    deskripsiMapel = p_desc,
+    status = p_status
   WHERE id_mapel = p_id;
 END$$
 DELIMITER ;
@@ -1358,6 +1405,16 @@ BEGIN
     SET MESSAGE_TEXT = 'Jam selesai harus lebih besar dari jam mulai';
   END IF;
 
+  -- Validasi pengajar boleh mengajar mapel
+  IF NOT EXISTS (
+    SELECT 1 FROM diajar
+    WHERE id_pengajar = p_id_pengajar
+      AND id_mapel = p_id_mapel
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Pengajar tidak mengajar mapel ini';
+  END IF;
+
   -- Validasi bentrok jadwal pengajar
   IF EXISTS (
     SELECT 1
@@ -1562,31 +1619,31 @@ END$$
 
 DELIMITER ;
 
--- checkpoint
+-- [24] SP_LihatJadwalMendatang (murid)
+-- Menampilkan jadwal yang belum dipesan & tanggal >= hari ini
 
--- [22] SP_LihatJadwalTersedia (murid)- Butuh cek isinya agar sesuai fungsinya
 DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_LihatJadwalTersedia`$$
-CREATE PROCEDURE `SP_LihatJadwalTersedia`(
+
+DROP PROCEDURE IF EXISTS `SP_LihatJadwalMendatang`$$
+CREATE PROCEDURE `SP_LihatJadwalMendatang`(
   IN p_periode VARCHAR(20),
-  IN p_urut VARCHAR(20),
-  IN p_id_mapel VARCHAR(10),
-  IN p_id_pengajar VARCHAR(10)
+  IN p_id_mapel VARCHAR(20),
+  IN p_id_pengajar VARCHAR(20)
 )
 BEGIN
   SELECT
     j.kode_jadwal,
     j.tanggal,
+    DAYNAME(j.tanggal) AS hari,
     j.jam_mulai,
     j.jam_akhir,
-    j.id_mapel,
     mp.nama_mapel,
-    j.id_pengajar,
     p.nama_pengajar
   FROM jadwal j
-  LEFT JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
-  LEFT JOIN pengajar p ON j.id_pengajar = p.id_pengajar
+  JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
+  JOIN pengajar p ON j.id_pengajar = p.id_pengajar
   WHERE j.id_murid IS NULL
+    AND j.tanggal >= CURDATE()
     AND (
       p_id_mapel IS NULL OR p_id_mapel = '' OR j.id_mapel = p_id_mapel
     )
@@ -1595,22 +1652,338 @@ BEGIN
     )
     AND (
       UPPER(p_periode) = 'SEMUA'
-      OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
-      OR (UPPER(p_periode) = 'MINGGU_INI' AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
-      OR (UPPER(p_periode) = 'BULAN_INI' AND MONTH(j.tanggal) = MONTH(CURDATE()) AND YEAR(j.tanggal) = YEAR(CURDATE()))
-      OR (UPPER(p_periode) = 'MULAI_HARI_INI' AND j.tanggal >= CURDATE())
+      OR (UPPER(p_periode) = 'MINGGU_INI'
+          AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
+      OR (UPPER(p_periode) = 'BULAN_INI'
+          AND MONTH(j.tanggal) = MONTH(CURDATE())
+          AND YEAR(j.tanggal) = YEAR(CURDATE()))
     )
-  ORDER BY
-    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN j.tanggal END DESC,
-    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN j.tanggal END ASC,
-    j.jam_mulai ASC;
+  ORDER BY j.tanggal ASC, j.jam_mulai ASC;
 END$$
+
 DELIMITER ;
 
--- [23] SP_LihatJadwalMurid (murid)- Hapus p_urut karena tidak dipakai
+
+-- [25] SP_LihatPaketDijual (murid)
+-- Menampilkan paket yang masih dijual (Untuk card daftar paket)
+
 DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_LihatPaketDijual`$$
+CREATE PROCEDURE `SP_LihatPaketDijual`()
+BEGIN
+  SELECT
+    id_paket,
+    nama_paket,
+    jml_pertemuan,
+    masa_aktif_hari,
+    harga
+  FROM katalogpaket
+  WHERE status_dijual = 1
+  ORDER BY jml_pertemuan ASC;
+END$$
+
+DELIMITER ;
+
+-- [26] SP_BeliPaket (murid)
+-- Membuat data pembelian paket (belum dibayar) Saat klik “Beli Paket”
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_BeliPaket`$$
+CREATE PROCEDURE `SP_BeliPaket`(
+  IN p_id_pembelian VARCHAR(20),
+  IN p_id_murid VARCHAR(20),
+  IN p_id_paket VARCHAR(20)
+)
+BEGIN
+  INSERT INTO paketdibeli (
+    id_pembelian,
+    id_murid,
+    id_paket,
+    tgl_pemesanan,
+    pertemuan_terpakai
+  )
+  VALUES (
+    p_id_pembelian,
+    p_id_murid,
+    p_id_paket,
+    NOW(),
+    0
+  );
+END$$
+
+DELIMITER ;
+
+-- [27] SP_LihatRiwayatPembelianMurid (murid)
+-- Menampilkan riwayat pembelian sesuai status UI
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_LihatRiwayatPembelianMurid`$$
+CREATE PROCEDURE `SP_LihatRiwayatPembelianMurid`(
+  IN p_id_murid VARCHAR(20),
+  IN p_status VARCHAR(20)
+)
+BEGIN
+  SELECT
+    pd.id_pembelian,
+    DATE(pd.tgl_pemesanan) AS tanggal,
+    k.nama_paket,
+    k.harga,
+
+    CASE
+      WHEN pd.tgl_pembayaran IS NOT NULL THEN 'LUNAS'
+      WHEN pd.gambar_bukti_pembayaran IS NOT NULL THEN 'MENUNGGU_VERIFIKASI'
+      ELSE 'MENUNGGU_PEMBAYARAN'
+    END AS status_ui
+
+  FROM paketdibeli pd
+  JOIN katalogpaket k ON pd.id_paket = k.id_paket
+  WHERE pd.id_murid = p_id_murid
+    AND (
+      UPPER(p_status) = 'SEMUA'
+      OR (UPPER(p_status) = 'LUNAS' AND pd.tgl_pembayaran IS NOT NULL)
+      OR (UPPER(p_status) = 'MENUNGGU_PEMBAYARAN'
+          AND pd.tgl_pembayaran IS NULL
+          AND pd.gambar_bukti_pembayaran IS NULL)
+      OR (UPPER(p_status) = 'MENUNGGU_VERIFIKASI'
+          AND pd.tgl_pembayaran IS NULL
+          AND pd.gambar_bukti_pembayaran IS NOT NULL)
+    )
+  ORDER BY pd.tgl_pemesanan DESC;
+END$$
+
+DELIMITER ;
+
+-- [28] SP_UploadBuktiPembayaran (murid)
+-- Upload bukti pembayaran, hanya jika belum lunas
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_UploadBuktiPembayaran`$$
+CREATE PROCEDURE `SP_UploadBuktiPembayaran`(
+  IN p_id_pembelian VARCHAR(20),
+  IN p_id_murid VARCHAR(20),
+  IN p_filename TEXT
+)
+BEGIN
+  UPDATE paketdibeli
+  SET gambar_bukti_pembayaran = p_filename
+  WHERE id_pembelian = p_id_pembelian
+    AND id_murid = p_id_murid
+    AND tgl_pembayaran IS NULL;
+
+  IF ROW_COUNT() = 0 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Upload gagal: paket tidak ditemukan atau sudah lunas';
+  END IF;
+END$$
+
+DELIMITER ;
+
+/* =========================================================
+   JADWAL MURID
+   ========================================================= */
+
+-- [29] SP_LihatJadwalTersediaMurid (murid)
+-- Menampilkan jadwal yang tersedia untuk dipilih murid
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_LihatJadwalTersediaMurid`$$
+CREATE PROCEDURE `SP_LihatJadwalTersediaMurid`(
+  IN p_periode VARCHAR(20),
+  IN p_id_mapel VARCHAR(20)
+)
+BEGIN
+  SELECT
+    j.kode_jadwal,
+    j.tanggal,
+    DAYNAME(j.tanggal) AS hari,
+    j.jam_mulai,
+    j.jam_akhir,
+    pg.nama_pengajar,
+    mp.nama_mapel
+  FROM jadwal j
+  JOIN pengajar pg ON j.id_pengajar = pg.id_pengajar
+  JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
+  WHERE j.id_murid IS NULL
+    AND j.tanggal >= CURDATE()
+    AND (
+      p_id_mapel IS NULL OR p_id_mapel = '' OR j.id_mapel = p_id_mapel
+    )
+    AND (
+      UPPER(p_periode) = 'SEMUA'
+      OR (UPPER(p_periode) = 'MINGGU_INI'
+          AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
+    )
+  ORDER BY j.tanggal ASC, j.jam_mulai ASC;
+END$$
+
+DELIMITER ;
+
+
+-- [30] SP_LihatJadwalSayaMurid (murid)
+-- Menampilkan jadwal yang sudah dipilih oleh murid
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_LihatJadwalSayaMurid`$$
+CREATE PROCEDURE `SP_LihatJadwalSayaMurid`(
+  IN p_id_murid VARCHAR(20),
+  IN p_periode VARCHAR(20)
+)
+BEGIN
+  SELECT
+    j.kode_jadwal,
+    j.tanggal,
+    DAYNAME(j.tanggal) AS hari,
+    j.jam_mulai,
+    j.jam_akhir,
+    pg.nama_pengajar,
+    mp.nama_mapel
+  FROM jadwal j
+  JOIN pengajar pg ON j.id_pengajar = pg.id_pengajar
+  JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
+  WHERE j.id_murid = p_id_murid
+    AND j.tanggal >= CURDATE()
+    AND (
+      UPPER(p_periode) = 'SEMUA'
+      OR (UPPER(p_periode) = 'MINGGU_INI'
+          AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
+    )
+  ORDER BY j.tanggal ASC, j.jam_mulai ASC;
+END$$
+
+DELIMITER ;
+
+
+-- [31] SP_PilihJadwal (murid)
+-- Murid memilih jadwal jika paket masih aktif dan sisa pertemuan tersedia
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_PilihJadwal`$$
+CREATE PROCEDURE `SP_PilihJadwal`(
+  IN p_kode_jadwal VARCHAR(20),
+  IN p_id_murid VARCHAR(20),
+  IN p_id_pembelian VARCHAR(20)
+)
+BEGIN
+  -- Validasi paket aktif dan sisa pertemuan
+  IF NOT EXISTS (
+    SELECT 1
+    FROM paketdibeli pd
+    JOIN katalogpaket k ON pd.id_paket = k.id_paket
+    WHERE pd.id_pembelian = p_id_pembelian
+      AND pd.id_murid = p_id_murid
+      AND pd.tgl_kedaluwarsa >= CURDATE()
+      AND pd.pertemuan_terpakai < k.jml_pertemuan
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Paket tidak aktif atau pertemuan telah habis';
+  END IF;
+
+  UPDATE jadwal
+  SET id_murid = p_id_murid,
+      id_pembelian = p_id_pembelian
+  WHERE kode_jadwal = p_kode_jadwal
+    AND id_murid IS NULL
+    AND tanggal >= CURDATE();
+
+  IF ROW_COUNT() = 0 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Jadwal tidak tersedia atau sudah terisi';
+  END IF;
+END$$
+
+DELIMITER ;
+
+
+-- [32] SP_BatalPilihJadwal (murid, admin)
+-- Membatalkan jadwal yang belum berlangsung
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_BatalPilihJadwal`$$
+CREATE PROCEDURE `SP_BatalPilihJadwal`(
+  IN p_kode_jadwal VARCHAR(20),
+  IN p_id_murid VARCHAR(20)
+)
+BEGIN
+  UPDATE jadwal
+  SET id_murid = NULL,
+      id_pembelian = NULL,
+      status_kehadiran = NULL,
+      deskripsiMateri = NULL
+  WHERE kode_jadwal = p_kode_jadwal
+    AND id_murid = p_id_murid
+    AND tanggal >= CURDATE();
+
+  IF ROW_COUNT() = 0 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Jadwal tidak bisa dibatalkan';
+  END IF;
+END$$
+
+DELIMITER ;
+
+
+-- [33] SP_LihatJadwalMurid (murid)
+
+DELIMITER $$
+
 DROP PROCEDURE IF EXISTS `SP_LihatJadwalMurid`$$
 CREATE PROCEDURE `SP_LihatJadwalMurid`(
+  IN p_id_murid VARCHAR(20),
+  IN p_periode VARCHAR(20),
+  IN p_status VARCHAR(20)
+)
+BEGIN
+  SELECT
+    j.kode_jadwal,
+    j.tanggal,
+    DAYNAME(j.tanggal) AS hari,
+    j.jam_mulai,
+    j.jam_akhir,
+    mp.nama_mapel,
+    p.nama_pengajar,
+
+    CASE
+      WHEN j.tanggal > CURDATE() THEN 'MENDATANG'
+      ELSE 'SELESAI'
+    END AS status_ui
+
+  FROM jadwal j
+  JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
+  JOIN pengajar p ON j.id_pengajar = p.id_pengajar
+  WHERE j.id_murid = p_id_murid
+    AND (
+      UPPER(p_periode) = 'SEMUA'
+      OR (UPPER(p_periode) = 'MINGGU_INI'
+          AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
+      OR (UPPER(p_periode) = 'BULAN_INI'
+          AND MONTH(j.tanggal) = MONTH(CURDATE())
+          AND YEAR(j.tanggal) = YEAR(CURDATE()))
+    )
+    AND (
+      UPPER(p_status) = 'SEMUA'
+      OR (UPPER(p_status) = 'MENDATANG' AND j.tanggal > CURDATE())
+      OR (UPPER(p_status) = 'SELESAI' AND j.tanggal <= CURDATE())
+    )
+  ORDER BY j.tanggal DESC, j.jam_mulai DESC;
+END$$
+
+DELIMITER ;
+
+-- [34] SP_RiwayatKehadiranMurid (murid)
+-- Menampilkan riwayat kehadiran les sesuai tampilan UI
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `SP_RiwayatKehadiranMurid`$$
+CREATE PROCEDURE `SP_RiwayatKehadiranMurid`(
   IN p_id_murid VARCHAR(10),
   IN p_periode VARCHAR(20),
   IN p_status VARCHAR(20),
@@ -1620,36 +1993,43 @@ BEGIN
   SELECT
     j.kode_jadwal,
     j.tanggal,
+    DAYNAME(j.tanggal) AS hari,
     j.jam_mulai,
     j.jam_akhir,
-    j.deskripsiMateri,
-    j.status_kehadiran,
-    j.id_mapel,
-    mp.nama_mapel,
-    j.id_pengajar,
     p.nama_pengajar,
-    j.id_pembelian
+    mp.nama_mapel,
+    j.deskripsiMateri,
+    CASE
+      WHEN j.status_kehadiran = 1 THEN 'HADIR'
+      WHEN j.status_kehadiran = 0 THEN 'TIDAK_HADIR'
+    END AS status_kehadiran_ui
   FROM jadwal j
-  LEFT JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
-  LEFT JOIN pengajar p ON j.id_pengajar = p.id_pengajar
+  JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
+  JOIN pengajar p ON j.id_pengajar = p.id_pengajar
   WHERE j.id_murid = p_id_murid
+    -- hanya jadwal yang sudah ada kehadirannya (riwayat)
+    AND j.status_kehadiran IS NOT NULL
     AND (
       UPPER(p_periode) = 'SEMUA'
-      OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
-      OR (UPPER(p_periode) = 'MINGGU_INI' AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
-      OR (UPPER(p_periode) = 'BULAN_INI' AND MONTH(j.tanggal) = MONTH(CURDATE()) AND YEAR(j.tanggal) = YEAR(CURDATE()))
+      OR (UPPER(p_periode) = 'HARI_INI'
+          AND j.tanggal = CURDATE())
+      OR (UPPER(p_periode) = 'MINGGU_INI'
+          AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
+      OR (UPPER(p_periode) = 'BULAN_INI'
+          AND MONTH(j.tanggal) = MONTH(CURDATE())
+          AND YEAR(j.tanggal) = YEAR(CURDATE()))
     )
     AND (
       UPPER(p_status) = 'SEMUA'
       OR (UPPER(p_status) = 'HADIR' AND j.status_kehadiran = 1)
       OR (UPPER(p_status) = 'TIDAK_HADIR' AND j.status_kehadiran = 0)
-      OR (UPPER(p_status) = 'BELUM_DIISI' AND j.status_kehadiran IS NULL)
     )
   ORDER BY
-    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN j.tanggal END DESC,
     CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN j.tanggal END ASC,
+    CASE WHEN UPPER(p_urut) = 'TERBARU' OR p_urut IS NULL THEN j.tanggal END DESC,
     j.jam_mulai ASC;
 END$$
+
 DELIMITER ;
 
 -- [24] SP_LihatJadwalPengajar (pengajar)- Hapus p_urut karena tidak dipakai
@@ -1695,245 +2075,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- [25] SP_PilihJadwal (murid)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_PilihJadwal`$$
-CREATE PROCEDURE `SP_PilihJadwal`(
-  IN p_kode_jadwal VARCHAR(10),
-  IN p_id_murid VARCHAR(10),
-  IN p_id_pembelian VARCHAR(10)
-)
-BEGIN
-  UPDATE jadwal
-  SET id_murid = p_id_murid,
-      id_pembelian = p_id_pembelian
-  WHERE kode_jadwal = p_kode_jadwal
-    AND id_murid IS NULL;
-
-  IF ROW_COUNT() = 0 THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Jadwal tidak tersedia atau sudah terisi';
-  END IF;
-END$$
-DELIMITER ;
-
--- [26] SP_BatalPilihJadwal (murid, admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_BatalPilihJadwal`$$
-CREATE PROCEDURE `SP_BatalPilihJadwal`(
-  IN p_kode_jadwal VARCHAR(10),
-  IN p_id_murid VARCHAR(10)
-)
-BEGIN
-  UPDATE jadwal
-  SET id_murid = NULL,
-      id_pembelian = NULL,
-      status_kehadiran = NULL,
-      deskripsiMateri = NULL
-  WHERE kode_jadwal = p_kode_jadwal
-    AND id_murid = p_id_murid;
-
-  IF ROW_COUNT() = 0 THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Jadwal tidak ditemukan untuk murid ini';
-  END IF;
-END$$
-DELIMITER ;
-
--- [27] SP_LihatPaketMurid (murid)- Butuh cek isinya agar sesuai fungsinya
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_LihatPaketMurid`$$
-CREATE PROCEDURE `SP_LihatPaketMurid`(
-  IN p_id_murid VARCHAR(10),
-  IN p_status VARCHAR(20),
-  IN p_urut VARCHAR(20)
-)
-BEGIN
-  SELECT
-    pd.id_pembelian,
-    pd.id_murid,
-    pd.id_paket,
-    k.nama_paket,
-    k.jml_pertemuan,
-    k.masa_aktif_hari,
-    k.harga,
-    pd.tgl_pemesanan,
-    pd.tgl_pembayaran,
-    pd.gambar_bukti_pembayaran,
-    pd.tgl_kedaluwarsa,
-    pd.pertemuan_terpakai,
-    (k.jml_pertemuan - pd.pertemuan_terpakai) AS sisa_pertemuan
-  FROM paketdibeli pd
-  JOIN katalogpaket k ON pd.id_paket = k.id_paket
-  WHERE pd.id_murid = p_id_murid
-    AND (
-      UPPER(p_status) = 'SEMUA'
-      OR (UPPER(p_status) = 'BELUM_BAYAR' AND pd.tgl_pembayaran IS NULL)
-      OR (UPPER(p_status) = 'AKTIF' AND pd.tgl_kedaluwarsa IS NOT NULL AND pd.tgl_kedaluwarsa >= CURDATE())
-      OR (UPPER(p_status) = 'KEDALUWARSA' AND pd.tgl_kedaluwarsa IS NOT NULL AND pd.tgl_kedaluwarsa < CURDATE())
-    )
-  ORDER BY
-    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN pd.tgl_pemesanan END DESC,
-    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN pd.tgl_pemesanan END ASC;
-END$$
-DELIMITER ;
-
--- [28] SP_LihatPaketSemua (admin) - Hapus p_urut karena tidak dipakai
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_LihatPaketSemua`$$
-CREATE PROCEDURE `SP_LihatPaketSemua`(
-  IN p_status VARCHAR(20),
-  IN p_urut VARCHAR(20)
-)
-BEGIN
-  SELECT
-    pd.id_pembelian,
-    pd.id_murid,
-    m.nama_murid,
-    pd.id_paket,
-    k.nama_paket,
-    k.jml_pertemuan,
-    k.masa_aktif_hari,
-    k.harga,
-    pd.tgl_pemesanan,
-    pd.tgl_pembayaran,
-    pd.gambar_bukti_pembayaran,
-    pd.tgl_kedaluwarsa,
-    pd.pertemuan_terpakai,
-    (k.jml_pertemuan - pd.pertemuan_terpakai) AS sisa_pertemuan
-  FROM paketdibeli pd
-  JOIN katalogpaket k ON pd.id_paket = k.id_paket
-  JOIN murid m ON pd.id_murid = m.id_murid
-  WHERE (
-      UPPER(p_status) = 'SEMUA'
-      OR (UPPER(p_status) = 'BELUM_BAYAR' AND pd.tgl_pembayaran IS NULL)
-      OR (UPPER(p_status) = 'AKTIF' AND pd.tgl_kedaluwarsa IS NOT NULL AND pd.tgl_kedaluwarsa >= CURDATE())
-      OR (UPPER(p_status) = 'KEDALUWARSA' AND pd.tgl_kedaluwarsa IS NOT NULL AND pd.tgl_kedaluwarsa < CURDATE())
-    )
-  ORDER BY
-    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN pd.tgl_pemesanan END DESC,
-    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN pd.tgl_pemesanan END ASC;
-END$$
-DELIMITER ;
-
--- [29] SP_UploadBuktiPembayaran (murid)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_UploadBuktiPembayaran`$$
-CREATE PROCEDURE `SP_UploadBuktiPembayaran`(
-  IN p_id_pembelian VARCHAR(10),
-  IN p_id_murid VARCHAR(10),
-  IN p_filename TEXT
-)
-BEGIN
-  UPDATE paketdibeli
-  SET gambar_bukti_pembayaran = p_filename
-  WHERE id_pembelian = p_id_pembelian
-    AND id_murid = p_id_murid;
-
-  IF ROW_COUNT() = 0 THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Pembelian tidak ditemukan untuk murid ini';
-  END IF;
-END$$
-DELIMITER ;
-
--- [30] SP_SetujuiPembayaran (admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_SetujuiPembayaran`$$
-CREATE PROCEDURE `SP_SetujuiPembayaran`(IN p_id_pembelian VARCHAR(10))
-BEGIN
-  CALL SP_TandaiLunas(p_id_pembelian);
-END$$
-DELIMITER ;
-
--- [31] SP_TolakPembayaran (admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_TolakPembayaran`$$
-CREATE PROCEDURE `SP_TolakPembayaran`(IN p_id_pembelian VARCHAR(10))
-BEGIN
-  UPDATE paketdibeli
-  SET tgl_pembayaran = NULL,
-      tgl_kedaluwarsa = NULL,
-      gambar_bukti_pembayaran = NULL
-  WHERE id_pembelian = p_id_pembelian;
-END$$
-DELIMITER ;
-
--- [32] SP_TambahDiajar (admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_TambahDiajar`$$
-CREATE PROCEDURE `SP_TambahDiajar`(
-  IN p_id_mapel VARCHAR(10),
-  IN p_id_pengajar VARCHAR(10)
-)
-BEGIN
-  IF EXISTS(
-    SELECT 1 FROM diajar WHERE id_mapel = p_id_mapel AND id_pengajar = p_id_pengajar
-  ) THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Relasi diajar sudah ada';
-  END IF;
-
-  INSERT INTO diajar (id_mapel, id_pengajar)
-  VALUES (p_id_mapel, p_id_pengajar);
-END$$
-DELIMITER ;
-
--- [33] SP_HapusDiajar (admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_HapusDiajar`$$
-CREATE PROCEDURE `SP_HapusDiajar`(IN p_id_diajar BIGINT)
-BEGIN
-  DELETE FROM diajar WHERE id_diajar = p_id_diajar;
-END$$
-DELIMITER ;
-
--- [34] SP_RiwayatKehadiranAdmin (admin)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_RiwayatKehadiranAdmin`$$
-CREATE PROCEDURE `SP_RiwayatKehadiranAdmin`(
-  IN p_periode VARCHAR(20),
-  IN p_status VARCHAR(20),
-  IN p_urut VARCHAR(20)
-)
-BEGIN
-  SELECT
-    j.kode_jadwal,
-    j.tanggal,
-    j.jam_mulai,
-    j.jam_akhir,
-    j.status_kehadiran,
-    j.deskripsiMateri,
-    j.id_mapel,
-    mp.nama_mapel,
-    j.id_pengajar,
-    p.nama_pengajar,
-    j.id_murid,
-    m.nama_murid
-  FROM jadwal j
-  LEFT JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
-  LEFT JOIN pengajar p ON j.id_pengajar = p.id_pengajar
-  LEFT JOIN murid m ON j.id_murid = m.id_murid
-  WHERE j.id_murid IS NOT NULL
-    AND (
-      UPPER(p_periode) = 'SEMUA'
-      OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
-      OR (UPPER(p_periode) = 'MINGGU_INI' AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
-      OR (UPPER(p_periode) = 'BULAN_INI' AND MONTH(j.tanggal) = MONTH(CURDATE()) AND YEAR(j.tanggal) = YEAR(CURDATE()))
-    )
-    AND (
-      UPPER(p_status) = 'SEMUA'
-      OR (UPPER(p_status) = 'HADIR' AND j.status_kehadiran = 1)
-      OR (UPPER(p_status) = 'TIDAK_HADIR' AND j.status_kehadiran = 0)
-      OR (UPPER(p_status) = 'BELUM_DIISI' AND j.status_kehadiran IS NULL)
-    )
-  ORDER BY
-    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN j.tanggal END DESC,
-    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN j.tanggal END ASC,
-    j.jam_mulai ASC;
-END$$
-DELIMITER ;
-
 -- [35] SP_RiwayatKehadiranPengajar (pengajar)
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `SP_RiwayatKehadiranPengajar`$$
@@ -1960,50 +2101,6 @@ BEGIN
   LEFT JOIN murid m ON j.id_murid = m.id_murid
   WHERE j.id_pengajar = p_id_pengajar
     AND j.id_murid IS NOT NULL
-    AND (
-      UPPER(p_periode) = 'SEMUA'
-      OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
-      OR (UPPER(p_periode) = 'MINGGU_INI' AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
-      OR (UPPER(p_periode) = 'BULAN_INI' AND MONTH(j.tanggal) = MONTH(CURDATE()) AND YEAR(j.tanggal) = YEAR(CURDATE()))
-    )
-    AND (
-      UPPER(p_status) = 'SEMUA'
-      OR (UPPER(p_status) = 'HADIR' AND j.status_kehadiran = 1)
-      OR (UPPER(p_status) = 'TIDAK_HADIR' AND j.status_kehadiran = 0)
-      OR (UPPER(p_status) = 'BELUM_DIISI' AND j.status_kehadiran IS NULL)
-    )
-  ORDER BY
-    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN j.tanggal END DESC,
-    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN j.tanggal END ASC,
-    j.jam_mulai ASC;
-END$$
-DELIMITER ;
-
--- [36] SP_RiwayatKehadiranMurid (murid)
-DELIMITER $$
-DROP PROCEDURE IF EXISTS `SP_RiwayatKehadiranMurid`$$
-CREATE PROCEDURE `SP_RiwayatKehadiranMurid`(
-  IN p_id_murid VARCHAR(10),
-  IN p_periode VARCHAR(20),
-  IN p_status VARCHAR(20),
-  IN p_urut VARCHAR(20)
-)
-BEGIN
-  SELECT
-    j.kode_jadwal,
-    j.tanggal,
-    j.jam_mulai,
-    j.jam_akhir,
-    j.status_kehadiran,
-    j.deskripsiMateri,
-    j.id_mapel,
-    mp.nama_mapel,
-    j.id_pengajar,
-    p.nama_pengajar
-  FROM jadwal j
-  LEFT JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
-  LEFT JOIN pengajar p ON j.id_pengajar = p.id_pengajar
-  WHERE j.id_murid = p_id_murid
     AND (
       UPPER(p_periode) = 'SEMUA'
       OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
