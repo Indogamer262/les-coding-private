@@ -188,6 +188,19 @@ INSERT INTO murid (id_murid, nama_murid, email, password, status) VALUES
 ('M-2601005', 'Eka Puspita', 'eka.puspita@gmail.com', '123', 1),
 ('M-2601006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '123', 0);
 
+INSERT INTO murid (id_murid, nama_murid, email, password, status) VALUES
+-- Murid belum pernah beli paket sama sekali
+('M-2601007', 'Gilang Pratama', 'gilang@gmail.com', '123', 1),
+
+-- Murid punya paket tapi SUDAH KEDALUWARSA
+('M-2601008', 'Hendra Wijaya', 'hendra@gmail.com', '123', 1),
+
+-- Murid punya paket LUNAS tapi kuota = 0
+('M-2601009', 'Intan Permata', 'intan@gmail.com', '123', 1),
+
+-- Murid punya paket tapi BELUM LUNAS
+('M-2601010', 'Joko Santoso', 'joko@gmail.com', '123', 1);
+
 /* =========================================================
    MATA PELAJARAN
    ========================================================= */
@@ -218,13 +231,76 @@ INSERT INTO paketdibeli (id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pe
 ('PB-2601001', 'M-2601001', 'PK-00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
 ('PB-2601002', 'M-2601001', 'PK-00002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-03-15 21:38:00', 0),
 ('PB-2601003', 'M-2601002', 'PK-00001', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
-('PB-2512001', 'M-2601002', 'PK-00003', '2026-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 0),
+('PB-2612001', 'M-2601002', 'PK-00003', '2026-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 0),
 ('PB-2601004', 'M-2601003', 'PK-00002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
-('PB-2512002', 'M-2601003', 'PK-00001', '2026-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2612002', 'M-2601003', 'PK-00001', '2026-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
 ('PB-2601005', 'M-2601004', 'PK-00005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
 ('PB-2601006', 'M-2601005', 'PK-00001', '2026-01-14 21:38:00', NULL, 'bukti.jpg', '2026-02-13 21:38:00', 4),
 ('PB-2601007', 'M-2601005', 'PK-00002', '2026-01-07 21:38:00', NULL, 'bukti.jpg', '2026-03-15 21:38:00', 0),
-('PB-2512003', 'M-2601006', 'PK-00003', '2026-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 2);
+('PB-2612003', 'M-2601006', 'PK-00003', '2026-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 2);
+
+-- =========================================================
+-- TAMBAHAN DATA KHUSUS UNTUK NUTUP SEMUA SKENARIO
+-- =========================================================
+
+INSERT INTO paketdibeli 
+(id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pembayaran, gambar_bukti_pembayaran, tgl_kedaluwarsa, pertemuan_terpakai) 
+VALUES
+
+-- =========================================================
+-- LUNAS + AKTIF + ADA SISA
+-- Murid: M-2601002 (contoh tambahan paket kedua yang masih ada sisa)
+-- =========================================================
+('PB-EDGE-001', 'M-2601002', 'PK-00002',
+ DATE_SUB(NOW(), INTERVAL 5 DAY),
+ NOW(),
+ 'bukti.jpg',
+ DATE_ADD(NOW(), INTERVAL 40 DAY),
+ 2), -- jml 8, terpakai 2 => sisa masih ada
+
+-- =========================================================
+-- LUNAS + AKTIF + SISA = 0
+-- Murid: M-2601009 (khusus skenario kuota habis)
+-- =========================================================
+('PB-2601012', 'M-2601009', 'PK-00001',
+ DATE_SUB(NOW(), INTERVAL 10 DAY),
+ NOW(),
+ 'bukti.jpg',
+ DATE_ADD(NOW(), INTERVAL 20 DAY),
+ 4), -- paket 4x, terpakai 4 => HABIS
+
+-- =========================================================
+-- LUNAS + KEDALUWARSA
+-- Murid: M-2601008
+-- =========================================================
+('PB-2601013', 'M-2601008', 'PK-00002',
+ DATE_SUB(NOW(), INTERVAL 100 DAY),
+ NOW(),
+ 'bukti.jpg',
+ DATE_SUB(NOW(), INTERVAL 10 DAY),
+ 3),
+
+-- =========================================================
+-- BELUM BAYAR + BELUM UPLOAD BUKTI
+-- Murid: M-2601010
+-- =========================================================
+('PB-2601014', 'M-2601010', 'PK-00003',
+ NOW(),
+ NULL,
+ NULL,
+ NULL,
+ 0),
+
+-- =========================================================
+-- BELUM BAYAR + SUDAH UPLOAD BUKTI
+-- Murid: M-2601005 (tambah paket kedua)
+-- =========================================================
+('PB-2601015', 'M-2601005', 'PK-00002',
+ DATE_SUB(NOW(), INTERVAL 2 DAY),
+ NULL,
+ 'bukti_pending.jpg',
+ NULL,
+ 0);
 
 /* =========================================================
    JADWAL
@@ -234,36 +310,81 @@ INSERT INTO jadwal (kode_jadwal, id_mapel, id_pengajar, id_murid, id_pembelian, 
 ('JD-2601002', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', NULL, '2026-01-13', '08:00:00', '09:00:00', 0),
 ('JD-2601003', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-14', '09:00:00', '10:00:00', 0),
 ('JD-2601004', 'MP-00002', 'P-2601001', NULL, NULL, NULL, '2026-01-14', '10:00:00', '11:00:00', NULL),
-('JD-2512001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', 1),
-('JD-2601005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
-('JD-2601006', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', NULL, '2026-01-04', '08:00:00', '09:00:00', 0),
-('JD-2512002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', 1),
-('JD-2512003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-25', '09:00:00', '10:00:00', NULL),
+('JD-2612001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', 1),
+('JD-2601005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
+('JD-2601006', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', NULL, '2026-01-04', '08:00:00', '09:00:00', 0),
+('JD-2612002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', 1),
+('JD-2612003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-25', '09:00:00', '10:00:00', NULL),
 ('JD-2601007', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '13:00:00', '14:00:00', 1),
-('JD-2512004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2026-12-14', '08:00:00', '09:00:00', 0),
+('JD-2612004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2612003', NULL, '2026-12-14', '08:00:00', '09:00:00', 0),
 ('JD-2601008', 'MP-00002', 'P-2601001', 'M-2601001', 'PB-2601001', 'Percabangan dan Perulangan', '2026-01-09', '08:00:00', '09:00:00', 1),
 ('JD-2601009', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-07', '08:00:00', '09:00:00', 0),
-('JD-2512005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Form, Table, dan Layout Web', '2026-12-30', '08:00:00', '09:00:00', 1),
+('JD-2612005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', 'Form, Table, dan Layout Web', '2026-12-30', '08:00:00', '09:00:00', 1),
 ('JD-2601010', 'MP-00005', 'P-2601004', 'M-2601005', 'PB-2601006', 'Pengenalan Database dan Tabel', '2026-01-12', '08:00:00', '09:00:00', 0),
 ('JD-2601011', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-01-12', '10:00:00', '11:00:00', NULL),
 ('JD-2601012', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', 'Percabangan dan Perulangan', '2026-01-15', '08:00:00', '09:00:00', 0),
 ('JD-2601013', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-16', '08:00:00', '09:00:00', 0),
 ('JD-2601014', 'MP-00003', 'P-2601002', NULL, NULL, NULL, '2026-01-17', '08:00:00', '09:00:00', NULL),
-('JD-2601015', 'MP-00005', 'P-2601004', 'M-2601003', 'PB-2512002', 'JOIN dan Query Lanjutan', '2026-01-14', '15:00:00', '16:00:00', 1),
+('JD-2601015', 'MP-00005', 'P-2601004', 'M-2601003', 'PB-2612002', 'JOIN dan Query Lanjutan', '2026-01-14', '15:00:00', '16:00:00', 1),
 ('JD-2601016', 'MP-00005', 'P-2601004', 'M-2601005', 'PB-2601006', 'Pengenalan Database dan Tabel', '2026-01-08', '15:00:00', '16:00:00', 0),
 ('JD-2601017', 'MP-00001', 'P-2601001', 'M-2601002', 'PB-2601003', 'Variabel, Tipe Data, dan Operator', '2026-01-06', '08:00:00', '09:00:00', 1),
-('JD-2601018', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2512002', 'Sorting dan Searching', '2026-01-02', '08:00:00', '09:00:00', 1),
-('JD-2512006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2512003', NULL, '2026-12-20', '08:00:00', '09:00:00', 0),
-('JD-2512007', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-20', '09:00:00', '10:00:00', NULL),
-('JD-2512008', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-12-15', '08:00:00', '09:00:00', 1),
-('JD-2512009', 'MP-00002', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2026-12-15', '08:00:00', '09:00:00', 0),
+('JD-2601018', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2612002', 'Sorting dan Searching', '2026-01-02', '08:00:00', '09:00:00', 1),
+('JD-2612006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2612003', NULL, '2026-12-20', '08:00:00', '09:00:00', 0),
+('JD-2612007', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-20', '09:00:00', '10:00:00', NULL),
+('JD-2612008', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-12-15', '08:00:00', '09:00:00', 1),
+('JD-2612009', 'MP-00002', 'P-2601001', 'M-2601006', 'PB-2612003', NULL, '2026-12-15', '08:00:00', '09:00:00', 0),
 ('JD-2601019', 'MP-00003', 'P-2601002', 'M-2601001', 'PB-2601001', 'Fungsi dan Prosedur', '2026-01-10', '08:00:00', '09:00:00', 1),
 ('JD-2601020', 'MP-00005', 'P-2601004', 'M-2601002', 'PB-2601003', 'Pengenalan Database dan Tabel', '2026-01-05', '08:00:00', '09:00:00', 0),
-('JD-2512010', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-12-31', '10:00:00', '11:00:00', NULL),
-('JD-2601021', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2512002', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1);
+('JD-2612010', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-12-31', '10:00:00', '11:00:00', NULL),
+('JD-2601021', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2612002', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1),
+('JD-2609001', 'MP-00001', 'P-2601005', 'M-2601001', 'PB-2601001', 'Materi Lama 1', '2025-09-10', '08:00:00', '09:00:00', 1),
+('JD-2609002', 'MP-00002', 'P-2601005', 'M-2601002', 'PB-2601003', 'Materi Lama 2', '2025-09-12', '09:00:00', '10:00:00', 0);
+
 
 -- set 1 jadwal ke hari ini
 UPDATE jadwal SET tanggal = CURDATE() WHERE kode_jadwal = 'JD-2601001';
+
+-- need to test SP manually later...
+
+-- 1) JADWAL KOSONG (BELUM DIAMBIL MURID)
+-- -- Kosong + masa lalu
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-001', 'MP-00001', 'P-2601001', NULL, NULL, NULL, DATE_SUB(CURDATE(), INTERVAL 5 DAY), '10:00:00', '11:00:00', NULL);
+
+-- -- Kosong + hari ini
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-002', 'MP-00002', 'P-2601001', NULL, NULL, NULL, CURDATE(), '14:00:00', '15:00:00', NULL);
+
+-- -- Kosong + masa depan
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-003', 'MP-00003', 'P-2601002', NULL, NULL, NULL, DATE_ADD(CURDATE(), INTERVAL 5 DAY), '09:00:00', '10:00:00', NULL);
+--  2) JADWAL TERISI - VARIASI ABSENSI
+-- -- Terisi + HADIR
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-004', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601002', 'Testing Hadir', CURDATE(), '16:00:00', '17:00:00', 1);
+
+-- -- Terisi + TIDAK HADIR
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-005', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', 'Testing Tidak Hadir', CURDATE(), '17:00:00', '18:00:00', 0);
+
+-- -- Terisi + BELUM DIABSEN
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-006', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Testing Belum Absen', CURDATE(), '18:00:00', '19:00:00', NULL);
+-- 3) JADWAL TERISI TAPI PAKET SUDAH HABIS (SISA = 0)
+-- Contoh: PB-2601001 sudah pertemuan_terpakai = 4 dari 4
+
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-007', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', 'Paket Sudah Habis', CURDATE(), '19:00:00', '20:00:00', NULL);
+-- 4) JADWAL TERISI TAPI PAKET SUDAH KEDALUWARSA
+-- Pakai pembelian lama / expired
+
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-008', 'MP-00005', 'P-2601004', 'M-2601002', 'PB-2512001', 'Paket Expired', CURDATE(), '20:00:00', '21:00:00', NULL);
+-- 5) JADWAL TERISI TAPI PAKET BELUM LUNAS
+-- Contoh: PB-2601004 / PB-2601005
+
+-- INSERT INTO jadwal VALUES
+-- ('JD-TST-009', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2601004', 'Paket Belum Lunas', CURDATE(), '21:00:00', '22:00:00', NULL);
 
 -- --------------------------------------------------------
 -- PENGAJAR
@@ -273,7 +394,8 @@ INSERT INTO pengajar (id_pengajar, nama_pengajar, email, password, status) VALUE
 ('P-2601001', 'Pengajar Andi', 'andi.pengajar@mail.com', '123', 1),
 ('P-2601002', 'Pengajar Bima', 'bima.pengajar@mail.com', '123', 1),
 ('P-2601003', 'Pengajar Citra', 'citra.pengajar@mail.com', '123', 0),
-('P-2601004', 'Pengajar Dewa', 'dewa.pengajar@mail.com', '123', 1);
+('P-2601004', 'Pengajar Dewa', 'dewa.pengajar@mail.com', '123', 1),
+('P-2601005', 'Pengajar Eko', 'eko.pengajar@mail.com', '123', 0);
 
 -- --------------------------------------------------------
 -- DIAJAR
@@ -283,7 +405,10 @@ INSERT INTO diajar (id_diajar, id_mapel, id_pengajar) VALUES
 (1, 'MP-00001', 'P-2601001'),
 (2, 'MP-00002', 'P-2601001'),
 (3, 'MP-00003', 'P-2601002'),
-(4, 'MP-00005', 'P-2601004');
+(4, 'MP-00005', 'P-2601004'),
+(5, 'MP-00001', 'P-2601005'),
+(6, 'MP-00002', 'P-2601005');
+
 
 -- --------------------------------------------------------
 -- LOG_SISTEM
