@@ -29,33 +29,37 @@ CREATE TABLE admin (
   nama_admin VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  status TINYINT(1) NOT NULL,
+  status TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id_admin)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE log_sistem ( 
-  id_log bigint(20) UNSIGNED NOT NULL,
-  tanggal datetime NOT NULL, aktivitas text NOT NULL, 
-  id_akun varchar(10) NOT NULL 
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  id_log BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  tanggal DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  aktivitas TEXT NOT NULL, 
+  id_akun VARCHAR(20) NOT NULL,
+  PRIMARY KEY (id_log)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 CREATE TABLE murid (
   id_murid VARCHAR(20) NOT NULL,
   nama_murid VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  status TINYINT(1) NOT NULL,
+  status TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id_murid)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE pengajar (
   id_pengajar VARCHAR(20) NOT NULL,
   nama_pengajar VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  status TINYINT(1) NOT NULL,
+  status TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id_pengajar)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 /* =========================================================
    MASTER DATA
@@ -67,17 +71,17 @@ CREATE TABLE katalogpaket (
   jml_pertemuan INT NOT NULL,
   masa_aktif_hari INT NOT NULL,
   harga DECIMAL(12,2) NOT NULL,
-  status_dijual TINYINT(1) NOT NULL,
+  status_dijual TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id_paket)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE mata_pelajaran (
   id_mapel VARCHAR(20) NOT NULL,
   nama_mapel VARCHAR(255) NOT NULL,
   deskripsiMapel TEXT NOT NULL,
-  status TINYINT(1) NOT NULL,
+  status TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (id_mapel)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /* =========================================================
    TRANSAKSI
@@ -87,17 +91,24 @@ CREATE TABLE paketdibeli (
   id_pembelian VARCHAR(20) NOT NULL,
   id_murid VARCHAR(20) NOT NULL,
   id_paket VARCHAR(20) NOT NULL,
-  tgl_pemesanan DATETIME NOT NULL,
+  tgl_pemesanan DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   tgl_pembayaran DATETIME DEFAULT NULL,
   gambar_bukti_pembayaran TEXT DEFAULT NULL,
   tgl_kedaluwarsa DATETIME DEFAULT NULL,
   pertemuan_terpakai INT NOT NULL DEFAULT 0,
   PRIMARY KEY (id_pembelian),
+
   CONSTRAINT fk_paketdibeli_murid
-    FOREIGN KEY (id_murid) REFERENCES murid(id_murid),
+    FOREIGN KEY (id_murid) REFERENCES murid(id_murid)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+
   CONSTRAINT fk_paketdibeli_paket
     FOREIGN KEY (id_paket) REFERENCES katalogpaket(id_paket)
-) ENGINE=InnoDB;
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE jadwal (
   kode_jadwal VARCHAR(20) NOT NULL,
@@ -111,25 +122,48 @@ CREATE TABLE jadwal (
   jam_akhir TIME NOT NULL,
   status_kehadiran TINYINT(1),
   PRIMARY KEY (kode_jadwal),
+
   CONSTRAINT fk_jadwal_mapel
-    FOREIGN KEY (id_mapel) REFERENCES mata_pelajaran(id_mapel),
+    FOREIGN KEY (id_mapel) REFERENCES mata_pelajaran(id_mapel)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+
   CONSTRAINT fk_jadwal_pengajar
-    FOREIGN KEY (id_pengajar) REFERENCES pengajar(id_pengajar),
+    FOREIGN KEY (id_pengajar) REFERENCES pengajar(id_pengajar)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+
   CONSTRAINT fk_jadwal_murid
-    FOREIGN KEY (id_murid) REFERENCES murid(id_murid),
+    FOREIGN KEY (id_murid) REFERENCES murid(id_murid)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+
   CONSTRAINT fk_jadwal_pembelian
     FOREIGN KEY (id_pembelian) REFERENCES paketdibeli(id_pembelian)
-) ENGINE=InnoDB;
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 CREATE TABLE diajar (
   id_diajar BIGINT AUTO_INCREMENT PRIMARY KEY,
   id_mapel VARCHAR(20) NOT NULL,
   id_pengajar VARCHAR(20) NOT NULL,
+
   CONSTRAINT fk_diajar_mapel
-    FOREIGN KEY (id_mapel) REFERENCES mata_pelajaran(id_mapel),
+    FOREIGN KEY (id_mapel) REFERENCES mata_pelajaran(id_mapel)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+
   CONSTRAINT fk_diajar_pengajar
     FOREIGN KEY (id_pengajar) REFERENCES pengajar(id_pengajar)
-) ENGINE=InnoDB;
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+
+  UNIQUE KEY uk_pengajar_mapel (id_mapel, id_pengajar)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /* =========================================================
    INSERT DATA
@@ -184,13 +218,13 @@ INSERT INTO paketdibeli (id_pembelian, id_murid, id_paket, tgl_pemesanan, tgl_pe
 ('PB-2601001', 'M-2601001', 'PK-00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
 ('PB-2601002', 'M-2601001', 'PK-00002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-03-15 21:38:00', 0),
 ('PB-2601003', 'M-2601002', 'PK-00001', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
-('PB-2512001', 'M-2601002', 'PK-00003', '2025-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 0),
+('PB-2512001', 'M-2601002', 'PK-00003', '2026-12-05 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 0),
 ('PB-2601004', 'M-2601003', 'PK-00002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
-('PB-2512002', 'M-2601003', 'PK-00001', '2025-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2512002', 'M-2601003', 'PK-00001', '2026-12-25 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
 ('PB-2601005', 'M-2601004', 'PK-00005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
-('PB-2601006', 'M-2601005', 'PK-00001', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 4),
-('PB-2601007', 'M-2601005', 'PK-00002', '2026-01-07 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-03-15 21:38:00', 0),
-('PB-2512003', 'M-2601006', 'PK-00003', '2025-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 2);
+('PB-2601006', 'M-2601005', 'PK-00001', '2026-01-14 21:38:00', NULL, 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2601007', 'M-2601005', 'PK-00002', '2026-01-07 21:38:00', NULL, 'bukti.jpg', '2026-03-15 21:38:00', 0),
+('PB-2512003', 'M-2601006', 'PK-00003', '2026-12-30 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-04-14 21:38:00', 2);
 
 /* =========================================================
    JADWAL
@@ -200,16 +234,16 @@ INSERT INTO jadwal (kode_jadwal, id_mapel, id_pengajar, id_murid, id_pembelian, 
 ('JD-2601002', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', NULL, '2026-01-13', '08:00:00', '09:00:00', 0),
 ('JD-2601003', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-14', '09:00:00', '10:00:00', 0),
 ('JD-2601004', 'MP-00002', 'P-2601001', NULL, NULL, NULL, '2026-01-14', '10:00:00', '11:00:00', NULL),
-('JD-2512001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2025-12-25', '08:00:00', '09:00:00', 1),
+('JD-2512001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', 1),
 ('JD-2601005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
 ('JD-2601006', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', NULL, '2026-01-04', '08:00:00', '09:00:00', 0),
-('JD-2512002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2025-12-25', '08:00:00', '09:00:00', 1),
-('JD-2512003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-25', '09:00:00', '10:00:00', NULL),
+('JD-2512002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2512003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', 1),
+('JD-2512003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-25', '09:00:00', '10:00:00', NULL),
 ('JD-2601007', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '13:00:00', '14:00:00', 1),
-('JD-2512004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2025-12-14', '08:00:00', '09:00:00', 0),
+('JD-2512004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2026-12-14', '08:00:00', '09:00:00', 0),
 ('JD-2601008', 'MP-00002', 'P-2601001', 'M-2601001', 'PB-2601001', 'Percabangan dan Perulangan', '2026-01-09', '08:00:00', '09:00:00', 1),
 ('JD-2601009', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-07', '08:00:00', '09:00:00', 0),
-('JD-2512005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Form, Table, dan Layout Web', '2025-12-30', '08:00:00', '09:00:00', 1),
+('JD-2512005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2512002', 'Form, Table, dan Layout Web', '2026-12-30', '08:00:00', '09:00:00', 1),
 ('JD-2601010', 'MP-00005', 'P-2601004', 'M-2601005', 'PB-2601006', 'Pengenalan Database dan Tabel', '2026-01-12', '08:00:00', '09:00:00', 0),
 ('JD-2601011', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-01-12', '10:00:00', '11:00:00', NULL),
 ('JD-2601012', 'MP-00001', 'P-2601001', 'M-2601001', 'PB-2601001', 'Percabangan dan Perulangan', '2026-01-15', '08:00:00', '09:00:00', 0),
@@ -219,14 +253,17 @@ INSERT INTO jadwal (kode_jadwal, id_mapel, id_pengajar, id_murid, id_pembelian, 
 ('JD-2601016', 'MP-00005', 'P-2601004', 'M-2601005', 'PB-2601006', 'Pengenalan Database dan Tabel', '2026-01-08', '15:00:00', '16:00:00', 0),
 ('JD-2601017', 'MP-00001', 'P-2601001', 'M-2601002', 'PB-2601003', 'Variabel, Tipe Data, dan Operator', '2026-01-06', '08:00:00', '09:00:00', 1),
 ('JD-2601018', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2512002', 'Sorting dan Searching', '2026-01-02', '08:00:00', '09:00:00', 1),
-('JD-2512006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2512003', NULL, '2025-12-20', '08:00:00', '09:00:00', 0),
-('JD-2512007', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2025-12-20', '09:00:00', '10:00:00', NULL),
-('JD-2512008', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2025-12-15', '08:00:00', '09:00:00', 1),
-('JD-2512009', 'MP-00002', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2025-12-15', '08:00:00', '09:00:00', 0),
+('JD-2512006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2512003', NULL, '2026-12-20', '08:00:00', '09:00:00', 0),
+('JD-2512007', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-20', '09:00:00', '10:00:00', NULL),
+('JD-2512008', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-12-15', '08:00:00', '09:00:00', 1),
+('JD-2512009', 'MP-00002', 'P-2601001', 'M-2601006', 'PB-2512003', NULL, '2026-12-15', '08:00:00', '09:00:00', 0),
 ('JD-2601019', 'MP-00003', 'P-2601002', 'M-2601001', 'PB-2601001', 'Fungsi dan Prosedur', '2026-01-10', '08:00:00', '09:00:00', 1),
 ('JD-2601020', 'MP-00005', 'P-2601004', 'M-2601002', 'PB-2601003', 'Pengenalan Database dan Tabel', '2026-01-05', '08:00:00', '09:00:00', 0),
-('JD-2512010', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2025-12-31', '10:00:00', '11:00:00', NULL),
+('JD-2512010', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-12-31', '10:00:00', '11:00:00', NULL),
 ('JD-2601021', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2512002', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1);
+
+-- set 1 jadwal ke hari ini
+UPDATE jadwal SET tanggal = CURDATE() WHERE kode_jadwal = 'JD-2601001';
 
 -- --------------------------------------------------------
 -- PENGAJAR
@@ -1195,8 +1232,12 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS SP_TandaiLunas;
 DELIMITER $$
 
-CREATE PROCEDURE SP_TandaiLunas(IN p_id VARCHAR(10))
+CREATE PROCEDURE SP_TandaiLunas(IN p_id VARCHAR(20))
 BEGIN
+  DECLARE v_rows INT;
+
+  START TRANSACTION;
+
   UPDATE paketdibeli pd
   JOIN katalogpaket k ON pd.id_paket = k.id_paket
   SET
@@ -1205,7 +1246,24 @@ BEGIN
   WHERE pd.id_pembelian = p_id
     AND pd.gambar_bukti_pembayaran IS NOT NULL
     AND pd.gambar_bukti_pembayaran <> ''
-    AND pd.tgl_pembayaran IS NULL; 
+    AND pd.tgl_pembayaran IS NULL;
+
+  SET v_rows = ROW_COUNT();
+
+  IF v_rows = 0 THEN
+    ROLLBACK;
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Paket tidak bisa ditandai lunas (sudah lunas atau belum upload bukti)';
+  END IF;
+
+  INSERT INTO log_sistem(tanggal, aktivitas, id_akun)
+  VALUES (
+    NOW(),
+    CONCAT('Admin menandai lunas pembelian paket: ', p_id),
+    COALESCE(@current_user_id, 'SYSTEM')
+  );
+
+  COMMIT;
 END$$
 
 DELIMITER ;
@@ -1935,6 +1993,13 @@ BEGIN
   SET pertemuan_terpakai = pertemuan_terpakai + 1
   WHERE id_pembelian = p_id_pembelian;
 
+  INSERT INTO log_sistem (tanggal, aktivitas, id_akun)
+  VALUES (
+    NOW(),
+    CONCAT('Murid ', p_id_murid, ' memilih jadwal ', p_kode_jadwal, ' (paket ', p_id_pembelian, ')'),
+    p_id_murid
+  );
+
   COMMIT;
 END$$
 
@@ -1988,6 +2053,14 @@ BEGIN
   SET pertemuan_terpakai = pertemuan_terpakai - 1
   WHERE id_pembelian = v_id_pembelian
     AND pertemuan_terpakai > 0;
+
+  INSERT INTO log_sistem (tanggal, aktivitas, id_akun)
+  VALUES (
+    NOW(),
+    CONCAT('Murid ', p_id_murid, ' membatalkan jadwal ', p_kode_jadwal),
+    p_id_murid
+  );
+
 
   COMMIT;
 END$$
