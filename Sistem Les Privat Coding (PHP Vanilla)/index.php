@@ -1,14 +1,24 @@
 <?php
     session_start();
 
+    // remove session if action=logout
+    if(!empty($_GET["action"])) {
+        if($_GET["action"] == "logout") {
+            $_SESSION["loginStat"] = 0;
+            $_SESSION["loginUSN"] = null;
+            $_SESSION["loginRoles"] = null;
+        }
+    }
+
     if (empty($_SESSION["loginStat"])) {
         $_SESSION["loginStat"] = 0;
     }
 
     // don't come here if already logged in
-    if($_SESSION["loginStat"] == 1) {
+    if($_SESSION["loginStat"] > 0) {
         header("Location: dashboard.php");
     }
+    
     
     // for wrong login message
     if(empty($_GET["wrongLogin"])) {
@@ -136,7 +146,7 @@
             <a onclick="switchPage(0);" class="back-link">< Kembali</a>
             <h3 style="margin-top: 0; margin-bottom: 5px;">Login Murid</h3>
 
-            <form>
+            <form method="POST" action="dashboard.php">
                 <input type="hidden" name="roles" value="murid">
                 <label for="email">Email:</label><br>
                 <input type="email" class="input-field" placeholder="nama@email.com" name="email" id="email" required>
@@ -156,7 +166,7 @@
             <a onclick="switchPage(0);" class="back-link">< Kembali</a>
             <h3 style="margin-top: 0; margin-bottom: 5px;">Login Pengajar</h3>
 
-            <form>
+            <form method="POST" action="dashboard.php">
                 <input type="hidden" name="roles" value="pengajar">
                 <label for="email">Email:</label><br>
                 <input type="email" class="input-field" placeholder="nama@email.com" name="email" id="email" required>
@@ -176,7 +186,7 @@
             <a onclick="switchPage(0);" class="back-link">< Kembali</a>
             <h3 style="margin-top: 0; margin-bottom: 5px;">Login Admin</h3>
 
-            <form>
+            <form method="POST" action="dashboard.php">
                 <input type="hidden" name="roles" value="admin">
                 <label for="email">Email:</label><br>
                 <input type="email" class="input-field" placeholder="nama@email.com" name="email" id="email" required>
