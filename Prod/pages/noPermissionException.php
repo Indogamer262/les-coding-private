@@ -29,7 +29,35 @@
                 grid-template-rows: auto 1fr;
                 background-color: #ededed;
             }
-            
+            .sidebar {
+                grid-area: sidebar;
+                height: 100vh;
+                box-sizing: border-box;
+                background-color: #004fa8ff;
+                overflow-y: auto;
+            }
+            .sidebar-content {
+                width: 300px;
+                padding: 25px;
+                box-sizing: border-box;
+            }
+            .sidebar-content>a {
+                display: block;
+                border-radius: 8px;
+                padding: 12px;
+                text-align: left;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+            .sidebar-content>a:hover {
+                background-color: #0070f0ff;
+            }
+            .sidebar-content>.active {
+                background-color: #006be6ff;
+                color: white;
+            }
             .main {
                 grid-area: content;
                 padding: 20px;
@@ -65,6 +93,16 @@
                     display: block;
                 }
 
+                .sidebar {
+                    height: auto;
+                    box-sizing: border-box;
+                    background-color: #004fa8ff;
+                    overflow: unset;
+                    position: absolute;
+                    z-index: 3;
+                    display: none;
+                }
+
                 .main {
                     grid-area: content;
                     padding: 20px;
@@ -84,91 +122,35 @@
         <?php include('occurence/navbar.php'); ?>
 
         <!-- Sidebar Layout -->
-        <?php include('pages/admin/sidebar.php'); ?>
+        <div class="sidebar poppins-regular">
+            <div>
+                <p style="font-size: 18px; color: white; text-align: center; margin-top: 25px; padding-bottom: 25px; border-bottom: 1px solid black; margin-bottom: 0; box-sizing: border-box;" class="poppins-bold"><b>Les Privat Coding</b></p>
+            </div>
+            <div class="sidebar-content">
+                <a href="dashboard.php">Dashboard</a>
+            </div>
+        </div>
         
         <!-- Main content layout -->
         <div class="main poppins-regular">
-            <h2 style="margin-bottom:0;">Dashboard Admin</h2>
-            Selamat datang di Sistem Les Privat Coding
-            <!-- summary board -->
-            <div class="summaryBoard">
-                <div>
-                    <p>
-                        Total Murid<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jumlahMurid"); ?></span><br>
-                        Aktif belajar
-                    </p>
-                </div>
-
-                <div>
-                    <p>
-                        Total Pengajar<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jumlahPengajar"); ?></span><br>
-                        Aktif mengajar
-                    </p>
-                </div>
-
-                <div>
-                    <p>
-                        Pendapatan Bulan ini<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("totalPendapatanBulan"); ?></span><br>
-                        Aktif belajar
-                    </p>
-                </div>
-
-                <div>
-                    <p>
-                        Pembelian Paket<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("pembelianPaketBelumLunas"); ?></span><br>
-                        Perlu verifikasi
-                    </p>
-                </div>    
+            <div style="padding: 20px; background-color: #ffc8c8;">
+                <h2 style="margin:0;">Galat</h2>
+                Anda tidak memiliki izin untuk melihat konten ini
             </div>
-
-            <div class="jadwalTerisiDashboard">
-                <div style="display:flex;justify-content: space-between;">
-                    <span style="font-size:20px;"><b>Jadwal Terisi</b></span>
-                    <a href="">Lihat Semua</a>
-                </div>
-                <hr>
-                <table id="dashboardTb" class="display">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Hari & Waktu</th>
-                            <th>Pengajar</th>
-                            <th>Mata Pelajaran</th>
-                            <th>Murid</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php echo $lesCodingUtil->renderTableBody("admin","dashboard"); ?>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
     </body>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
     <script>
-        new DataTable('#dashboardTb', {
-            columnDefs: [
-                {
-                    targets: [0],
-                    orderData: [0, 1]
-                },
-                {
-                    targets: [1],
-                    orderData: [1, 0]
-                },
-                {
-                    targets: [4],
-                    orderData: [4, 0]
-                }
-            ],
-            scrollX: true
-        });
+        let state = false;
+        function sidebarToggle() {
+            if(state) {
+                document.getElementsByClassName("sidebar")[0].style.display = null;
+                state = false;
+            }
+            else {
+                document.getElementsByClassName("sidebar")[0].style.display = "block";
+                state = true;
+            }
+        }
     </script>
 </html>

@@ -18,12 +18,12 @@
 
     // import pages based on roles
     if($_SESSION["loginRoles"] == "murid") {
-        include("pages/murid/dashboard.php");
+        include("pages/noPermissionException.php");
     }
     else if($_SESSION["loginRoles"] == "pengajar") {
-        include("pages/pengajar/dashboard.php");
+        include("pages/noPermissionException.php");
     }
     else if($_SESSION["loginRoles"] == "admin") {
-        include("pages/admin/dashboard.php");
+        include("pages/admin/accounts.php");
     }
 ?>
