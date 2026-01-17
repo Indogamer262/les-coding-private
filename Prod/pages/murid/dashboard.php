@@ -122,20 +122,7 @@
         <?php include('occurence/navbar.php'); ?>
 
         <!-- Sidebar Layout -->
-        <div class="sidebar poppins-regular">
-            <div>
-                <p style="font-size: 18px; color: white; text-align: center; margin-top: 25px; padding-bottom: 25px; border-bottom: 1px solid black; margin-bottom: 0; box-sizing: border-box;" class="poppins-bold"><b>Les Privat Coding</b></p>
-            </div>
-            <div class="sidebar-content">
-                <a href="" class="active">Dashboard</a>
-                <a href="">Beli Paket</a>
-                <a href="">Paket Saya</a>
-                <a href="">Pilih Jadwal</a>
-                <a href="">Jadwal Les</a>
-                <a href="">Riwayat Kehadiran</a>
-                <a href="">Log Aktivitas</a>
-            </div>
-        </div>
+        <?php include('pages/murid/sidebar.php'); ?>
         
         <!-- Main content layout -->
         <div class="main poppins-regular">

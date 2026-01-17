@@ -2,208 +2,235 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Riwayat Kehadiran</h2>
-            <p class="text-sm text-gray-600 mt-1">Pantau perjalanan belajar Anda</p>
-        </div>
-    </div>
-    <!-- Progress Section -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Progress Pembelajaran</h2>
-        <div class="mb-2 flex items-center justify-between">
-            <span class="text-sm text-gray-600">Total Progress</span>
-            <span class="text-sm font-semibold text-blue-600">14 / 16 pertemuan selesai (87.5%)</span>
-        </div>
-        <div class="w-full bg-gray-200 rounded-full h-4">
-            <div class="bg-blue-600 h-4 rounded-full transition-all" style="width: 87.5%"></div>
+            <h1 class="text-2xl font-bold text-gray-800">Riwayat Kehadiran</h1>
+            <p class="text-sm text-gray-600 mt-1">Lihat seluruh riwayat kehadiran les</p>
         </div>
     </div>
 
-    <!-- Filter Section -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200 p-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="all">Semua Periode</option>
-                    <option value="week">Minggu Ini</option>
-                    <option value="month" selected>Bulan Ini</option>
-                    <option value="year">Tahun Ini</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="all">Semua Pelajaran</option>
-                    <option value="python">Python</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="react">React.js</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="all">Semua Status</option>
-                    <option value="hadir">Hadir</option>
-                    <option value="tidak-hadir">Tidak Hadir</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <!-- Attendance History -->
+    <!-- Attendance Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800">Riwayat Pertemuan</h2>
+        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <h2 class="text-lg font-semibold text-gray-800">Daftar Kehadiran</h2>
+
+            <!-- Filters -->
+            <div id="kehadiranMuridDtFilters" class="hidden flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Periode</label>
+                    <select id="filterPeriode" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Semua</option>
+                        <option value="today">Hari Ini</option>
+                        <option value="week" selected>Minggu Ini</option>
+                        <option value="month">Bulan Ini</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm whitespace-nowrap">Status</label>
+                    <select id="filterStatus" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all" selected>Semua</option>
+                        <option value="hadir">Hadir</option>
+                        <option value="tidak-hadir">Tidak Hadir</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-6 py-4">Tanggal & Waktu</th>
-                        <th class="px-6 py-4">Pengajar</th>
-                        <th class="px-6 py-4">Mata Pelajaran</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4">Materi</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+        <div class="px-6 py-6">
+            <table id="tableKehadiranMurid" class="display w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3">Tanggal & Waktu</th>
+                        <th class="px-6 py-3">Pengajar</th>
+                        <th class="px-6 py-3">Mata Pelajaran</th>
+                        <th class="px-6 py-3">Materi</th>
+                        <th class="px-6 py-3 text-center">Kehadiran</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
-                    <!-- Row 1 - Present -->
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Senin, 30 Des 2025</p>
-                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center font-semibold text-emerald-600 text-xs">
-                                    AW
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Ahmad Wijaya</p>
-                                    <p class="text-xs text-gray-500">#PGJ001</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Python</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">✓ Hadir</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-gray-800 max-w-xs">Python Functions & Modules, praktik membuat calculator sederhana</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="viewDetail(1)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 - Present -->
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Rabu, 01 Jan 2026</p>
-                                <p class="text-sm text-gray-600">16:00 - 18:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center font-semibold text-emerald-600 text-xs">
-                                    AW
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Ahmad Wijaya</p>
-                                    <p class="text-xs text-gray-500">#PGJ001</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">React.js</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">✓ Hadir</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-gray-800 max-w-xs">Introduction to React Hooks, useState dan useEffect basics</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="viewDetail(2)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 - Absent -->
-                    <tr class="hover:bg-gray-50 transition-colors opacity-75">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Jumat, 27 Des 2025</p>
-                                <p class="text-sm text-gray-600">10:00 - 12:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center font-semibold text-purple-600 text-xs">
-                                    DK
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Dewi Kusuma</p>
-                                    <p class="text-xs text-gray-500">#PGJ002</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">JavaScript</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">✕ Tidak Hadir</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-gray-500 italic">Anda tidak hadir</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center">
-                                <button onclick="viewDetail(3)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
             </table>
-        </div>
-        <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <p class="text-sm text-gray-600">Menampilkan <span class="font-medium">3</span> dari <span class="font-medium">16</span> pertemuan</p>
-            <div class="flex gap-2">
-                <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Previous</button>
-                <button class="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-medium">1</button>
-                <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">2</button>
-                <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Next</button>
-            </div>
         </div>
     </div>
 </div>
 
 <script>
-function viewDetail(id) {
-    alert('Viewing attendance detail for ID: ' + id);
+let tableKehadiranMurid;
+let selectedPeriodeFilter = 'week';
+let selectedStatusFilter = 'all';
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
+
+// Dummy data for kehadiran murid
+const kehadiranMuridData = [
+    {
+        kehadiran_id: 1,
+        tanggal: '2025-12-30',
+        tanggal_display: '30 Des 2025, Senin',
+        waktu: '14:00 - 16:00',
+        pengajar: 'Ahmad Wijaya',
+        mapel: 'Python',
+        materi: 'Python Functions & Modules',
+        status: 'hadir'
+    },
+    {
+        kehadiran_id: 2,
+        tanggal: '2025-12-31',
+        tanggal_display: '31 Des 2025, Selasa',
+        waktu: '10:00 - 12:00',
+        pengajar: 'Dewi Kusuma',
+        mapel: 'JavaScript',
+        materi: '-',
+        status: 'tidak-hadir'
+    },
+    {
+        kehadiran_id: 3,
+        tanggal: '2026-01-02',
+        tanggal_display: '02 Jan 2026, Kamis',
+        waktu: '14:00 - 16:00',
+        pengajar: 'Ahmad Wijaya',
+        mapel: 'React.js',
+        materi: 'React Components & Props',
+        status: 'hadir'
+    },
+    {
+        kehadiran_id: 4,
+        tanggal: '2026-01-04',
+        tanggal_display: '04 Jan 2026, Sabtu',
+        waktu: '09:00 - 11:00',
+        pengajar: 'Eko Prasetyo',
+        mapel: 'Node.js',
+        materi: 'Express.js Basics',
+        status: 'hadir'
+    }
+];
+
+function applyFilters() {
+    if (!tableKehadiranMurid) return;
+    tableKehadiranMurid.draw();
+}
+
+function getStatusBadge(status) {
+    const isHadir = status === 'hadir';
+    const label = isHadir ? 'Hadir' : 'Tidak Hadir';
+    const cls = isHadir ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+    return `<span class="px-4 py-1 rounded-full text-xs font-medium ${cls}">${label}</span>`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Custom filter for status
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
+        if (!settings?.nTable || settings.nTable.id !== 'tableKehadiranMurid') return true;
+        if (!tableKehadiranMurid) return true;
+
+        const row = tableKehadiranMurid.row(dataIndex).data();
+        if (!row) return true;
+
+        const statusOk = selectedStatusFilter === 'all' || row.status === selectedStatusFilter;
+        return statusOk;
+    });
+
+    tableKehadiranMurid = $('#tableKehadiranMurid').DataTable({
+        data: kehadiranMuridData,
+        columns: [
+            {
+                data: null,
+                render: (data, type, row) => {
+                    if (type === 'sort' || type === 'type') return row.tanggal;
+                    return `
+                        <div>
+                            <p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(row.tanggal_display)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(row.waktu)}</p>
+                        </div>
+                    `;
+                }
+            },
+            {
+                data: 'pengajar',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'mapel',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'materi',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return `<span class="text-sm text-gray-800">${escapeHtml(data)}</span>`;
+                }
+            },
+            {
+                data: 'status',
+                className: 'text-center',
+                render: (data, type) => {
+                    if (type !== 'display') return data;
+                    return getStatusBadge(data);
+                }
+            }
+        ],
+        createdRow: (row, data) => {
+            $(row).addClass('hover:bg-gray-50 transition-colors');
+            row.setAttribute('data-kehadiran-id', String(data.kehadiran_id));
+        },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            zeroRecords: "Tidak ada kehadiran ditemukan",
+            paginate: {
+                first: "Pertama",
+                last: "Terakhir",
+                next: "Selanjutnya",
+                previous: "Sebelumnya"
+            }
+        },
+        pageLength: 10,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
+        ordering: true,
+        order: [[0, 'desc']]
+    });
+
+    // Move filters next to length menu
+    const wrapper = document.getElementById('tableKehadiranMurid_wrapper');
+    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
+    const filterEl = document.getElementById('kehadiranMuridDtFilters');
+    if (lengthEl && filterEl) {
+        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
+        filterEl.classList.remove('hidden');
+        lengthEl.appendChild(filterEl);
+    }
+
+    const periodeSelect = document.getElementById('filterPeriode');
+    const statusSelect = document.getElementById('filterStatus');
+
+    if (periodeSelect) {
+        selectedPeriodeFilter = periodeSelect.value || 'week';
+        periodeSelect.addEventListener('change', () => {
+            selectedPeriodeFilter = periodeSelect.value || 'week';
+            applyFilters();
+        });
+    }
+
+    if (statusSelect) {
+        selectedStatusFilter = statusSelect.value || 'all';
+        statusSelect.addEventListener('change', () => {
+            selectedStatusFilter = statusSelect.value || 'all';
+            applyFilters();
+        });
+    }
+
+    applyFilters();
+});
 </script>
