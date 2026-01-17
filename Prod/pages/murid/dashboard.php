@@ -29,35 +29,6 @@
                 grid-template-rows: auto 1fr;
                 background-color: #ededed;
             }
-            .sidebar {
-                grid-area: sidebar;
-                height: 100vh;
-                box-sizing: border-box;
-                background-color: #004fa8ff;
-                overflow-y: auto;
-            }
-            .sidebar-content {
-                width: 300px;
-                padding: 25px;
-                box-sizing: border-box;
-            }
-            .sidebar-content>a {
-                display: block;
-                border-radius: 8px;
-                padding: 12px;
-                text-align: left;
-                color: white;
-                text-decoration: none;
-                font-size: 14px;
-                margin-bottom: 4px;
-            }
-            .sidebar-content>a:hover {
-                background-color: #0070f0ff;
-            }
-            .sidebar-content>.active {
-                background-color: #006be6ff;
-                color: white;
-            }
             .main {
                 grid-area: content;
                 padding: 20px;
@@ -91,16 +62,6 @@
             @media only screen and (max-width: 800px) {
                 body {
                     display: block;
-                }
-
-                .sidebar {
-                    height: auto;
-                    box-sizing: border-box;
-                    background-color: #004fa8ff;
-                    overflow: unset;
-                    position: absolute;
-                    z-index: 3;
-                    display: none;
                 }
 
                 .main {

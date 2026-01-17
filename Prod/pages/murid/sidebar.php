@@ -48,11 +48,11 @@
     </div>
     <div class="sidebar-content">
 
-    <a href="dashboard-murid.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "dashboard") echo "active"; ?>">
+    <a href="dashboard.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "dashboard") echo "active"; ?>">
         Dashboard
     </a>
 
-    <a href="paketLes.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "beliPaket") echo "active"; ?>">
+    <a href="beliPaket.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "beliPaket") echo "active"; ?>">
         Beli Paket
     </a>
 
