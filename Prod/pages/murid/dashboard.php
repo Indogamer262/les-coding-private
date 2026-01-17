@@ -96,7 +96,7 @@
                 <div>
                     <p>
                         Paket Les Aktif<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("paketLesAktifMurid"); ?></span><br> <!-- FC_getJumlahPaketAktifMurid -->
+                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("paketLesAktifMurid",$_SESSION["loginID"]); ?></span><br> <!-- FC_getJumlahPaketAktifMurid -->
                         Sedang Berjalan
                     </p>
                 </div>
@@ -104,7 +104,7 @@
                 <div>
                     <p>
                         Sisa Pertemuan<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("sisaPertemuanMurid"); ?></span><br> <!-- FC_getTotalSisaPertemuanMurid -->
+                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("sisaPertemuanMurid",$_SESSION["loginID"]); ?></span><br> <!-- FC_getTotalSisaPertemuanMurid -->
                         Dari paket aktif
                     </p>
                 </div>
@@ -112,7 +112,7 @@
                 <div>
                     <p>
                         Jadwal Hari Ini<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jadwalHariIniMurid"); ?></span><br> <!-- FC_getTotalJadwalHariIniMurid -->
+                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jadwalHariIniMurid",$_SESSION["loginID"]); ?></span><br> <!-- FC_getTotalJadwalHariIniMurid -->
                         Pertemuan Terjadwal
                     </p>
                 </div>
@@ -120,7 +120,7 @@
                 <div>
                     <p>
                         Jadwal Minggu Ini<br>
-                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jadwalMingguIniMurid"); ?></span><br> <!-- FC_getTotalJadwalMingguIniMurid -->
+                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jadwalMingguIniMurid",$_SESSION["loginID"]); ?></span><br> <!-- FC_getTotalJadwalMingguIniMurid -->
                         Pertemuan Terjadwal
                     </p>
                 </div>    

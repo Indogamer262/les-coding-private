@@ -37,6 +37,7 @@
                 
                 // get username and put it in session
                 $_SESSION["loginUSN"] = $lesCodingUtil->getAccountUsername($roles, $username);
+                $_SESSION["loginID"] = $lesCodingUtil->getAccountId($roles, $username);
             }
             else {
                 $loginStat = -1;
