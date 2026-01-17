@@ -128,13 +128,12 @@
                         <tr>
                             <th>Tanggal</th>
                             <th>Hari & Waktu</th>
-                            <th>Pengajar</th>
                             <th>Mata Pelajaran</th>
                             <th>Murid</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php echo $lesCodingUtil->renderTableBody("admin","dashboard"); ?>
+                        <?php echo $lesCodingUtil->renderTableBody("pengajar","dashboard"); ?> 
                     </tbody>
                 </table>
             </div>
@@ -156,8 +155,8 @@
                     orderData: [1, 0]
                 },
                 {
-                    targets: [4],
-                    orderData: [4, 0]
+                    targets: [3],
+                    orderData: [3, 0]
                 }
             ],
             scrollX: true

@@ -132,7 +132,33 @@
                             "<td>" . $row['tanggal'] . "</td>" .
                             "<td>" . $row['hari'] . "<br>". $row['waktu'] ."</td>" .
                             "<td>" . $row['nama_pengajar'] . "</td>" .
-                            "<td>" . $row['nama_pengajar'] . "</td>" .
+                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>";
+                    }
+                }
+            }
+            else if($roles == "murid") {
+                if($type == "dashboard") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardMurid_JadwalMendatang");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['hari'] . "<br>". $row['waktu'] ."</td>" .
+                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . $row['nama_pengajar'] . "</td>";
+                    }
+                }
+            }
+            else if($roles == "pengajar") {
+                if($type == "dashboard") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardPengajar_JadwalMendatang");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['hari'] . "<br>". $row['waktu'] ."</td>" .
+                            "<td>" . $row['nama_mapel'] . "</td>" .
                             "<td>" . $row['nama_murid'] . "</td>";
                     }
                 }

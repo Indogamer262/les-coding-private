@@ -45,7 +45,7 @@
                 padding: 12px;
                 margin: 10px;
             }
-            .jadwalDashboard {
+            .jadwalTerisiDashboard {
                 background-color: white;
                 box-shadow: 0 0 10px 0 lightgray;
                 border-radius: 8px;
@@ -126,7 +126,7 @@
                 </div>    
             </div>
 
-            <div class="jadwalDashboard">
+            <div class="jadwalTerisiDashboard">
                 <div style="display:flex;justify-content: space-between;">
                     <span style="font-size:20px;"><b>Jadwal Mendatang</b></span>
                     <a href="">Lihat Semua</a>
@@ -137,8 +137,8 @@
                         <tr>
                             <th>Tanggal</th>
                             <th>Hari & Waktu</th>
-                            <th>Pengajar</th>
                             <th>Mata Pelajaran</th>
+                            <th>Pengajar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -164,23 +164,11 @@
                     orderData: [1, 0]
                 },
                 {
-                    targets: [4],
-                    orderData: [4, 0]
+                    targets: [3],
+                    orderData: [3, 0]
                 }
             ],
             scrollX: true
         });
-
-        let state = false;
-        function sidebarToggle() {
-            if(state) {
-                document.getElementsByClassName("sidebar")[0].style.display = null;
-                state = false;
-            }
-            else {
-                document.getElementsByClassName("sidebar")[0].style.display = "block";
-                state = true;
-            }
-        }
     </script>
 </html>
