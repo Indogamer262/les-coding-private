@@ -75,7 +75,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_BatalPilihJadwal` (IN `p_kode_ja
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_BeliPaket` (IN `p_id_murid` VARCHAR(20), IN `p_id_paket` VARCHAR(20))   BEGIN
-  DECLARE v_prefix VARCHAR(10);
+  DECLARE v_prefix VARCHAR(20);
   DECLARE v_last INT DEFAULT 0;
   DECLARE v_id VARCHAR(20);
 
@@ -258,7 +258,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_InputAbsensi_Pengajar` (IN `p_ko
     AND id_pengajar = p_id_pengajar;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_JadwalMengajarPengajar` (IN `p_id_pengajar` VARCHAR(10), IN `p_periode` VARCHAR(20), IN `p_status` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_JadwalMengajarPengajar` (IN `p_id_pengajar` VARCHAR(20), IN `p_periode` VARCHAR(20), IN `p_status` VARCHAR(20))   BEGIN
   SELECT
     j.kode_jadwal,
     j.tanggal,
@@ -415,7 +415,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatAkun` (IN `p_role` VARCHAR(
     );
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatBuktiPembayaran` (IN `p_id` VARCHAR(10))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatBuktiPembayaran` (IN `p_id` VARCHAR(20))   BEGIN
   SELECT gambar_bukti_pembayaran
   FROM paketdibeli
   WHERE id_pembelian = p_id;
@@ -859,7 +859,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_RiwayatKehadiranMurid` (IN `p_id
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_RiwayatKehadiranPengajar` (IN `p_id_pengajar` VARCHAR(10), IN `p_periode` VARCHAR(20), IN `p_status` VARCHAR(20), IN `p_urut` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_RiwayatKehadiranPengajar` (IN `p_id_pengajar` VARCHAR(20), IN `p_periode` VARCHAR(20), IN `p_status` VARCHAR(20), IN `p_urut` VARCHAR(20))   BEGIN
   SELECT
     j.kode_jadwal,
     j.tanggal,
@@ -1177,7 +1177,7 @@ END$$
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getJumlahPaketAktifMurid` (`p_id_murid` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
+CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getJumlahPaketAktifMurid` (`p_id_murid` VARCHAR(20)) RETURNS INT(11) READS SQL DATA RETURN (
   SELECT COUNT(*)
   FROM paketdibeli
   WHERE id_murid = p_id_murid
@@ -1194,14 +1194,14 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getPendapatanBulanIni` () RETURNS
     AND YEAR(pd.tgl_pembayaran) = YEAR(CURDATE())
 )$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalHariIniMurid` (`p_id_murid` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
+CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalHariIniMurid` (`p_id_murid` VARCHAR(20)) RETURNS INT(11) READS SQL DATA RETURN (
   SELECT COUNT(*)
   FROM jadwal
   WHERE id_murid = p_id_murid
     AND tanggal = CURDATE()
 )$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalHariIniPengajar` (`p_id_pengajar` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
+CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalHariIniPengajar` (`p_id_pengajar` VARCHAR(20)) RETURNS INT(11) READS SQL DATA RETURN (
   SELECT COUNT(*)
   FROM jadwal
   WHERE id_pengajar = p_id_pengajar
@@ -1209,45 +1209,26 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalHariIniPengajar` (`
     AND tanggal = CURDATE()
 )$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalMingguIniMurid` (`p_id_murid` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
+CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalMingguIniMurid` (`p_id_murid` VARCHAR(20)) RETURNS INT(11) READS SQL DATA RETURN (
   SELECT COUNT(*)
   FROM jadwal
   WHERE id_murid = p_id_murid
     AND YEARWEEK(tanggal, 1) = YEARWEEK(CURDATE(), 1)
 )$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalMingguIniPengajar` (`p_id_pengajar` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
+CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalMingguIniPengajar` (`p_id_pengajar` VARCHAR(20)) RETURNS INT(11) READS SQL DATA RETURN (
   SELECT COUNT(*)
   FROM jadwal
   WHERE id_pengajar = p_id_pengajar
     AND id_murid IS NOT NULL
     AND YEARWEEK(tanggal, 1) = YEARWEEK(CURDATE(), 1)
-)$$
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalMurid` (`p_id_murid` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
-  SELECT COUNT(*)
-  FROM jadwal
-  WHERE id_murid = p_id_murid
-)$$
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalJadwalPengajar` (`p_id_pengajar` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
-  SELECT COUNT(*)
-  FROM jadwal
-  WHERE id_pengajar = p_id_pengajar
-)$$
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalKehadiranMurid` (`p_id_murid` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
-  SELECT COUNT(*)
-  FROM jadwal
-  WHERE id_murid = p_id_murid
-    AND status_kehadiran = 1
 )$$
 
 CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalMurid` () RETURNS INT(11) READS SQL DATA RETURN (
   SELECT COUNT(*) FROM murid
 )$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalMuridDiajar` (`p_id_pengajar` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
+CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalMuridDiajar` (`p_id_pengajar` VARCHAR(20)) RETURNS INT(11) READS SQL DATA RETURN (
   SELECT COUNT(DISTINCT id_murid)
   FROM jadwal
   WHERE id_pengajar = p_id_pengajar
@@ -1265,7 +1246,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalPengajar` () RETURNS INT(
   SELECT COUNT(*) FROM pengajar
 )$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalSisaPertemuanMurid` (`p_id_murid` VARCHAR(10)) RETURNS INT(11) READS SQL DATA RETURN (
+CREATE DEFINER=`root`@`localhost` FUNCTION `FC_getTotalSisaPertemuanMurid` (`p_id_murid` VARCHAR(20)) RETURNS INT(11) READS SQL DATA RETURN (
   SELECT IFNULL(SUM((k.jml_pertemuan - pd.pertemuan_terpakai)), 0)
   FROM paketdibeli pd
   JOIN katalogpaket k ON pd.id_paket = k.id_paket

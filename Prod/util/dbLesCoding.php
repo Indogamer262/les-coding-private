@@ -63,7 +63,9 @@
             return $usn;
         }
 
-        public function getValueStatistic($type) {
+        public function getValueStatistic($type, $role_id = null) {
+            // admins dashboard
+            
             if($type == "jumlahMurid") {
                 return $this->db->readSingleValue("SELECT FC_getTotalMurid()");
             }
@@ -75,6 +77,29 @@
             }
             else if ($type == "pembelianPaketBelumLunas") {
                 return $this->db->readSingleValue("SELECT FC_getTotalPembelianPaket()");
+            }
+            // murid dashboard
+            else if ($type == "paketLesAktifMurid") {
+                return $this->db->readSingleValue("SELECT FC_getJumlahPaketAktifMurid('$role_id')");//
+            }
+            else if ($type == "sisaPertemuanMurid") {
+                return $this->db->readSingleValue("SELECT FC_getTotalSisaPertemuanMurid('$role_id')");
+            }
+            else if ($type == "jadwalHariIniMurid") {
+                return $this->db->readSingleValue("SELECT FC_getTotalJadwalHariIniMurid('$role_id')");//
+            }
+            else if ($type == "jadwalMingguIniMurid") {
+                return $this->db->readSingleValue("SELECT FC_getTotalJadwalMingguIniMurid('$role_id')");//
+            }
+            // pengajar dashboard
+            else if ($type == "muridDiajar") {
+                return $this->db->readSingleValue("SELECT FC_getTotalMuridDiajar('$role_id')");
+            }
+            else if ($type == "jadwalHariIniPengajar") {
+                return $this->db->readSingleValue("SELECT FC_getTotalJadwalHariIniPengajar('$role_id')");//
+            }
+            else if ($type == "jadwalMingguIniPengajar") {
+                return $this->db->readSingleValue("SELECT FC_getTotalJadwalMingguIniPengajar('$role_id')");//
             }
             else {
                 return null;
