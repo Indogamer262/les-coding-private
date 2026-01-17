@@ -62,7 +62,23 @@
             
             return $usn;
         }
-
+        public function getAccountId($roles, $email) {
+            $safe_email = str_replace("'", "", $email);
+            if($roles == "murid" || $roles == "pengajar" || $roles == "admin") {
+                $safe_roles = str_replace("'", "", $roles);
+            }
+            else {
+                $safe_roles = 0;
+            }
+            
+            //echo "getting account USN for $safe_roles with email $safe_email";
+            
+            // get the USN from DB
+            $rawId = $this->db->readingQuery("SELECT id_$safe_roles FROM $safe_roles WHERE email = '$safe_email'");
+            $id = $rawId[0]["id_$safe_roles"] ?? null;
+            
+            return $id;
+        }
         public function getValueStatistic($type, $role_id = null) {
             // admins dashboard
             
