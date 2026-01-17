@@ -105,7 +105,7 @@
                         <p class="text-sm font-medium text-gray-600">Jadwal hari ini</p>
                         <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jadwalHariIniPengajar", $_SESSION["loginID"]); ?></span><br>
                         <p class="text-xs text-gray-500 mt-1">Sesi mengajar</p>
-                    </p><?php echo $_SESSION["loginID"];?>
+                    </p>
                 </div>
 
                 <div>
