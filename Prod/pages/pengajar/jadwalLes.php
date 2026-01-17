@@ -1,247 +1,166 @@
-<div class="flex flex-col gap-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="text-2xl font-bold text-gray-800">Jadwal Mengajar</h2>
-            <p class="text-sm text-gray-600 mt-1">Kelola jadwal mengajar Anda dengan mudah</p>
-        </div>
-    </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="all">Semua Mata Pelajaran</option>
-                    <option value="python">Python</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="react">React.js</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Hari</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="all">Semua Hari</option>
-                    <option value="senin">Senin</option>
-                    <option value="selasa">Selasa</option>
-                    <option value="rabu">Rabu</option>
-                    <option value="kamis">Kamis</option>
-                    <option value="jumat">Jumat</option>
-                    <option value="sabtu">Sabtu</option>
-                    <option value="minggu">Minggu</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="all">Semua Status</option>
-                    <option value="filled">Terisi</option>
-                    <option value="empty">Kosong</option>
-                </select>
-            </div>
-        </div>
-    </div>
+<!-- Frontend by 2472008, member of "Les Coding Private" Team -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jadwal Les</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Teaching Schedule -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800">Jadwal Mengajar</h2>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-6 py-4">Hari & Waktu</th>
-                        <th class="px-6 py-4">Mata Pelajaran</th>
-                        <th class="px-6 py-4">Murid</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    <!-- Row 1 - Filled Schedule -->
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Senin</p>
-                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Python</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center font-semibold text-blue-600 text-xs">
-                                    BS
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Budi Santoso</p>
-                                    <p class="text-xs text-gray-500">#MRD001</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Terisi</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="viewScheduleDetail(1)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+        <!-- Library Import -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Lexend:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+        <link href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css" rel="stylesheet">
 
-                    <!-- Row 2 - Filled Schedule -->
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Rabu</p>
-                                <p class="text-sm text-gray-600">16:00 - 18:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">React.js</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center font-semibold text-purple-600 text-xs">
-                                    AS
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Ani Susanti</p>
-                                    <p class="text-xs text-gray-500">#MRD003</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Terisi</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="viewScheduleDetail(2)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+        <style>
+            body, html {box-sizing: border-box; margin: 0; height: 100%;}
+            .poppins-light {font-family: "Poppins", sans-serif;font-weight: 300;font-style: normal;}
+            .poppins-regular {font-family: "Poppins", sans-serif;font-weight: 400;font-style: normal;}
+            .poppins-semibold {font-family: "Poppins", sans-serif;font-weight: 600;font-style: normal;}
+            .poppins-bold {font-family: "Poppins", sans-serif;font-weight: 700;font-style: normal;}
+            .poppins-light-italic {font-family: "Poppins", sans-serif;font-weight: 300;font-style: italic;}
+            .poppins-regular-italic {font-family: "Poppins", sans-serif;font-weight: 400;font-style: italic;}
 
-                    <!-- Row 3 - Empty Schedule -->
-                    <tr class="hover:bg-gray-50 transition-colors opacity-75">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Jumat</p>
-                                <p class="text-sm text-gray-600">10:00 - 12:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">JavaScript</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-sm text-gray-500 italic">Belum ada murid</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">Kosong</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="viewScheduleDetail(3)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+            body {
+                display: grid;
+                grid-template-areas:
+                    "sidebar header"
+                    "sidebar content";
+                grid-template-columns: auto 1fr;
+                grid-template-rows: auto 1fr;
+                background-color: #ededed;
+            }
+            
+            .main {
+                grid-area: content;
+                padding: 20px;
+                overflow-y: auto;
+            }
+            .summaryBoard {
+                display:grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+            .summaryBoard > div {
+                background-color: white;
+                box-shadow: 0 0 10px 0 lightgray;
+                border-radius: 8px;
+                padding: 12px;
+                margin: 10px;
+            }
+            .jadwalTerisiDashboard {
+                background-color: white;
+                box-shadow: 0 0 10px 0 lightgray;
+                border-radius: 8px;
+                padding: 24px;
+                margin: 10px;
+            }
 
-                    <!-- Row 4 - Filled Schedule -->
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Sabtu</p>
-                                <p class="text-sm text-gray-600">09:00 - 11:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Python</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center font-semibold text-emerald-600 text-xs">
-                                    DP
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Dedi Prasetyo</p>
-                                    <p class="text-xs text-gray-500">#MRD005</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Terisi</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="viewScheduleDetail(4)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <p class="text-sm text-gray-600">Menampilkan <span class="font-medium">4</span> dari <span class="font-medium">12</span> jadwal</p>
-            <div class="flex gap-2">
-                <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Previous</button>
-                <button class="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-medium">1</button>
-                <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">2</button>
-                <button class="px-3 py-1 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Next</button>
+            @media only screen and (max-width: 900px) {
+                .summaryBoard {
+                    display:grid;
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+            @media only screen and (max-width: 800px) {
+                body {
+                    display: block;
+                }
+
+                .main {
+                    grid-area: content;
+                    padding: 20px;
+                    overflow: visible;
+                }
+
+                .summaryBoard {
+                    display:grid;
+                    grid-template-columns: 1fr;
+                }
+            }
+            
+        </style>
+    </head>
+    <body>
+        <!-- Header bar layout -->
+        <?php include('occurence/navbar.php'); ?>
+
+        <!-- Sidebar Layout -->
+        <?php include('pages/pengajar/sidebar.php'); ?>
+        
+        <!-- Main content layout -->
+        <div class="main poppins-regular">
+            <h2 style="margin-bottom:0;">Jadwal Mengajar</h2>
+            <p class="text-sm text-gray-600 mt-1">Selamat datang di Sistem Les Privat Coding<span class="font-semibold"></span>!</p>
+            <!-- summary board -->
+            <div class="summaryBoard">
+                <div>
+                    <p>
+                        <p class="text-sm font-medium text-gray-600">Total Murid</p>
+                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jumlahMurid"); ?></span><br>
+                        <p class="text-xs text-gray-500 mt-1">Yang diajar saat ini</p>
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <p class="text-sm font-medium text-gray-600">Jadwal hari ini</p>
+                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("jumlahPengajar"); ?></span><br>
+                        <p class="text-xs text-gray-500 mt-1">Sesi mengajar</p>
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <p class="text-sm font-medium text-gray-600">Jadwal Minggu ini</p>
+                        <span style="font-size:40px;"><?php echo $lesCodingUtil->getValueStatistic("totalPendapatanBulan"); ?></span><br>
+                        <p class="text-xs text-gray-500 mt-1">Sesi mengajar</p>
+                    </p>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Info Box -->
-    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
-        <div class="flex items-start gap-4">
-            <div class="bg-emerald-100 p-3 rounded-lg flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                </svg>
+            <div class="jadwalTerisiDashboard">
+                <div style="display:flex;justify-content: space-between;">
+                    <span style="font-size:20px;"><b>Jadwal Terisi</b></span>
+                    <a href="">Lihat Semua</a>
+                </div>
+                <hr>
+                <table id="dashboardTb" class="display">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Hari & Waktu</th>
+                            <th>Pengajar</th>
+                            <th>Mata Pelajaran</th>
+                            <th>Murid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php echo $lesCodingUtil->renderTableBody("admin","dashboard"); ?>
+                    </tbody>
+                </table>
             </div>
-            <div>
-                <h3 class="font-semibold text-emerald-900 mb-2">Informasi Jadwal Mengajar</h3>
-                <ul class="space-y-2 text-sm text-emerald-800">
-                    <li class="flex items-start gap-2">
-                        <span class="text-emerald-600">•</span>
-                        <span>Anda dapat mengajar lebih dari satu mata pelajaran</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-emerald-600">•</span>
-                        <span>Pastikan untuk mengisi absensi dan materi setelah setiap pertemuan</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-emerald-600">•</span>
-                        <span>Hubungi admin jika ada perubahan jadwal mendadak</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
-function viewScheduleDetail(id) {
-    alert('Viewing schedule details for ID: ' + id);
-}
-</script>
+        </div>
+    </body>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
+    <script>
+        new DataTable('#dashboardTb', {
+            columnDefs: [
+                {
+                    targets: [0],
+                    orderData: [0, 1]
+                },
+                {
+                    targets: [1],
+                    orderData: [1, 0]
+                },
+                {
+                    targets: [4],
+                    orderData: [4, 0]
+                }
+            ],
+            scrollX: true
+        });
+    </script>
+</html>
