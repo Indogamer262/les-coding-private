@@ -124,6 +124,9 @@
 
         public function renderTableBody($roles, $type) {
             if($roles == "admin") {
+
+                // VIEW LIHAT TABEL
+
                 if($type == "dashboard") {
                     $result = $this->db->readingQuery("SELECT * FROM view_DashboardAdmin_JadwalTerisi");
                     
@@ -136,6 +139,104 @@
                             "<td>" . $row['nama_murid'] . "</td>";
                     }
                 }
+
+                else if($type == "matapelajaranaktif") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_matapelajaranaktif");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . $row['deskripsiMapel'] . "</td>" .
+                            // pengajar somehow
+                            "<td>" . $row['status'] . "</td>";
+                            // aksi somehow
+                    }
+                }
+                else if($type == "matapelajarannonaktif") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_matapelajarannonaktif");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . $row['deskripsiMapel'] . "</td>" .
+                            // pengajar somehow
+                            "<td>" . $row['status'] . "</td>";
+                            // aksi somehow
+                    }
+                }
+                else if($type == "paketlesaktif") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_paketlesaktif");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['nama_paket'] . "</td>" .
+                            "<td>" . $row['harga'] . "</td>" .
+                            "<td>" . $row['jml_pertemuan'] . "</td>" .
+                            "<td>" . $row['status'] . "</td>";
+                            // aksi somehow
+                    }
+                }
+                else if($type == "paketlesnonaktif") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_paketlesnonaktif");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['nama_paket'] . "</td>" .
+                            "<td>" . $row['harga'] . "</td>" .
+                            "<td>" . $row['jml_pertemuan'] . "</td>" .
+                            "<td>" . $row['status'] . "</td>";
+                            // aksi somehow
+                    }
+                }
+
+                else if($type == "logsemua") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_logsemua");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['aktivitas'] . "</td>" .
+                            "<td>" . $row['id_akun'] . "</td>";
+                    }
+                }
+                else if($type == "logmurid") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_logsistem WHERE role = 'Murid'");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['id_log'] . "</td>" .
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['aktivitas'] . "</td>" .
+                            "<td>" . $row['id_akun'] . "</td>";
+                    }
+                }
+                else if($type == "logpengajar") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_logsistem WHERE role = 'Pengajar'");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['id_log'] . "</td>" .
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['aktivitas'] . "</td>" .
+                            "<td>" . $row['id_akun'] . "</td>";
+                    }
+                }
+                else if($type == "logadmin") {
+                    $result = $this->db->readingQuery("SELECT * FROM view_logsistem WHERE role = 'Admin'");
+                    
+                    foreach($result as $row) {
+                        echo "<tr>" . 
+                            "<td>" . $row['id_log'] . "</td>" .
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['aktivitas'] . "</td>" .
+                            "<td>" . $row['id_akun'] . "</td>";
+                    }
+                }
+
+                // SP LIHAT TABEL
+
+                
+
             }
             else if($roles == "murid") {
                 if($type == "dashboard") {
