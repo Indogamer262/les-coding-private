@@ -58,6 +58,16 @@
         <?php include('occurence/navbar.php'); ?>
         <?php include('pages/murid/sidebar.php'); ?>
         
+        <?php
+            // Get current filters from URL or default to 'all'
+            $selectedPeriode = $_GET['periode'] ?? 'all';
+            $selectedStatus = $_GET['status'] ?? 'all';
+            // Note: SP_LihatJadwalMurid currently sorts by date DESC default, but we can support sort param if needed later.
+            // For now, consistent with Pengajar page, let's keep it simple or align. 
+            // The SP logic in dbLesCoding (murid section) didn't implement sorting yet explicitly by param, 
+            // but the SP itself ends with ORDER BY j.tanggal DESC, j.jam_mulai DESC.
+        ?>
+
         <div class="main poppins-regular">
             <div class="pageHeader">
                 <h2>Jadwal Les Saya</h2>
@@ -69,19 +79,19 @@
                 <div class="filterRow">
                     <div class="filterGroup">
                         <label>Periode</label>
-                        <select id="filterPeriode" onchange="applyFilters()">
-                            <option value="all">Semua</option>
-                            <option value="today">Hari Ini</option>
-                            <option value="week" selected>Minggu Ini</option>
-                            <option value="month">Bulan Ini</option>
+                        <select id="filterPeriode" onchange="updateFilters()">
+                            <option value="all" <?php echo $selectedPeriode == 'all' ? 'selected' : ''; ?>>Semua</option>
+                            <option value="today" <?php echo $selectedPeriode == 'today' ? 'selected' : ''; ?>>Hari Ini</option>
+                            <option value="week" <?php echo $selectedPeriode == 'week' ? 'selected' : ''; ?>>Minggu Ini</option>
+                            <option value="month" <?php echo $selectedPeriode == 'month' ? 'selected' : ''; ?>>Bulan Ini</option>
                         </select>
                     </div>
                     <div class="filterGroup">
                         <label>Status</label>
-                        <select id="filterStatus" onchange="applyFilters()">
-                            <option value="all">Semua</option>
-                            <option value="selesai">Selesai</option>
-                            <option value="mendatang">Mendatang</option>
+                        <select id="filterStatus" onchange="updateFilters()">
+                            <option value="all" <?php echo $selectedStatus == 'all' ? 'selected' : ''; ?>>Semua</option>
+                            <option value="selesai" <?php echo $selectedStatus == 'selesai' ? 'selected' : ''; ?>>Selesai</option>
+                            <option value="mendatang" <?php echo $selectedStatus == 'mendatang' ? 'selected' : ''; ?>>Mendatang</option>
                         </select>
                     </div>
                     <div class="spacer"></div>
@@ -98,7 +108,14 @@
                         </tr>
                     </thead>
                     <tbody id="jadwalTableBody">
-                        <?php echo $lesCodingUtil->renderTableBody("murid","jadwal"); ?>
+                        <?php 
+                            // Pass filters to the render function
+                            $filters = [
+                                'periode' => $selectedPeriode,
+                                'status' => $selectedStatus
+                            ];
+                            echo $lesCodingUtil->renderTableBody("murid", "jadwal", $filters); 
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -109,22 +126,18 @@
     <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
-            new DataTable('#jadwalTb', { scrollX: true });
+            new DataTable('#jadwalTb', { 
+                scrollX: true,
+                ordering: false 
+            });
         });
 
-        function applyFilters() {
+        function updateFilters() {
+            const periode = document.getElementById('filterPeriode').value;
             const status = document.getElementById('filterStatus').value;
-
-            const rows = document.querySelectorAll('#jadwalTableBody tr');
             
-            rows.forEach(row => {
-                const rowStatus = row.getAttribute('data-status');
-                const text = row.textContent.toLowerCase();
-                let visible = true;
-                if (status !== 'all' && rowStatus !== status) visible = false;
-
-                row.style.display = visible ? '' : 'none';
-            });
+            // Reload page with new parameters
+            window.location.href = `?page=jadwalLes&periode=${periode}&status=${status}`;
         }
     </script>
 </html>

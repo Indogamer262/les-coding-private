@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jan 17, 2026 at 11:11 AM
+-- Host: 127.0.0.1:3306
+-- Generation Time: Jan 18, 2026 at 03:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -258,7 +258,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_InputAbsensi_Pengajar` (IN `p_ko
     AND id_pengajar = p_id_pengajar;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_JadwalMengajarPengajar` (IN `p_id_pengajar` VARCHAR(20), IN `p_periode` VARCHAR(20), IN `p_status` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_JadwalMengajarPengajar` (IN `p_id_pengajar` VARCHAR(20), IN `p_periode` VARCHAR(20), IN `p_status` VARCHAR(20), IN `p_urut` VARCHAR(20))   BEGIN
   SELECT
     j.kode_jadwal,
     j.tanggal,
@@ -301,7 +301,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_JadwalMengajarPengajar` (IN `p_i
     )
 
   ORDER BY
-    j.tanggal ASC,
+    CASE WHEN UPPER(p_urut) = 'TERBARU' THEN j.tanggal END DESC,
+    CASE WHEN UPPER(p_urut) = 'TERLAMA' THEN j.tanggal END ASC,
     j.jam_mulai ASC;
 END$$
 
@@ -1281,8 +1282,8 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id_admin`, `nama_admin`, `email`, `password`, `status`) VALUES
 ('A-2601001', 'Gavin Malik Setiawan', 'gavin@gavin.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
-('A-2601002', 'Admin One', 'admin1@mail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
-('A-2601003', 'Admin Two', 'admin2@mail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1);
+('A-2601002', 'Admin One', 'admin1@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
+('A-2601003', 'Admin Two', 'admin2@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1);
 
 --
 -- Triggers `admin`
@@ -1368,7 +1369,7 @@ INSERT INTO `jadwal` (`kode_jadwal`, `id_mapel`, `id_pengajar`, `id_murid`, `id_
 ('JD-2601003', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-14', '09:00:00', '10:00:00', NULL),
 ('JD-2601004', 'MP-00002', 'P-2601001', NULL, NULL, NULL, '2026-01-14', '10:00:00', '11:00:00', NULL),
 ('JD-2601005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', 'Form, Table, dan Layout Web', '2026-01-11', '08:00:00', '09:00:00', 1),
-('JD-2601006', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', NULL, '2026-01-04', '08:00:00', '09:00:00', NULL),
+('JD-2601006', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', '', '2026-01-04', '08:00:00', '09:00:00', 0),
 ('JD-2601007', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-01-14', '13:00:00', '14:00:00', 1),
 ('JD-2601008', 'MP-00002', 'P-2601001', 'M-2601001', 'PB-2601001', 'Percabangan dan Perulangan', '2026-01-09', '08:00:00', '09:00:00', 1),
 ('JD-2601009', 'MP-00002', 'P-2601001', 'M-2601002', 'PB-2601003', NULL, '2026-01-07', '08:00:00', '09:00:00', NULL),
@@ -1532,7 +1533,13 @@ INSERT INTO `log_sistem` (`id_log`, `tanggal`, `aktivitas`, `id_akun`) VALUES
 (19, '2026-01-17 17:04:12', 'Edit akun murid: M-2601007', 'M-2601007'),
 (20, '2026-01-17 17:04:12', 'Edit akun murid: M-2601008', 'M-2601008'),
 (21, '2026-01-17 17:04:12', 'Edit akun murid: M-2601009', 'M-2601009'),
-(22, '2026-01-17 17:04:12', 'Edit akun murid: M-2601010', 'M-2601010');
+(22, '2026-01-17 17:04:12', 'Edit akun murid: M-2601010', 'M-2601010'),
+(23, '2026-01-18 20:55:12', 'Ubah status akun murid: M-2601004', 'M-2601004'),
+(24, '2026-01-18 20:55:28', 'Admin menandai lunas pembelian paket: PB-2601006', 'SYSTEM'),
+(25, '2026-01-18 21:01:50', 'Pembelian paket: PB-2601016', 'M-2601005'),
+(26, '2026-01-18 21:04:18', 'Input absensi jadwal: JD-2601006', 'P-2601002'),
+(27, '2026-01-18 21:33:15', 'Edit akun admin: A-2601002', 'A-2601002'),
+(28, '2026-01-18 21:33:22', 'Edit akun admin: A-2601003', 'A-2601003');
 
 -- --------------------------------------------------------
 
@@ -1581,7 +1588,7 @@ INSERT INTO `murid` (`id_murid`, `nama_murid`, `email`, `password`, `status`) VA
 ('M-2601001', 'Andika Saputra', 'andika.saputra@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
 ('M-2601002', 'Budi Hartono', 'budi.hartono@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
 ('M-2601003', 'Caca Ramadhani', 'caca.ramadhani@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
-('M-2601004', 'Doni Kurniawan', 'doni.kurniawan@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 0),
+('M-2601004', 'Doni Kurniawan', 'doni.kurniawan@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
 ('M-2601005', 'Eka Puspita', 'eka.puspita@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
 ('M-2601006', 'Fani Wulandari', 'fani.wulandari@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 0),
 ('M-2601007', 'Gilang Pratama', 'gilang@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
@@ -1647,13 +1654,14 @@ INSERT INTO `paketdibeli` (`id_pembelian`, `id_murid`, `id_paket`, `tgl_pemesana
 ('PB-2601003', 'M-2601002', 'PK-00002', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 6),
 ('PB-2601004', 'M-2601003', 'PK-00002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
 ('PB-2601005', 'M-2601004', 'PK-00005', '2026-01-12 21:38:00', NULL, NULL, NULL, 0),
-('PB-2601006', 'M-2601005', 'PK-00002', '2026-01-14 21:38:00', NULL, 'bukti.jpg', '2026-02-13 21:38:00', 4),
+('PB-2601006', 'M-2601005', 'PK-00002', '2026-01-14 21:38:00', '2026-01-18 20:55:28', 'bukti.jpg', '2026-03-19 20:55:28', 4),
 ('PB-2601007', 'M-2601005', 'PK-00002', '2026-01-07 21:38:00', NULL, 'bukti.jpg', '2026-03-15 21:38:00', 0),
 ('PB-2601011', 'M-2601002', 'PK-00002', '2026-01-12 09:02:42', '2026-01-17 09:02:42', 'bukti.jpg', '2026-02-26 09:02:42', 0),
 ('PB-2601012', 'M-2601009', 'PK-00002', '2026-01-07 09:02:42', '2026-01-17 09:02:42', 'bukti.jpg', '2026-02-06 09:02:42', 0),
 ('PB-2601013', 'M-2601008', 'PK-00002', '2025-10-09 09:02:42', '2026-01-17 09:02:42', 'bukti.jpg', '2026-01-07 09:02:42', 0),
 ('PB-2601014', 'M-2601010', 'PK-00003', '2026-01-17 09:02:42', NULL, NULL, NULL, 0),
 ('PB-2601015', 'M-2601005', 'PK-00002', '2026-01-15 09:02:42', NULL, 'bukti_pending.jpg', NULL, 0),
+('PB-2601016', 'M-2601005', 'PK-00001', '2026-01-18 21:01:50', NULL, NULL, NULL, 0),
 ('PB-2602001', 'M-2601007', 'PK-00001', '2026-01-16 09:02:42', NULL, NULL, NULL, 0),
 ('PB-2602002', 'M-2601007', 'PK-00002', '2026-01-14 09:02:42', NULL, 'bukti_pending_2601007.jpg', NULL, 0),
 ('PB-2602003', 'M-2601007', 'PK-00003', '2026-01-07 09:02:42', '2026-01-17 09:02:42', 'bukti.jpg', '2026-04-07 09:02:42', 0),
@@ -2092,7 +2100,7 @@ ALTER TABLE `diajar`
 -- AUTO_INCREMENT for table `log_sistem`
 --
 ALTER TABLE `log_sistem`
-  MODIFY `id_log` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_log` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables

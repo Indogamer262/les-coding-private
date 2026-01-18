@@ -184,7 +184,7 @@
             $this->db->nonReadingQuery("CALL SP_UbahStatusAkun('$safe_roles', '$safe_id', $safe_targetStatus)");
         }
 
-        public function renderTableBody($roles, $type) {
+        public function renderTableBody($roles, $type, $filters = []) {
             if($roles == "admin") {
 
                 // VIEW LIHAT TABEL
@@ -347,11 +347,11 @@
 
                     foreach($result as $row) {
                         $formattedJumlah = "Rp " . number_format($row['jumlah'], 0, ',', '.');
-                        echo "<tr data-bukti='belum' data-murid='" . $row['nama_murid'] . "'>" . 
-                            "<td>" . $row['id_pembelian'] . "</td>" .
-                            "<td>" . $row['tgl_pemesanan'] . "</td>" .
-                            "<td>" . $row['nama_murid'] . "</td>" .
-                            "<td>" . $row['nama_paket'] . "</td>" .
+                        echo "<tr data-bukti='belum' data-murid='" . htmlspecialchars($row['nama_murid'] ?? '') . "' data-tanggal='" . htmlspecialchars($row['tgl_pemesanan'] ?? '') . "'>" . 
+                            "<td>" . htmlspecialchars($row['id_pembelian'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['tgl_pemesanan'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_murid'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_paket'] ?? '') . "</td>" .
                             "<td>" . $formattedJumlah . "</td>" .
                             "<td> <i>Menunggu bukti</i> </td>" .
                             "</tr>";
@@ -363,19 +363,20 @@
                         $bukti = $this->db->readSingleValue("SELECT gambar_bukti_pembayaran FROM paketdibeli WHERE id_pembelian = '" . $row['id_pembelian'] . "'");
                         $formattedJumlah = "Rp " . number_format($row['jumlah'], 0, ',', '.');
 
-                        echo "<tr data-id='" . $row['id_pembelian'] . "' " .
-                             "data-pembelian='" . $row['id_pembelian'] . "' " .
-                             "data-murid='" . $row['nama_murid'] . "' " .
-                             "data-paket='" . $row['nama_paket'] . "' " .
+                        echo "<tr data-id='" . htmlspecialchars($row['id_pembelian'] ?? '') . "' " .
+                             "data-pembelian='" . htmlspecialchars($row['id_pembelian'] ?? '') . "' " .
+                             "data-murid='" . htmlspecialchars($row['nama_murid'] ?? '') . "' " .
+                             "data-paket='" . htmlspecialchars($row['nama_paket'] ?? '') . "' " .
                              "data-jumlah='" . $formattedJumlah . "' " .
-                             "data-bukti-url='" . $bukti . "' " .
-                             "data-bukti='ada'>" . 
-                            "<td>" . $row['id_pembelian'] . "</td>" .
-                            "<td>" . $row['tgl_pemesanan'] . "</td>" .
-                            "<td>" . $row['nama_murid'] . "</td>" .
-                            "<td>" . $row['nama_paket'] . "</td>" .
+                             "data-bukti-url='" . htmlspecialchars($bukti ?? '') . "' " .
+                             "data-bukti='ada' " .
+                             "data-tanggal='" . htmlspecialchars($row['tgl_pemesanan'] ?? '') . "'>" . 
+                            "<td>" . htmlspecialchars($row['id_pembelian'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['tgl_pemesanan'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_murid'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_paket'] ?? '') . "</td>" .
                             "<td>" . $formattedJumlah . "</td>" .
-                            "<td><button class='btn-view' onclick='openBuktiModal(\"" . $row['id_pembelian'] . "\")'>Lihat Bukti</button></td>" .
+                            "<td><button class='btn-view' onclick='openBuktiModal(\"" . htmlspecialchars($row['id_pembelian'] ?? '') . "\")'>Lihat Bukti</button></td>" .
                             "</tr>";
                     }
                 }
@@ -396,18 +397,19 @@
                         $formattedJumlah = "Rp " . number_format($row['harga'], 0, ',', '.');
                         $isExpired = ($row['status'] == 'KEDALUWARSA') ? 'row-expired' : '';
                         
-                        echo "<tr class='$isExpired' data-id='" . htmlspecialchars($row['id_pembelian']) . "' " .
-                             "data-murid='" . htmlspecialchars($row['nama_murid']) . "' " .
+                        echo "<tr class='$isExpired' data-id='" . htmlspecialchars($row['id_pembelian'] ?? '') . "' " .
+                             "data-murid='" . htmlspecialchars($row['nama_murid'] ?? '') . "' " .
                              "data-total='$totalPertemuan' " .
                              "data-sisa='$sisaPertemuan' " .
-                             "data-terpakai='$jsonPertemuan'>" . 
-                            "<td style='text-align:center;'>" . htmlspecialchars($row['id_pembelian']) . "</td>" .
-                            "<td>" . htmlspecialchars($row['tgl_pemesanan']) . "</td>" .
-                            "<td>" . htmlspecialchars($row['tgl_pembayaran']) . "</td>" .
-                            "<td>" . htmlspecialchars($row['nama_murid']) . "</td>" .
-                            "<td>" . htmlspecialchars($row['nama_paket']) . "</td>" .
+                             "data-terpakai='$jsonPertemuan' " .
+                             "data-tanggal='" . htmlspecialchars($row['tgl_pemesanan'] ?? '') . "'>" . 
+                            "<td style='text-align:center;'>" . htmlspecialchars($row['id_pembelian'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['tgl_pemesanan'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['tgl_pembayaran'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_murid'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_paket'] ?? '') . "</td>" .
                             "<td class='text-harga'>" . $formattedJumlah . "</td>" .
-                            "<td>" . ($row['status'] == 'KEDALUWARSA' ? '<span class="text-expired">Kadaluarsa</span>' : htmlspecialchars($row['masa_aktif'])) . "</td>" .
+                            "<td>" . ($row['status'] == 'KEDALUWARSA' ? '<span class="text-expired">Kadaluarsa</span>' : htmlspecialchars($row['masa_aktif'] ?? '')) . "</td>" .
                             "<td style='text-align:center;'><button class='btn-view' onclick='openDetailModal(this)'>Lihat Detail</button></td>" .
                             "</tr>";
                     }
@@ -453,7 +455,7 @@
                                     "</ul>" .
 
                                     // need to make this work...
-                                    "<button class='btn-beli' onclick='openBeliModal(\"".$row['id_paket']."\", \"".addslashes($row['nama_paket'])."\", ".$row['harga'].")'>Beli Paket</button>" .
+                                    "<button class='btn-beli' onclick='openBeliModal(\"".$row['id_paket']."\", \"".addslashes($row['nama_paket'] ?? '')."\", ".$row['harga'].")'>Beli Paket</button>" .
                                 "</div>" .
                              "</div>";
                     }
@@ -484,8 +486,48 @@
 
                 }
                 else if($type == "jadwal") {
-                    // TODO: Query jadwal les murid
-                    // Query should return: tanggal, hari, waktu, mapel, pengajar, status
+                    // Map UI filters to SP parameters
+                    $periodeMap = [
+                        'today' => 'HARI_INI', // Note: SP_LihatJadwalMurid in current SQL doesn't explicitly have HARI_INI in WHERE clause but has MINGGU_INI/BULAN_INI. Wait, user provided SP code has: UPPER(p_periode) = 'SEMUA', 'MINGGU_INI', 'BULAN_INI'. It does NOT have HARI_INI. 
+                        // I shall add HARI_INI support to the SP or map 'today' to something else? 
+                        // The user provided SP logic:
+                        // OR (UPPER(p_periode) = 'MINGGU_INI' ...
+                        // OR (UPPER(p_periode) = 'BULAN_INI' ...
+                        // It seems HARI_INI is missing from the provided SP logic in the prompt. I will Map it to 'MINGGU_INI' or just assume I need to update the SP later if 'today' is needed. 
+                        // Actually, looking at the user request: "CREATE DEFINER... SP_LihatJadwalMurid ... UPPER(p_periode) = 'SEMUA' OR ... 'MINGGU_INI' ... 'BULAN_INI'". 
+                        // It indeed misses 'HARI_INI'.
+                        // Howerver, standardizing with Pengajar which usually has 'today', I should probably use 'SEMUA' if not supported or ask to update SP.
+                        // But I'll stick to what is supported. 'week' -> 'MINGGU_INI', 'month' -> 'BULAN_INI'. 'today' -> fallback to 'SEMUA' or emulate? 
+                        // The user said "buat mirip speerti pengajar". Pengajar has 'today'.
+                        // I will pass 'TODAY' and I will update the SP next to support 'TODAY' (HARI_INI) as per standard.
+                        'today' => 'HARI_INI',
+                        'week' => 'MINGGU_INI',
+                        'month' => 'BULAN_INI',
+                        'all' => 'SEMUA'
+                    ];
+                    $statusMap = [
+                        'selesai' => 'SELESAI',
+                        'mendatang' => 'MENDATANG',
+                        'all' => 'SEMUA'
+                    ];
+
+                    $p_periode = isset($filters['periode']) ? ($periodeMap[$filters['periode']] ?? 'SEMUA') : 'SEMUA';
+                    $p_status = isset($filters['status']) ? ($statusMap[$filters['status']] ?? 'SEMUA') : 'SEMUA';
+
+                    $result = $this->db->readingQuery("CALL SP_LihatJadwalMurid('".$_SESSION["loginID"]."', '$p_periode', '$p_status')");
+
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $badgeClass = ($row['status_ui'] == 'SELESAI') ? 'badge-selesai' : 'badge-mendatang';
+                        
+                        echo "<tr>" . 
+                            "<td>" . htmlspecialchars($row['tanggal'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['hari'] ?? '') . "<br>". $waktu ."</td>" .
+                            "<td>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_pengajar'] ?? '') . "</td>" .
+                            "<td style='text-align:center;'><span class='badge " . $badgeClass . "'>" . $row['status_ui'] . "</span></td>" .
+                            "</tr>";
+                    }
                 }
                 else if($type == "kehadiran") {
                     // TODO: Query riwayat kehadiran murid
@@ -517,21 +559,40 @@
                     }
                 }
                 else if($type == "jadwal") {
-                    // SP_JadwalMengajarPengajar(p_id_pengajar, p_periode, p_status)
-                    // Using 'SEMUA' for both periode and status to get all records
-                    $result = $this->db->readingQuery("CALL SP_JadwalMengajarPengajar('".$_SESSION["loginID"]."', 'SEMUA', 'SEMUA')");
+                    // Map UI filters to SP parameters
+                    $periodeMap = [
+                        'today' => 'HARI_INI',
+                        'week' => 'MINGGU_INI',
+                        'month' => 'BULAN_INI',
+                        'all' => 'SEMUA'
+                    ];
+                    $statusMap = [
+                        'selesai' => 'SELESAI',
+                        'mendatang' => 'MENDATANG',
+                        'all' => 'SEMUA'
+                    ];
+                    $sortMap = [
+                        'terbaru' => 'TERBARU',
+                        'terlama' => 'TERLAMA'
+                    ];
+
+                    $p_periode = isset($filters['periode']) ? ($periodeMap[$filters['periode']] ?? 'SEMUA') : 'SEMUA';
+                    $p_status = isset($filters['status']) ? ($statusMap[$filters['status']] ?? 'SEMUA') : 'SEMUA';
+                    $p_urut = isset($filters['sort']) ? ($sortMap[$filters['sort']] ?? 'TERBARU') : 'TERBARU';
+                    
+                    // SP_JadwalMengajarPengajar(p_id_pengajar, p_periode, p_status, p_urut)
+                    $result = $this->db->readingQuery("CALL SP_JadwalMengajarPengajar('".$_SESSION["loginID"]."', '$p_periode', '$p_status', '$p_urut')");
                     
                     foreach($result as $row) {
                         $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
                         $statusUI = strtoupper($row['status_jadwal_ui']);
                         $badgeClass = ($statusUI == 'SELESAI') ? 'badge-selesai' : 'badge-mendatang';
-                        $dataStatus = ($statusUI == 'SELESAI') ? 'selesai' : 'mendatang';
                         
-                        echo "<tr data-status='" . $dataStatus . "'>" . 
-                            "<td>" . $row['tanggal'] . "</td>" .
-                            "<td>" . $row['hari'] . "<br>" . $waktu . "</td>" .
-                            "<td>" . $row['nama_mapel'] . "</td>" .
-                            "<td>" . $row['nama_murid'] . "</td>" .
+                        echo "<tr>" . 
+                            "<td>" . htmlspecialchars($row['tanggal'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['hari'] ?? '') . "<br>" . $waktu . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_murid'] ?? '') . "</td>" .
                             "<td style='text-align:center;'><span class='badge " . $badgeClass . "'>" . $statusUI . "</span></td>" .
                             "</tr>";
                     }
@@ -547,17 +608,17 @@
                         
                         // Only show InputAbsensi button if status_kehadiran is NULL (belum diisi)
                         if($row['status_kehadiran'] == null) {
-                            $aksiBtn = "<button class='btn-input' onclick='openAbsensiModal(\"" . $row['kode_jadwal'] . "\", \"" . $row['tanggal'] . "\", \"" . $waktu . "\", \"" . addslashes($row['nama_murid']) . "\", \"" . addslashes($row['nama_mapel']) . "\")'>Input Absensi</button>";
+                            $aksiBtn = "<button class='btn-input' onclick='openAbsensiModal(\"" . $row['kode_jadwal'] . "\", \"" . $row['tanggal'] . "\", \"" . $waktu . "\", \"" . addslashes($row['nama_murid'] ?? '') . "\", \"" . addslashes($row['nama_mapel'] ?? '') . "\")'>Input Absensi</button>";
                         } else {
                             // Show badge "Sudah Absen" like reference
                             $aksiBtn = "<span class='badge badge-sudah'>Sudah Absen</span>";
                         }
                         
-                        echo "<tr data-status='" . $dataStatus . "'>" . 
-                            "<td>" . $row['tanggal'] . "</td>" .
-                            "<td>" . $row['hari'] . "<br>" . $waktu . "</td>" .
-                            "<td>" . $row['nama_mapel'] . "</td>" .
-                            "<td>" . $row['nama_murid'] . "</td>" .
+                        echo "<tr data-status='" . $dataStatus . "' data-tanggal='" . htmlspecialchars($row['tanggal'] ?? '') . "'>" . 
+                            "<td>" . htmlspecialchars($row['tanggal'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['hari'] ?? '') . "<br>" . $waktu . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_murid'] ?? '') . "</td>" .
                             "<td style='text-align:center;'>" . $aksiBtn . "</td>" .
                             "</tr>";
                     }
@@ -584,10 +645,10 @@
                         
                         $materi = !empty($row['deskripsiMateri']) ? $row['deskripsiMateri'] : '-';
                         
-                        echo "<tr data-status='" . $dataStatus . "'>" . 
+                        echo "<tr data-status='" . $dataStatus . "' data-tanggal='" . htmlspecialchars($row['tanggal'] ?? '') . "'>" . 
                             "<td>" . $tanggalWaktu . "</td>" .
-                            "<td>" . $row['nama_murid'] . "</td>" .
-                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_murid'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</td>" .
                             "<td>" . $materi . "</td>" .
                             "<td style='text-align:center;'><span class='badge " . $badgeClass . "'>" . $statusText . "</span></td>" .
                             "</tr>";
