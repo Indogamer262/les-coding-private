@@ -125,9 +125,7 @@
                         <button id="filterNonaktif" onclick="setStatusFilter('nonaktif')">Nonaktif</button>
                     </div>
                     <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <input type="text" id="searchInput" placeholder="Cari nama paket..." oninput="applyFilters()">
-                    </div>
+
                 </div>
                 <table id="paketTb" class="display">
                     <thead>
@@ -204,7 +202,7 @@
         }
 
         function applyFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
             const rows = document.querySelectorAll('#paketTableBody tr');
             
             rows.forEach(row => {
@@ -212,7 +210,7 @@
                 const text = row.textContent.toLowerCase();
                 
                 let visible = status === selectedStatus;
-                if (searchQuery && !text.includes(searchQuery)) visible = false;
+
                 
                 row.style.display = visible ? '' : 'none';
             });

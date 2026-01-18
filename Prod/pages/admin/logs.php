@@ -76,9 +76,7 @@
                         <button id="filterAdmin" onclick="setRoleFilter('admin')">Admin</button>
                     </div>
                     <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <input type="text" id="searchInput" placeholder="Cari aktivitas..." oninput="applyFilters()">
-                    </div>
+
                 </div>
                 <table id="logsTb" class="display">
                     <thead>
@@ -119,7 +117,7 @@
         }
 
         function applyFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
             const rows = document.querySelectorAll('#logsTableBody tr');
             
             rows.forEach(row => {
@@ -128,7 +126,7 @@
                 
                 let visible = true;
                 if (selectedRole !== 'semua' && role !== selectedRole) visible = false;
-                if (searchQuery && !text.includes(searchQuery)) visible = false;
+
                 
                 row.style.display = visible ? '' : 'none';
             });

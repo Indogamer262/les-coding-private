@@ -114,10 +114,7 @@
                         </select>
                     </div>
                     <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <label>Cari</label>
-                        <input type="text" id="searchInput" placeholder="Cari pengajar atau murid..." oninput="applyFilters()">
-                    </div>
+
                 </div>
                 <table id="absensiTb" class="display">
                     <thead>
@@ -178,13 +175,13 @@
         });
 
         function applyFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
             const rows = document.querySelectorAll('#absensiTableBody tr');
             
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
                 let visible = true;
-                if (searchQuery && !text.includes(searchQuery)) visible = false;
+
                 row.style.display = visible ? '' : 'none';
             });
         }

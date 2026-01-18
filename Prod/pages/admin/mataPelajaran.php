@@ -189,9 +189,7 @@
                         <button id="filterNonaktif" onclick="setStatusFilter('nonaktif')">Nonaktif</button>
                     </div>
                     <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <input type="text" id="searchInput" placeholder="Cari mata pelajaran..." oninput="applyFilters()">
-                    </div>
+
                 </div>
                 <table id="mapelTb" class="display">
                     <thead>
@@ -261,7 +259,7 @@
         }
 
         function applyFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
             const rows = document.querySelectorAll('#mapelTableBody tr');
             
             rows.forEach(row => {
@@ -269,7 +267,7 @@
                 const text = row.textContent.toLowerCase();
                 
                 let visible = status === selectedStatus;
-                if (searchQuery && !text.includes(searchQuery)) visible = false;
+
                 
                 row.style.display = visible ? '' : 'none';
             });

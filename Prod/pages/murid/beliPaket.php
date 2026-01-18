@@ -125,8 +125,6 @@
                             <option value="all">Semua</option>
                             <option value="pending">Menunggu Pembayaran</option>
                             <option value="verifikasi">Menunggu Verifikasi</option>
-                            <option value="lunas">Lunas</option>
-                            <option value="ditolak">Ditolak</option>
                         </select>
                     </div>
                     <div class="spacer"></div>
@@ -156,29 +154,33 @@
                     <h3>Konfirmasi Pembelian</h3>
                     <button class="modal-close" onclick="closeBeliModal()">&times;</button>
                 </div>
-                <div class="modal-body">
-                    <div class="detail-box">
-                        <div class="detail-row">
-                            <span>Paket:</span>
-                            <span id="modalPaketNama">-</span>
+                <form id="beliForm" method="POST" action="submissionHandler.php">
+                    <input type="hidden" name="handlerType" value="beliPaket">
+                    <input type="hidden" name="id_paket" id="modalPaketId" value="">
+                    <div class="modal-body">
+                        <div class="detail-box">
+                            <div class="detail-row">
+                                <span>Paket:</span>
+                                <span id="modalPaketNama">-</span>
+                            </div>
+                            <div class="detail-row border-top">
+                                <span>Total:</span>
+                                <span id="modalPaketHarga" style="color: #2563eb; font-weight: 600;">-</span>
+                            </div>
                         </div>
-                        <div class="detail-row border-top">
-                            <span>Total:</span>
-                            <span id="modalPaketHarga" style="color: #2563eb; font-weight: 600;">-</span>
+                        <div class="info-box">
+                            <h4>Informasi Pembayaran</h4>
+                            <p>Transfer ke rekening berikut:</p>
+                            <p style="font-weight: 600; margin-top: 8px;">Bank BCA - 1234567890</p>
+                            <p>a.n. Les Privat Coding</p>
                         </div>
+                        <p style="font-size: 13px; color: #666;">Setelah melakukan pembayaran, silakan upload bukti pembayaran untuk diverifikasi oleh admin.</p>
                     </div>
-                    <div class="info-box">
-                        <h4>Informasi Pembayaran</h4>
-                        <p>Transfer ke rekening berikut:</p>
-                        <p style="font-weight: 600; margin-top: 8px;">Bank BCA - 1234567890</p>
-                        <p>a.n. Les Privat Coding</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" onclick="closeBeliModal()">Batal</button>
+                        <button type="submit" class="btn-save">Beli Paket</button>
                     </div>
-                    <p style="font-size: 13px; color: #666;">Setelah melakukan pembayaran, silakan upload bukti pembayaran untuk diverifikasi oleh admin.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-cancel" onclick="closeBeliModal()">Batal</button>
-                    <button class="btn-save" onclick="konfirmasiBeli()">Beli Paket</button>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -189,12 +191,14 @@
                     <h3>Upload Bukti Pembayaran</h3>
                     <button class="modal-close" onclick="closeUploadModal()">&times;</button>
                 </div>
-                <form id="uploadForm" onsubmit="handleUpload(event)">
+                <form id="uploadForm" method="POST" action="submissionHandler.php" enctype="multipart/form-data">
+                    <input type="hidden" name="handlerType" value="uploadBukti">
+                    <input type="hidden" name="id_pembelian" id="uploadPembelianId" value="">
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Bukti Pembayaran</label>
                             <input type="file" name="bukti" accept="image/*" required>
-                            <p style="font-size: 12px; color: #999; margin-top: 4px;">Format: JPG, PNG, maksimal 2MB</p>
+                            <p style="font-size: 12px; color: #999; margin-top: 4px;">Format: JPG, PNG, GIF maksimal 2MB</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -216,6 +220,19 @@
 
         $(document).ready(function() {
             new DataTable('#pembelianTb', { scrollX: true });
+            
+            // Show alert messages if any
+            const urlParams = new URLSearchParams(window.location.search);
+            if(urlParams.get('beli') === 'success') {
+                alert('Pembelian berhasil dibuat! Silakan lakukan pembayaran dan upload bukti.');
+            } else if(urlParams.get('beli') === 'error') {
+                alert('Gagal membeli paket: ' + (urlParams.get('msg') || 'Unknown error'));
+            }
+            if(urlParams.get('upload') === 'success') {
+                alert('Bukti pembayaran berhasil diupload! Menunggu verifikasi admin.');
+            } else if(urlParams.get('upload') === 'error') {
+                alert('Gagal upload bukti: ' + (urlParams.get('msg') || 'Unknown error'));
+            }
         });
 
         function formatRupiah(amount) {
@@ -235,6 +252,7 @@
             currentPaketId = id;
             currentPaketNama = nama;
             currentPaketHarga = harga;
+            document.getElementById('modalPaketId').value = id;
             document.getElementById('modalPaketNama').textContent = nama;
             document.getElementById('modalPaketHarga').textContent = formatRupiah(harga);
             document.getElementById('beliModal').classList.add('show');
@@ -244,25 +262,16 @@
             document.getElementById('beliModal').classList.remove('show');
         }
 
-        function konfirmasiBeli() {
-            alert('Pembelian berhasil dibuat! Silakan lakukan pembayaran dan upload bukti.');
-            closeBeliModal();
-        }
-
         function openUploadModal(id) {
             currentUploadId = id;
+            document.getElementById('uploadPembelianId').value = id;
             document.getElementById('uploadForm').reset();
+            document.getElementById('uploadPembelianId').value = id; // Re-set after reset
             document.getElementById('uploadModal').classList.add('show');
         }
 
         function closeUploadModal() {
             document.getElementById('uploadModal').classList.remove('show');
-        }
-
-        function handleUpload(event) {
-            event.preventDefault();
-            alert('Bukti pembayaran berhasil diupload! Menunggu verifikasi admin.');
-            closeUploadModal();
         }
 
         document.getElementById('beliModal').addEventListener('click', function(e) { if (e.target === this) closeBeliModal(); });

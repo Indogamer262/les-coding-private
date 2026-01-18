@@ -1,3 +1,24 @@
+<?php
+// Handle form submission for input absensi
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'input_absensi') {
+    include_once('util/dbLesCoding.php');
+    session_start();
+    
+    $kode_jadwal = $_POST['kode_jadwal'] ?? '';
+    $status_kehadiran = $_POST['status'] ?? '';
+    $materi = $_POST['materi'] ?? '';
+    $id_pengajar = $_SESSION['loginID'] ?? '';
+    
+    if (!empty($kode_jadwal) && $status_kehadiran !== '' && !empty($id_pengajar)) {
+        $db = new DBLesCoding();
+        $db->inputAbsensi($kode_jadwal, $id_pengajar, $status_kehadiran, $materi);
+    }
+    
+    // Redirect to prevent form resubmission
+    header('Location: ?page=absensi&success=1');
+    exit;
+}
+?>
 <!-- Frontend by 2472008, member of "Les Coding Private" Team -->
 <!DOCTYPE html>
 <html>
@@ -43,8 +64,11 @@
             table.dataTable thead th { background-color: #f9fafb; font-weight: 600; font-size: 12px; text-transform: uppercase; color: #666; }
             table.dataTable tbody tr:hover { background-color: #f9fafb; }
 
-            .btn-input { background-color: #059669; color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-            .btn-input:hover { background-color: #047857; }
+            .btn-input { background-color: #3528edff; color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+            .btn-input:hover { background-color: #3528edff; }
+
+            .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+            .badge-sudah { background-color: #dcfce7; color: #15803d; }
 
             .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
             .modal-overlay.show { display: flex; }
@@ -104,10 +128,7 @@
                         </select>
                     </div>
                     <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <label>Cari</label>
-                        <input type="text" id="searchInput" placeholder="Cari murid..." oninput="applyFilters()">
-                    </div>
+
                 </div>
                 <table id="absensiTb" class="display">
                     <thead>
@@ -133,7 +154,9 @@
                     <h3>Input Absensi</h3>
                     <button class="modal-close" onclick="closeModal()">&times;</button>
                 </div>
-                <form id="absensiForm" onsubmit="handleAbsensi(event)">
+                <form id="absensiForm" method="POST" onsubmit="handleAbsensi(event)">
+                    <input type="hidden" name="kode_jadwal" id="inputKodeJadwal" value="">
+                    <input type="hidden" name="action" value="input_absensi">
                     <div class="modal-body">
                         <div class="detail-box">
                             <div class="detail-row"><span>Tanggal:</span><span id="modalTanggal">-</span></div>
@@ -143,15 +166,15 @@
                         </div>
                         <div class="form-group">
                             <label>Status Kehadiran</label>
-                            <select name="status" required>
+                            <select name="status" id="inputStatus" required>
                                 <option value="">-- Pilih Status --</option>
-                                <option value="hadir">Hadir</option>
-                                <option value="tidak-hadir">Tidak Hadir</option>
+                                <option value="1">Hadir</option>
+                                <option value="0">Tidak Hadir</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Materi Pembelajaran</label>
-                            <textarea name="materi" placeholder="Materi yang diajarkan..."></textarea>
+                            <textarea name="materi" id="inputMateri" placeholder="Materi yang diajarkan..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -175,7 +198,7 @@
 
         function applyFilters() {
             const status = document.getElementById('filterStatus').value;
-            const search = document.getElementById('searchInput').value.toLowerCase();
+
             const rows = document.querySelectorAll('#absensiTableBody tr');
             
             rows.forEach(row => {
@@ -183,18 +206,20 @@
                 const text = row.textContent.toLowerCase();
                 let visible = true;
                 if (status !== 'all' && rowStatus !== status) visible = false;
-                if (search && !text.includes(search)) visible = false;
+
                 row.style.display = visible ? '' : 'none';
             });
         }
 
         function openAbsensiModal(id, tanggal, waktu, murid, mapel) {
             currentJadwalId = id;
+            document.getElementById('inputKodeJadwal').value = id;
             document.getElementById('modalTanggal').textContent = tanggal;
             document.getElementById('modalWaktu').textContent = waktu;
             document.getElementById('modalMurid').textContent = murid;
             document.getElementById('modalMapel').textContent = mapel;
             document.getElementById('absensiForm').reset();
+            document.getElementById('inputKodeJadwal').value = id; // Re-set after reset
             document.getElementById('absensiModal').classList.add('show');
         }
 
@@ -204,8 +229,8 @@
 
         function handleAbsensi(event) {
             event.preventDefault();
-            alert('Absensi berhasil disimpan!');
-            closeModal();
+            // Submit the form
+            document.getElementById('absensiForm').submit();
         }
 
         document.getElementById('absensiModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
