@@ -113,7 +113,7 @@
             </div>
 
             <div class="paketGrid">
-                <?php echo $lesCodingUtil->renderTableBody("murid","belipaket"); ?>
+                <?php echo $lesCodingUtil->renderTableBody("murid","paketdijual"); ?>
             </div>
 
             <div class="tableCard">
@@ -143,7 +143,7 @@
                         </tr>
                     </thead>
                     <tbody id="pembelianTableBody">
-                        <?php echo $lesCodingUtil->renderTableBody("murid","riwayatpembelian"); ?>
+                        <?php echo $lesCodingUtil->renderTableBody("murid","riwayatPembelianMurid"); ?>
                     </tbody>
                 </table>
             </div>

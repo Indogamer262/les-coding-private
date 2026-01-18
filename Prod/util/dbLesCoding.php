@@ -265,7 +265,6 @@
 
                 // SP LIHAT TABEL
 
-                // Stub functions for new admin pages (to be filled in later)
                 else if($type == "accounts") {
                     // TODO: Implement accounts table query
                     // Query should return: id, nama, email, role, status
@@ -320,7 +319,7 @@
             }
             else if($roles == "murid") {
                 if($type == "dashboard") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardMurid_JadwalMendatang");
+                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardMurid_JadwalMendatang WHERE id_murid = '".$_SESSION["loginID"]."'");
                     
                     foreach($result as $row) {
                         echo "<tr>" . 
@@ -329,13 +328,12 @@
                             "<td>" . $row['nama_mapel'] . "</td>" .
                             "<td>" . $row['nama_pengajar'] . "</td>";
                     }
-                }
-                // Stub functions for murid pages (to be filled in later)
-                else if($type == "belipaket") {
-                    // TODO: Render paket cards for purchase
+                }  
+                else if($type == "paketdijual") {
+                    // TODO: Render paket cards for purchase                    
                     // Should return paket cards HTML
                 }
-                else if($type == "riwayatpembelian") {
+                else if($type == "riwayatPembelianMurid") {
                     // TODO: Query riwayat pembelian murid
                     // Query should return: id_pembelian, tanggal, paket, harga, status
                 }
@@ -362,7 +360,7 @@
             }
             else if($roles == "pengajar") {
                 if($type == "dashboard") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardPengajar_JadwalMendatang");
+                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardPengajar_JadwalMendatang WHERE id_pengajar = '".$_SESSION["loginID"]."'");
                     
                     foreach($result as $row) {
                         echo "<tr>" . 
@@ -372,7 +370,6 @@
                             "<td>" . $row['nama_murid'] . "</td>";
                     }
                 }
-                // Stub functions for pengajar pages (to be filled in later)
                 else if($type == "absensi") {
                     // TODO: Query jadwal untuk input absensi
                     // Query should return: tanggal, hari, waktu, mapel, murid
