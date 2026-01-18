@@ -47,16 +47,16 @@
         <p style="font-size: 18px; color: white; text-align: center; margin-top: 25px; padding-bottom: 25px; border-bottom: 1px solid black; margin-bottom: 0; box-sizing: border-box;" class="poppins-bold"><b>Les Privat Coding</b></p>
     </div>
     <div class="sidebar-content">
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "dashboard") {echo "active";} ?>">Dashboard</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "accounts") {echo "active";} ?>">Kelola Akun</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "paketLes") {echo "active";} ?>">Kelola Paket Les</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "mataPelajaran") {echo "active";} ?>">Kelola Mata Pelajaran</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "verifikasiPembayaran") {echo "active";} ?>">Verifikasi Pembayaran</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "pembelian") {echo "active";} ?>">Riwayat Pembelian</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "jadwalLes") {echo "active";} ?>">Kelola Jadwal</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "absensi") {echo "active";} ?>">Absensi</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "kehadiran") {echo "active";} ?>">Riwayat Kehadiran</a>
-        <a href="" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "logs") {echo "active";} ?>">Log Aktivitas</a>
+        <a href="dashboard.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "dashboard") {echo "active";} ?>">Dashboard</a>
+        <a href="accounts.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "accounts") {echo "active";} ?>">Kelola Akun</a>
+        <a href="paketLes.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "paketLes") {echo "active";} ?>">Kelola Paket Les</a>
+        <a href="mataPelajaran.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "mataPelajaran") {echo "active";} ?>">Kelola Mata Pelajaran</a>
+        <a href="verifikasiPembayaran.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "verifikasiPembayaran") {echo "active";} ?>">Verifikasi Pembayaran</a>
+        <a href="pembelian.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "pembelian") {echo "active";} ?>">Riwayat Pembelian</a>
+        <a href="jadwalLes.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "jadwalLes") {echo "active";} ?>">Kelola Jadwal</a>
+        <a href="absensi.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "absensi") {echo "active";} ?>">Absensi</a>
+        <a href="kehadiran.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "kehadiran") {echo "active";} ?>">Riwayat Kehadiran</a>
+        <a href="logs.php" class="<?php if(basename($_SERVER['PHP_SELF'], ".php") == "logs") {echo "active";} ?>">Log Aktivitas</a>
     </div>
 </div>
 
