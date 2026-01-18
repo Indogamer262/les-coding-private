@@ -132,10 +132,7 @@
                         </select>
                     </div>
                     <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <label>Cari</label>
-                        <input type="text" id="searchInput" placeholder="Cari pengajar atau murid..." oninput="applyFilters()">
-                    </div>
+
                 </div>
                 <table id="jadwalTb" class="display">
                     <thead>
@@ -228,7 +225,7 @@
         }
 
         function applyFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
             const statusFilter = document.getElementById('filterStatus').value;
             const rows = document.querySelectorAll('#jadwalTableBody tr');
             
@@ -239,7 +236,7 @@
                 const status = isBelum ? 'belum' : 'terisi';
                 
                 let visible = true;
-                if (searchQuery && !text.includes(searchQuery)) visible = false;
+
                 if (statusFilter !== 'all' && status !== statusFilter) visible = false;
                 
                 row.style.display = visible ? '' : 'none';

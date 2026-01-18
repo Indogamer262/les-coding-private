@@ -312,10 +312,42 @@
                     // Query should return: id_pembelian, tanggal_pesan, tanggal_bayar, murid, paket, harga, masa_aktif
                 }
                 else if($type == "verifikasi") {
-                    // TODO: Implement verifikasi pembayaran table query
-                    // Query should return: id_pembelian, tanggal, murid, paket, jumlah, bukti_url
-                }
+                    $result = $this->db->readingQuery("CALL SP_LihatPembelianPaket('SEMUA', 'MENUNGGU_BUKTI')");
 
+                    foreach($result as $row) {
+                        $formattedJumlah = "Rp " . number_format($row['jumlah'], 0, ',', '.');
+                        echo "<tr data-bukti='belum' data-murid='" . $row['nama_murid'] . "'>" . 
+                            "<td>" . $row['id_pembelian'] . "</td>" .
+                            "<td>" . $row['tgl_pemesanan'] . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>" .
+                            "<td>" . $row['nama_paket'] . "</td>" .
+                            "<td>" . $formattedJumlah . "</td>" .
+                            "<td> <i>Menunggu bukti</i> </td>" .
+                            "</tr>";
+                    }
+
+                    $result2 = $this->db->readingQuery("CALL SP_LihatPembelianPaket('SEMUA', 'MENUNGGU_VERIFIKASI')");
+
+                    foreach($result2 as $row) {
+                        $bukti = $this->db->readSingleValue("SELECT gambar_bukti_pembayaran FROM paketdibeli WHERE id_pembelian = '" . $row['id_pembelian'] . "'");
+                        $formattedJumlah = "Rp " . number_format($row['jumlah'], 0, ',', '.');
+
+                        echo "<tr data-id='" . $row['id_pembelian'] . "' " .
+                             "data-pembelian='" . $row['id_pembelian'] . "' " .
+                             "data-murid='" . $row['nama_murid'] . "' " .
+                             "data-paket='" . $row['nama_paket'] . "' " .
+                             "data-jumlah='" . $formattedJumlah . "' " .
+                             "data-bukti-url='" . $bukti . "' " .
+                             "data-bukti='ada'>" . 
+                            "<td>" . $row['id_pembelian'] . "</td>" .
+                            "<td>" . $row['tgl_pemesanan'] . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>" .
+                            "<td>" . $row['nama_paket'] . "</td>" .
+                            "<td>" . $formattedJumlah . "</td>" .
+                            "<td><button class='btn-view' onclick='openBuktiModal(\"" . $row['id_pembelian'] . "\")'>Lihat Bukti</button></td>" .
+                            "</tr>";
+                    }
+                }
             }
             else if($roles == "murid") {
                 if($type == "dashboard") {
@@ -371,7 +403,13 @@
                             "<td>" . $row['nama_paket'] . "</td>" .
                             "<td>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>" .
                             "<td>" . $row['status_ui'] . "</td>";
-
+                    if($row['status_ui'] == 'MENUNGGU_PEMBAYARAN') {
+                        echo "<td><button class='bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition-colors text-sm' onclick='openUploadModal(\"".$row['id_pembelian']."\")'>Upload Bukti</button></td>";
+                    }
+                    else {
+                        echo "<td>-</td>";
+                    }
+                    echo "</tr>";
                 }
                         
 

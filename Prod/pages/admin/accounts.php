@@ -389,10 +389,7 @@
                         </select>
                     </div>
                     <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <label>Cari</label>
-                        <input type="text" id="searchInput" placeholder="Cari nama atau email..." oninput="applyFilters()">
-                    </div>
+
                 </div>
                 <table id="accountsTb" class="display">
                     <thead>
@@ -508,7 +505,7 @@
         function applyFilters() {
             const roleFilter = document.getElementById('filterRole').value;
             const statusFilter = document.getElementById('filterStatus').value;
-            const searchQuery = document.getElementById('searchInput').value;
+
 
             // 1. Filter Role (Kolom indeks ke-3)
             if (roleFilter === 'all') {
@@ -527,8 +524,7 @@
                 dataTable.column(4).search('^' + formattedStatus + '$', true, false);
             }
 
-            // 3. Filter Pencarian Global (Nama/Email)
-            dataTable.search(searchQuery);
+
 
             // 4. Gambar ulang tabelnya
             dataTable.draw();

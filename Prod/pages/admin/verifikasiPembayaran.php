@@ -127,11 +127,6 @@
                             <option value="terlama">Terlama</option>
                         </select>
                     </div>
-                    <div class="spacer"></div>
-                    <div class="filterGroup">
-                        <label>Cari</label>
-                        <input type="text" id="searchInput" placeholder="Cari nama murid..." oninput="applyFilters()">
-                    </div>
                 </div>
                 <table id="verifikasiTb" class="display">
                     <thead>

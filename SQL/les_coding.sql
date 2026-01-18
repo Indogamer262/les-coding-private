@@ -576,12 +576,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatPembelianPaket` (IN `p_peri
   )
   AND (
     UPPER(p_status_bukti) = 'SEMUA'
-    OR (UPPER(p_status_bukti) = 'SUDAH'
+    OR (UPPER(p_status_bukti) = 'LUNAS'
         AND pd.gambar_bukti_pembayaran IS NOT NULL
-        AND pd.gambar_bukti_pembayaran <> '')
-    OR (UPPER(p_status_bukti) = 'BELUM'
+        AND pd.gambar_bukti_pembayaran <> ''
+        AND pd.tgl_pembayaran IS NOT NULL)
+    OR (UPPER(p_status_bukti) = 'MENUNGGU_BUKTI'
         AND (pd.gambar_bukti_pembayaran IS NULL
         OR pd.gambar_bukti_pembayaran = ''))
+    OR (UPPER(p_status_bukti) = 'MENUNGGU_VERIFIKASI'
+        AND pd.gambar_bukti_pembayaran IS NOT NULL
+        AND pd.gambar_bukti_pembayaran <> ''
+        AND pd.tgl_pembayaran IS NULL)
   )
   ORDER BY pd.tgl_pemesanan DESC;
 END$$
