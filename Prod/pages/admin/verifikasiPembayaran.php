@@ -186,12 +186,16 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn-cancel" onclick="closeModal()">Tutup</button>
-                    <button id="btnLunas" class="btn-lunas" onclick="tandaiLunas()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Tandai Lunas
-                    </button>
+                    <form id="lunasForm" method="POST" action="submissionHandler.php" style="display: inline;">
+                        <input type="hidden" name="handlerType" value="tandaiLunas">
+                        <input type="hidden" name="id_pembelian" id="lunasIdPembelian" value="">
+                        <button type="submit" id="btnLunas" class="btn-lunas">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Tandai Lunas
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -216,19 +220,24 @@
 
         $(document).ready(function() {
             new DataTable('#verifikasiTb', { scrollX: true });
+            
+            // Show alert messages if any
+            const urlParams = new URLSearchParams(window.location.search);
+            if(urlParams.get('lunas') === 'success') {
+                showToast();
+            } else if(urlParams.get('lunas') === 'error') {
+                alert('Gagal menandai lunas: ' + (urlParams.get('msg') || 'Unknown error'));
+            }
         });
 
         function applyFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
             const buktiFilter = document.getElementById('filterBukti').value;
             const rows = document.querySelectorAll('#verifikasiTableBody tr');
             
             rows.forEach(row => {
-                const murid = (row.dataset.murid || '').toLowerCase();
                 const bukti = row.dataset.bukti || '';
                 
                 let visible = true;
-                if (searchQuery && !murid.includes(searchQuery)) visible = false;
                 if (buktiFilter !== 'all' && bukti !== buktiFilter) visible = false;
                 
                 row.style.display = visible ? '' : 'none';
@@ -245,23 +254,13 @@
             document.getElementById('buktiPaket').textContent = row.dataset.paket || '-';
             document.getElementById('buktiJumlah').textContent = row.dataset.jumlah || '-';
             document.getElementById('buktiImage').src = row.dataset.buktiUrl || '';
+            document.getElementById('lunasIdPembelian').value = id;
 
             document.getElementById('buktiModal').classList.add('show');
         }
 
         function closeModal() {
             document.getElementById('buktiModal').classList.remove('show');
-        }
-
-        function tandaiLunas() {
-            if (!currentId) return;
-            
-            const row = document.querySelector('tr[data-id="' + currentId + '"]');
-            if (row) row.remove();
-            
-            closeModal();
-            showToast();
-            currentId = null;
         }
 
         function showToast() {

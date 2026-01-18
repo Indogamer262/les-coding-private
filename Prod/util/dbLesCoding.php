@@ -551,5 +551,48 @@
                 }
             }
         }
+
+        // =============================================
+        // BELI PAKET & PEMBAYARAN METHODS
+        // =============================================
+
+        /**
+         * Beli paket untuk murid
+         * @param string $id_murid ID murid yang membeli
+         * @param string $id_paket ID paket yang dibeli
+         * @return string|bool Success message or false on failure
+         */
+        public function beliPaket($id_murid, $id_paket) {
+            $safe_id_murid = str_replace("'", "", $id_murid);
+            $safe_id_paket = str_replace("'", "", $id_paket);
+            
+            return $this->db->nonReadingQuery("CALL SP_BeliPaket('$safe_id_murid', '$safe_id_paket')");
+        }
+
+        /**
+         * Upload bukti pembayaran
+         * @param string $id_pembelian ID pembelian
+         * @param string $id_murid ID murid yang upload
+         * @param string $filename Nama file bukti pembayaran
+         * @return string|bool Success message or error
+         */
+        public function uploadBuktiPembayaran($id_pembelian, $id_murid, $filename) {
+            $safe_id_pembelian = str_replace("'", "", $id_pembelian);
+            $safe_id_murid = str_replace("'", "", $id_murid);
+            $safe_filename = str_replace("'", "", $filename);
+            
+            return $this->db->nonReadingQuery("CALL SP_UploadBuktiPembayaran('$safe_id_pembelian', '$safe_id_murid', '$safe_filename')");
+        }
+
+        /**
+         * Tandai pembayaran sebagai lunas (admin only)
+         * @param string $id_pembelian ID pembelian yang ditandai lunas
+         * @return string|bool Success message or error
+         */
+        public function tandaiLunas($id_pembelian) {
+            $safe_id_pembelian = str_replace("'", "", $id_pembelian);
+            
+            return $this->db->nonReadingQuery("CALL SP_TandaiLunas('$safe_id_pembelian')");
+        }
     }
 ?>
