@@ -1,445 +1,272 @@
-<div class="flex flex-col gap-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Beli Paket</h1>
-            <p class="text-sm text-gray-600 mt-1">Pilih paket les yang tersedia</p>
-        </div>
-    </div>
+<!-- Frontend by 2472008, member of "Les Coding Private" Team -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Beli Paket</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Packages Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="packageGrid">
-        <!-- Package Card 1 -->
-        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-blue-600 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">Paket 4 Pertemuan</h3>
-                <p class="text-blue-100 text-sm mt-1">Cocok untuk pemula</p>
-            </div>
-            <div class="p-6">
-                <div class="text-center mb-4">
-                    <span class="text-3xl font-bold text-gray-800">Rp 250.000</span>
-                </div>
-                <ul class="space-y-3 mb-4">
-                    <li class="flex items-center gap-2 text-sm text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><polyline points="20 6 9 17 4 12"/></svg>
-                        4 Pertemuan
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><polyline points="20 6 9 17 4 12"/></svg>
-                        Masa aktif 14 hari
-                    </li>
-                </ul>
-                <button onclick="openBeliModal(1, 'Paket 4 Pertemuan', 250000)" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-                    Beli Sekarang
-                </button>
-            </div>
-        </div>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css" rel="stylesheet">
 
-        <!-- Package Card 2 -->
-        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-blue-600 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">Paket 8 Pertemuan</h3>
-                <p class="text-blue-100 text-sm mt-1">Paling diminati</p>
-            </div>
-            <div class="p-6">
-                <div class="text-center mb-4">
-                    <span class="text-3xl font-bold text-gray-800">Rp 450.000</span>
-                </div>
-                <ul class="space-y-3 mb-4">
-                    <li class="flex items-center gap-2 text-sm text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><polyline points="20 6 9 17 4 12"/></svg>
-                        8 Pertemuan
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><polyline points="20 6 9 17 4 12"/></svg>
-                        Masa aktif 28 hari
-                    </li>
-                </ul>
-                <button onclick="openBeliModal(2, 'Paket 8 Pertemuan', 450000)" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-                    Beli Sekarang
-                </button>
-            </div>
-        </div>
+        <style>
+            body, html {box-sizing: border-box; margin: 0; height: 100%;}
+            .poppins-regular {font-family: "Poppins", sans-serif;font-weight: 400;}
+            .poppins-bold {font-family: "Poppins", sans-serif;font-weight: 700;}
 
-        <!-- Package Card 3 -->
-        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-            <div class="bg-blue-600 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">Paket 12 Pertemuan</h3>
-                <p class="text-blue-100 text-sm mt-1">Untuk belajar intensif</p>
-            </div>
-            <div class="p-6">
-                <div class="text-center mb-4">
-                    <span class="text-3xl font-bold text-gray-800">Rp 600.000</span>
-                </div>
-                <ul class="space-y-3 mb-4">
-                    <li class="flex items-center gap-2 text-sm text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><polyline points="20 6 9 17 4 12"/></svg>
-                        12 Pertemuan
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><polyline points="20 6 9 17 4 12"/></svg>
-                        Masa aktif 45 hari
-                    </li>
-                </ul>
-                <button onclick="openBeliModal(3, 'Paket 12 Pertemuan', 600000)" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-                    Beli Sekarang
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Riwayat Pembelian Table -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <h2 class="text-lg font-semibold text-gray-800">Riwayat Pembelian</h2>
-
-            <!-- Filters -->
-            <div id="pembelianDtFilters" class="hidden flex flex-wrap items-center gap-3">
-                <div class="flex items-center gap-2">
-                    <label class="text-sm whitespace-nowrap">Status</label>
-                    <select id="filterStatus" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="all" selected>Semua</option>
-                        <option value="pending">Menunggu Pembayaran</option>
-                        <option value="verifikasi">Menunggu Verifikasi</option>
-                        <option value="lunas">Lunas</option>
-                        <option value="ditolak">Ditolak</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="px-6 py-6">
-            <table id="tablePembelianMurid" class="display w-full text-sm text-left rtl:text-right text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3">ID Pembelian</th>
-                        <th class="px-6 py-3">Tanggal</th>
-                        <th class="px-6 py-3">Paket</th>
-                        <th class="px-6 py-3">Harga</th>
-                        <th class="px-6 py-3">Status</th>
-                        <th class="px-6 py-3">Aksi</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Beli Paket Modal -->
-<div id="beliModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-2xl max-w-lg w-full mx-4">
-        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-xl font-semibold text-gray-800">Konfirmasi Pembelian</h3>
-            <button type="button" onclick="closeBeliModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <div class="p-6 space-y-4">
-            <div class="bg-gray-50 rounded-lg p-4 space-y-2">
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Paket:</span>
-                    <span id="modalPaketNama" class="font-semibold text-gray-800">-</span>
-                </div>
-                <div class="flex justify-between border-t border-gray-200 pt-2">
-                    <span class="text-gray-600">Total:</span>
-                    <span id="modalPaketHarga" class="font-bold text-blue-600 text-lg">-</span>
-                </div>
-            </div>
-
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 class="font-semibold text-blue-800 mb-2">Informasi Pembayaran</h4>
-                <p class="text-sm text-blue-700">Transfer ke rekening berikut:</p>
-                <div class="mt-2 space-y-1 text-sm">
-                    <p class="font-medium text-blue-800">Bank BCA - 1234567890</p>
-                    <p class="text-blue-700">a.n. Les Privat Coding</p>
-                </div>
-            </div>
-
-            <p class="text-sm text-gray-600">
-                Setelah melakukan pembayaran, silakan upload bukti pembayaran untuk diverifikasi oleh admin.
-            </p>
-        </div>
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
-            <button type="button" onclick="closeBeliModal()" class="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">Batal</button>
-            <button type="button" onclick="konfirmasiBeli()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">Beli Paket</button>
-        </div>
-    </div>
-</div>
-
-<!-- Upload Bukti Modal -->
-<div id="uploadBuktiModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-2xl max-w-lg w-full mx-4">
-        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-xl font-semibold text-gray-800">Upload Bukti Pembayaran</h3>
-            <button type="button" onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <form id="uploadBuktiForm" class="p-6 space-y-4" onsubmit="handleUploadBukti(event)">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Bukti Pembayaran</label>
-                <input type="file" name="bukti" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, maksimal 2MB</p>
-            </div>
-        </form>
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
-            <button type="button" onclick="closeUploadModal()" class="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">Batal</button>
-            <button type="submit" form="uploadBuktiForm" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">Upload</button>
-        </div>
-    </div>
-</div>
-
-<script>
-let tablePembelianMurid;
-let selectedStatusFilter = 'all';
-let currentPaketId = null;
-let currentPaketNama = '';
-let currentPaketHarga = 0;
-let currentUploadPembelianId = null;
-
-function escapeHtml(value) {
-    if (value === null || value === undefined) return '';
-    return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}
-
-function formatRupiah(amount) {
-    const num = Number(amount || 0);
-    return 'Rp ' + num.toLocaleString('id-ID');
-}
-
-// Dummy data
-const pembelianMuridData = [
-    {
-        pembelian_id: 1,
-        id_pembelian: 'PL-0001',
-        tanggal: '2026-01-02',
-        tanggal_display: '02 Jan 2026',
-        paket: 'Paket 8 Pertemuan',
-        harga: 450000,
-        status: 'lunas'
-    },
-    {
-        pembelian_id: 2,
-        id_pembelian: 'PL-0015',
-        tanggal: '2026-01-10',
-        tanggal_display: '10 Jan 2026',
-        paket: 'Paket 4 Pertemuan',
-        harga: 250000,
-        status: 'pending'
-    },
-    {
-        pembelian_id: 3,
-        id_pembelian: 'PL-0018',
-        tanggal: '2026-01-12',
-        tanggal_display: '12 Jan 2026',
-        paket: 'Paket 8 Pertemuan',
-        harga: 450000,
-        status: 'verifikasi'
-    }
-];
-
-function applyFilters() {
-    if (!tablePembelianMurid) return;
-    tablePembelianMurid.draw();
-}
-
-function openBeliModal(id, nama, harga) {
-    currentPaketId = id;
-    currentPaketNama = nama;
-    currentPaketHarga = harga;
-    
-    document.getElementById('modalPaketNama').textContent = nama;
-    document.getElementById('modalPaketHarga').textContent = formatRupiah(harga);
-    
-    document.getElementById('beliModal').classList.remove('hidden');
-    document.getElementById('beliModal').classList.add('flex');
-}
-
-function closeBeliModal() {
-    document.getElementById('beliModal').classList.add('hidden');
-    document.getElementById('beliModal').classList.remove('flex');
-    currentPaketId = null;
-}
-
-function konfirmasiBeli() {
-    alert('Pembelian berhasil dibuat! Silakan lakukan pembayaran dan upload bukti pembayaran.');
-    closeBeliModal();
-    // Reload table or add new row
-}
-
-function openUploadModal(pembelianId) {
-    currentUploadPembelianId = pembelianId;
-    document.getElementById('uploadBuktiForm').reset();
-    document.getElementById('uploadBuktiModal').classList.remove('hidden');
-    document.getElementById('uploadBuktiModal').classList.add('flex');
-}
-
-function closeUploadModal() {
-    document.getElementById('uploadBuktiModal').classList.add('hidden');
-    document.getElementById('uploadBuktiModal').classList.remove('flex');
-    currentUploadPembelianId = null;
-}
-
-function handleUploadBukti(event) {
-    event.preventDefault();
-    alert('Bukti pembayaran berhasil diupload! Menunggu verifikasi admin.');
-    closeUploadModal();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Custom filter (Status)
-    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
-        if (!settings?.nTable || settings.nTable.id !== 'tablePembelianMurid') return true;
-        if (!tablePembelianMurid) return true;
-
-        const row = tablePembelianMurid.row(dataIndex).data();
-        if (!row) return true;
-
-        const statusOk = selectedStatusFilter === 'all' || row.status === selectedStatusFilter;
-        return statusOk;
-    });
-
-    tablePembelianMurid = $('#tablePembelianMurid').DataTable({
-        data: pembelianMuridData,
-        columns: [
-            {
-                data: 'id_pembelian',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    return `<span class="font-mono text-sm font-medium text-gray-800">${escapeHtml(data)}</span>`;
-                }
-            },
-            {
-                data: 'tanggal_display',
-                render: (data, type, row) => {
-                    if (type === 'sort' || type === 'type') return row.tanggal;
-                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
-                }
-            },
-            {
-                data: 'paket',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
-                }
-            },
-            {
-                data: 'harga',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    return `<span class="font-medium text-gray-800">${formatRupiah(data)}</span>`;
-                }
-            },
-            {
-                data: 'status',
-                className: 'text-center',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    let cls = '';
-                    let label = '';
-                    switch(data) {
-                        case 'pending':
-                            cls = 'bg-yellow-100 text-yellow-700';
-                            label = 'Menunggu Pembayaran';
-                            break;
-                        case 'verifikasi':
-                            cls = 'bg-blue-100 text-blue-700';
-                            label = 'Menunggu Verifikasi';
-                            break;
-                        case 'lunas':
-                            cls = 'bg-green-100 text-green-700';
-                            label = 'Lunas';
-                            break;
-                        case 'ditolak':
-                            cls = 'bg-red-100 text-red-700';
-                            label = 'Ditolak';
-                            break;
-                        default:
-                            cls = 'bg-gray-100 text-gray-700';
-                            label = data;
-                    }
-                    return `<span class="status-badge ${cls}">${label}</span>`;
-                }
-            },
-            {
-                data: null,
-                orderable: false,
-                searchable: false,
-                className: 'text-center',
-                render: (data, type, row) => {
-                    if (type !== 'display') return '';
-                    if (row.status === 'pending') {
-                        return `
-                            <button type="button" onclick="openUploadModal(${row.pembelian_id})" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors">
-                                Upload Bukti
-                            </button>
-                        `;
-                    }
-                    if (row.status === 'ditolak') {
-                        return `
-                            <button type="button" onclick="openUploadModal(${row.pembelian_id})" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-orange-500 text-white hover:bg-orange-600 transition-colors">
-                                Upload Ulang
-                            </button>
-                        `;
-                    }
-                    return `<span class="text-gray-400 text-xs">-</span>`;
-                }
+            body {
+                display: grid;
+                grid-template-areas: "sidebar header" "sidebar content";
+                grid-template-columns: auto 1fr;
+                grid-template-rows: auto 1fr;
+                background-color: #ededed;
             }
-        ],
-        createdRow: (row, data) => {
-            $(row).addClass('hover:bg-gray-50 transition-colors');
-            row.setAttribute('data-status', data.status);
-            row.setAttribute('data-pembelian-id', String(data.pembelian_id));
-        },
-        language: {
-            search: "Cari:",
-            lengthMenu: "Tampilkan _MENU_ data",
-            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-            infoEmpty: "Tidak ada data",
-            infoFiltered: "(disaring dari _MAX_ total data)",
-            zeroRecords: "Tidak ada data yang cocok",
-            paginate: {
-                first: "Pertama",
-                last: "Terakhir",
-                next: "Selanjutnya",
-                previous: "Sebelumnya"
+            
+            .main { grid-area: content; padding: 20px; overflow-y: auto; }
+            .pageHeader { margin-bottom: 20px; }
+            .pageHeader h2 { margin: 0; }
+            .pageHeader p { margin: 5px 0 0 0; color: #666; font-size: 14px; }
+
+            .paketGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
+            .paketCard { background: white; border-radius: 10px; box-shadow: 0 0 10px 0 lightgray; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+            .paketCard:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+            .paketHeader { background: #2563eb; color: white; padding: 16px 20px; }
+            .paketHeader h3 { margin: 0; font-size: 18px; }
+            .paketHeader p { margin: 4px 0 0 0; font-size: 12px; opacity: 0.9; }
+            .paketBody { padding: 20px; }
+            .paketPrice { font-size: 28px; font-weight: 700; color: #1f2937; text-align: center; margin-bottom: 16px; }
+            .paketFeatures { list-style: none; padding: 0; margin: 0 0 16px 0; }
+            .paketFeatures li { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 14px; color: #4b5563; }
+            .paketFeatures li svg { color: #10b981; flex-shrink: 0; }
+            .btn-beli { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+            .btn-beli:hover { background: #1d4ed8; }
+
+            .tableCard { background-color: white; box-shadow: 0 0 10px 0 lightgray; border-radius: 8px; padding: 24px; }
+            .tableCard h3 { margin: 0 0 16px 0; }
+
+            .filterRow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px; }
+            .filterGroup { display: flex; flex-direction: column; gap: 4px; }
+            .filterGroup label { font-size: 12px; color: #666; }
+            .filterGroup select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+            .filterGroup select:focus { outline: none; border-color: #2563eb; }
+            .spacer { flex: 1; }
+
+            table.dataTable { width: 100% !important; border-collapse: collapse; }
+            table.dataTable th, table.dataTable td { border: none; padding: 12px; text-align: left; }
+            table.dataTable thead th { background-color: #f9fafb; font-weight: 600; font-size: 12px; text-transform: uppercase; color: #666; }
+            table.dataTable tbody tr:hover { background-color: #f9fafb; }
+
+            .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+            .badge-pending { background-color: #fef3c7; color: #b45309; }
+            .badge-verifikasi { background-color: #dbeafe; color: #1d4ed8; }
+            .badge-lunas { background-color: #dcfce7; color: #15803d; }
+            .badge-ditolak { background-color: #fee2e2; color: #dc2626; }
+
+            .btn-upload { background-color: #2563eb; color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+            .btn-upload:hover { background-color: #1d4ed8; }
+
+            .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
+            .modal-overlay.show { display: flex; }
+            .modal { background: white; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+            .modal-header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+            .modal-header h3 { margin: 0; }
+            .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
+            .modal-close:hover { color: #333; }
+            .modal-body { padding: 20px; }
+            .modal-footer { padding: 16px 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px; }
+
+            .detail-box { background-color: #f9fafb; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+            .detail-row { display: flex; justify-content: space-between; padding: 6px 0; }
+            .detail-row span:first-child { color: #666; }
+            .detail-row span:last-child { font-weight: 500; }
+            .detail-row.border-top { border-top: 1px solid #ddd; padding-top: 10px; margin-top: 6px; }
+
+            .info-box { background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+            .info-box h4 { margin: 0 0 8px 0; color: #1e40af; font-size: 14px; }
+            .info-box p { margin: 0; font-size: 13px; color: #1e40af; }
+
+            .form-group { margin-bottom: 16px; }
+            .form-group label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; }
+            .form-group input { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+
+            .btn-cancel { background: white; border: 1px solid #ddd; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+            .btn-cancel:hover { background: #f9fafb; }
+            .btn-save { background-color: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+            .btn-save:hover { background-color: #1d4ed8; }
+
+            @media only screen and (max-width: 800px) {
+                body { display: block; }
+                .main { padding: 20px; overflow: visible; }
+                .paketGrid { grid-template-columns: 1fr; }
             }
-        },
-        pageLength: 10,
-        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
-        ordering: true,
-        order: [[1, 'desc']]
-    });
+        </style>
+    </head>
+    <body>
+        <?php include('occurence/navbar.php'); ?>
+        <?php include('pages/murid/sidebar.php'); ?>
+        
+        <div class="main poppins-regular">
+            <div class="pageHeader">
+                <h2>Beli Paket</h2>
+                <p>Pilih paket les yang tersedia</p>
+            </div>
 
-    // Move filters next to length menu
-    const wrapper = document.getElementById('tablePembelianMurid_wrapper');
-    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
-    const filterEl = document.getElementById('pembelianDtFilters');
-    if (lengthEl && filterEl) {
-        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
-        filterEl.classList.remove('hidden');
-        lengthEl.appendChild(filterEl);
-    }
+            <div class="paketGrid">
+                <?php echo $lesCodingUtil->renderTableBody("murid","belipaket"); ?>
+            </div>
 
-    const statusSelect = document.getElementById('filterStatus');
-    if (statusSelect) {
-        selectedStatusFilter = statusSelect.value || 'all';
-        statusSelect.addEventListener('change', () => {
-            selectedStatusFilter = statusSelect.value || 'all';
-            applyFilters();
+            <div class="tableCard">
+                <h3>Riwayat Pembelian</h3>
+                <div class="filterRow">
+                    <div class="filterGroup">
+                        <label>Status</label>
+                        <select id="filterStatus" onchange="applyFilters()">
+                            <option value="all">Semua</option>
+                            <option value="pending">Menunggu Pembayaran</option>
+                            <option value="verifikasi">Menunggu Verifikasi</option>
+                            <option value="lunas">Lunas</option>
+                            <option value="ditolak">Ditolak</option>
+                        </select>
+                    </div>
+                    <div class="spacer"></div>
+                </div>
+                <table id="pembelianTb" class="display">
+                    <thead>
+                        <tr>
+                            <th>ID Pembelian</th>
+                            <th>Tanggal</th>
+                            <th>Paket</th>
+                            <th>Harga</th>
+                            <th style="text-align:center;">Status</th>
+                            <th style="text-align:center;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pembelianTableBody">
+                        <?php echo $lesCodingUtil->renderTableBody("murid","riwayatpembelian"); ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal Beli -->
+        <div class="modal-overlay" id="beliModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Konfirmasi Pembelian</h3>
+                    <button class="modal-close" onclick="closeBeliModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="detail-box">
+                        <div class="detail-row">
+                            <span>Paket:</span>
+                            <span id="modalPaketNama">-</span>
+                        </div>
+                        <div class="detail-row border-top">
+                            <span>Total:</span>
+                            <span id="modalPaketHarga" style="color: #2563eb; font-weight: 600;">-</span>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <h4>Informasi Pembayaran</h4>
+                        <p>Transfer ke rekening berikut:</p>
+                        <p style="font-weight: 600; margin-top: 8px;">Bank BCA - 1234567890</p>
+                        <p>a.n. Les Privat Coding</p>
+                    </div>
+                    <p style="font-size: 13px; color: #666;">Setelah melakukan pembayaran, silakan upload bukti pembayaran untuk diverifikasi oleh admin.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick="closeBeliModal()">Batal</button>
+                    <button class="btn-save" onclick="konfirmasiBeli()">Beli Paket</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Upload Bukti -->
+        <div class="modal-overlay" id="uploadModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Upload Bukti Pembayaran</h3>
+                    <button class="modal-close" onclick="closeUploadModal()">&times;</button>
+                </div>
+                <form id="uploadForm" onsubmit="handleUpload(event)">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Bukti Pembayaran</label>
+                            <input type="file" name="bukti" accept="image/*" required>
+                            <p style="font-size: 12px; color: #999; margin-top: 4px;">Format: JPG, PNG, maksimal 2MB</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" onclick="closeUploadModal()">Batal</button>
+                        <button type="submit" class="btn-save">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
+    <script>
+        let currentPaketId = null;
+        let currentPaketNama = '';
+        let currentPaketHarga = 0;
+        let currentUploadId = null;
+
+        $(document).ready(function() {
+            new DataTable('#pembelianTb', { scrollX: true });
         });
-    }
 
-    applyFilters();
-});
-</script>
+        function formatRupiah(amount) {
+            return 'Rp ' + Number(amount).toLocaleString('id-ID');
+        }
+
+        function applyFilters() {
+            const status = document.getElementById('filterStatus').value;
+            const rows = document.querySelectorAll('#pembelianTableBody tr');
+            rows.forEach(row => {
+                const rowStatus = row.getAttribute('data-status');
+                row.style.display = (status === 'all' || rowStatus === status) ? '' : 'none';
+            });
+        }
+
+        function openBeliModal(id, nama, harga) {
+            currentPaketId = id;
+            currentPaketNama = nama;
+            currentPaketHarga = harga;
+            document.getElementById('modalPaketNama').textContent = nama;
+            document.getElementById('modalPaketHarga').textContent = formatRupiah(harga);
+            document.getElementById('beliModal').classList.add('show');
+        }
+
+        function closeBeliModal() {
+            document.getElementById('beliModal').classList.remove('show');
+        }
+
+        function konfirmasiBeli() {
+            alert('Pembelian berhasil dibuat! Silakan lakukan pembayaran dan upload bukti.');
+            closeBeliModal();
+        }
+
+        function openUploadModal(id) {
+            currentUploadId = id;
+            document.getElementById('uploadForm').reset();
+            document.getElementById('uploadModal').classList.add('show');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('show');
+        }
+
+        function handleUpload(event) {
+            event.preventDefault();
+            alert('Bukti pembayaran berhasil diupload! Menunggu verifikasi admin.');
+            closeUploadModal();
+        }
+
+        document.getElementById('beliModal').addEventListener('click', function(e) { if (e.target === this) closeBeliModal(); });
+        document.getElementById('uploadModal').addEventListener('click', function(e) { if (e.target === this) closeUploadModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeBeliModal(); closeUploadModal(); } });
+    </script>
+</html>

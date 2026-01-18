@@ -283,6 +283,35 @@
                             "<td>" . $row['nama_pengajar'] . "</td>";
                     }
                 }
+                // Stub functions for murid pages (to be filled in later)
+                else if($type == "belipaket") {
+                    // TODO: Render paket cards for purchase
+                    // Should return paket cards HTML
+                }
+                else if($type == "riwayatpembelian") {
+                    // TODO: Query riwayat pembelian murid
+                    // Query should return: id_pembelian, tanggal, paket, harga, status
+                }
+                else if($type == "jadwal") {
+                    // TODO: Query jadwal les murid
+                    // Query should return: tanggal, hari, waktu, mapel, pengajar, status
+                }
+                else if($type == "kehadiran") {
+                    // TODO: Query riwayat kehadiran murid
+                    // Query should return: tanggal, waktu, pengajar, mapel, materi, status
+                }
+                else if($type == "paketsaya") {
+                    // TODO: Query paket yang dibeli murid
+                    // Query should return: id_pembelian, tanggal, paket, sisa, total, masa_aktif
+                }
+                else if($type == "jadwaltersedia") {
+                    // TODO: Query jadwal tersedia untuk dipilih
+                    // Query should return: tanggal, hari, waktu, pengajar, mapel
+                }
+                else if($type == "jadwaldipilih") {
+                    // TODO: Query jadwal yang sudah dipilih murid
+                    // Query should return: tanggal, hari, waktu, pengajar, mapel
+                }
             }
             else if($roles == "pengajar") {
                 if($type == "dashboard") {
@@ -295,6 +324,19 @@
                             "<td>" . $row['nama_mapel'] . "</td>" .
                             "<td>" . $row['nama_murid'] . "</td>";
                     }
+                }
+                // Stub functions for pengajar pages (to be filled in later)
+                else if($type == "absensi") {
+                    // TODO: Query jadwal untuk input absensi
+                    // Query should return: tanggal, hari, waktu, mapel, murid
+                }
+                else if($type == "jadwal") {
+                    // TODO: Query jadwal mengajar pengajar
+                    // Query should return: tanggal, hari, waktu, mapel, murid, status
+                }
+                else if($type == "kehadiran") {
+                    // TODO: Query riwayat kehadiran murid yang diajar
+                    // Query should return: tanggal, waktu, murid, mapel, materi, status
                 }
             }
         }
