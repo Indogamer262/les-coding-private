@@ -32,14 +32,31 @@
         else if($handlerType == "editAkun") {
             // get all the data this handler needs
             $nama = $_POST["nama"];
-            $role = $_POST["role"];
+            $role = $_POST["editRoles"];
             $email = $_POST["email"];
             $password = $_POST["password"];
+            $id = $_POST["editId"];
 
-            $lesCodingUtil->editAccount($id, $nama, $email, $password);
+            $lesCodingUtil->editAccount($id, $role, $nama, $email);
+
+            // only update password if password field was filled
+            if(!empty($password)) {
+                $lesCodingUtil->editAccountPassword($id, $role, $password);
+            }
 
             // fallback to previous page
-            header("Location: accounts.php?addAccount=success");
+            header("Location: accounts.php?addAccount=edit");
+        }
+        else if($handlerType == "alihStatusAkun") {
+            // get all the data this handler needs
+            $role = $_POST["role"];
+            $id = $_POST["editId"];
+            $targetStatus = $_POST["targetStatus"];
+
+            $lesCodingUtil->editAccountStatus($id, $role, $targetStatus);
+
+            // fallback to previous page
+            header("Location: accounts.php?addAccount=status");
         }
         else {
             header("Location: dashboard.php");

@@ -422,6 +422,7 @@
                 <form id="accountForm" action="submissionHandler.php" method="POST">
                     <input type="hidden" name="handlerType" id="handlerType" value="tambahAkun">
                     <input type="hidden" name="editId" id="editId" value="">
+                    <input type="hidden" name="editRoles" id="editRoles" value="">
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group">
@@ -444,7 +445,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Password</label>
-                                <input type="password" name="password" placeholder="Minimal 8 karakter">
+                                <input type="password" name="password" placeholder="Minimal 0 karakter">
                             </div>
                             <div class="form-group">
                                 <label>Konfirmasi Password</label>
@@ -464,18 +465,44 @@
         <div class="modal-overlay poppins-regular" id="successModal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 id="modalTitle">Tambah Akun Baru</h3>
+                    <h3>Aksi Akun</h3>
                     <button class="modal-close" onclick="closeModalSuccess()">&times;</button>
                 </div>
             
     
                 <div class="modal-body">
-                    <p>Akun berhasil ditambahkan!</p>
+                    <p id="successMessage">Akun berhasil ditambahkan!</p>
                 </div>
                           
                 <div class="modal-footer">
                     <button type="submit" class="btn-save" onclick="closeModalSuccess()">Selesai</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal Alih Status -->
+        <div class="modal-overlay poppins-regular" id="statusModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Alih Status Akun</h3>
+                    <button class="modal-close" onclick="closeModalStatus()">&times;</button>
+                </div>
+
+                <form id="alihStatusForm" action="submissionHandler.php" method="POST">
+                    <input type="hidden" name="handlerType" value="alihStatusAkun">
+                    <input type="hidden" name="editId" value="">
+                    <input type="hidden" name="role" value="">
+                    <input type="hidden" name="targetStatus" value="">
+
+                    <div class="modal-body">
+                        <p id="statusMessage">Yakin untuk alih status menjadi STATUS_NAME?</p>
+                    </div>
+                            
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" onclick="closeModalStatus()">Batal</button>
+                        <button type="submit" class="btn-save">Yakin</button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -541,6 +568,7 @@
             document.getElementById('editId').setAttribute('value',null);
             document.getElementById('handlerType').setAttribute('value','tambahAkun');
             document.getElementById('accountForm').elements["role"].removeAttribute('disabled');
+            document.getElementById('editRoles').setAttribute('value',null);
         }
 
         function editAccount(id, data) {
@@ -554,6 +582,7 @@
             document.getElementById('accountForm').elements["email"].value = data[1];
             document.getElementById('accountForm').elements["role"].value = data[2];
             document.getElementById('accountForm').elements["role"].setAttribute('disabled', '');
+            document.getElementById('editRoles').setAttribute('value',data[2]);
         }
         
 
@@ -561,8 +590,16 @@
             document.getElementById('accountModal').classList.remove('show');
         }
 
-        function openSuccessModal() {
-            document.getElementById('modalTitle').textContent = 'Tambah Akun Baru';
+        function openSuccessModal(successType) {
+            if(successType == "success") {
+                document.getElementById('successMessage').textContent = 'Akun berhasil ditambahkan!';
+            }
+            else if(successType == "edit") {
+                document.getElementById('successMessage').textContent = 'Akun berhasil diubah!';
+            }
+            else if(successType == "status") {
+                document.getElementById('successMessage').textContent = 'Akun berhasil alih status!';
+            }
             document.getElementById('successModal').classList.add('show');
         }
 
@@ -606,6 +643,32 @@
             applyFilters();
         }
 
+        function alihStatus(roles, id, targetStatus) {
+            if(targetStatus == 1) {
+                statusName = "AKTIF";
+            }
+            else {
+                statusName = "NON-AKTIF"
+            }
+            document.getElementById('statusMessage').textContent = 'Yakin untuk alih status menjadi ' + statusName + " ?";
+
+            // set form value
+            document.getElementById('alihStatusForm').elements["editId"].setAttribute('value',id);
+            document.getElementById('alihStatusForm').elements["role"].setAttribute('value',roles);
+            document.getElementById('alihStatusForm').elements["targetStatus"].setAttribute('value',targetStatus);
+
+            document.getElementById('statusModal').classList.add('show');
+        }
+        function closeModalStatus() {
+            document.getElementById('statusModal').classList.remove('show');
+            
+            const url = new URL(window.location.href);
+            // Delete the specific parameter
+            url.searchParams.delete("addAccount"); 
+            // Update the browser URL without reloading the page
+            window.history.replaceState({}, document.title, url.toString());
+        }
+
         // Close modal on overlay click
         document.getElementById('accountModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
@@ -617,6 +680,6 @@
         });
 
         // open successModal on success
-        <?php if($_GET['addAccount']??null =="success") {echo "openSuccessModal();";} ?>
+        <?php $successState=$_GET['addAccount']??null; if($successState != null) {echo "openSuccessModal('$successState');";} ?>
     </script>
 </html>

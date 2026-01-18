@@ -32,7 +32,7 @@
             // Do all of these only if roles is correct
             if($safe_roles != 0) {
                 // firstly get the username
-                $hashRaw = $this->db->readingQuery("SELECT password FROM $safe_roles WHERE email = '$safe_username'");
+                $hashRaw = $this->db->readingQuery("SELECT password FROM $safe_roles WHERE email = '$safe_username' AND status = 1");
                 $hash = $hashRaw[0]['password'] ?? null;
                 // after we got the username, we shall verify the password it cames with
                 // but return false immediately if there's no username tied to it
@@ -142,13 +142,46 @@
             $this->db->nonReadingQuery("CALL SP_TambahAkun ('$safe_roles','$safe_name','$safe_email','$hashed_password')");
         }
 
-        public function editAccount($id, $name, $email, $password) {
+        public function editAccount($id, $roles, $name, $email) {
             $safe_email = str_replace("'", "", $email);
             $safe_name = str_replace("'", "", $name);
             $safe_id = str_replace("'", "", $id);
+            if($roles == "murid" || $roles == "pengajar" || $roles == "admin") {
+                $safe_roles = str_replace("'", "", $roles);
+            }
+            else {
+                $safe_roles = 0;
+            }
 
-            // Something is wrong: SP does not change password
-            // thus i cannot create this method
+            $this->db->nonReadingQuery("CALL SP_EditAkun ('$safe_roles', '$safe_id', '$safe_name', '$safe_email')");
+        }
+
+        public function editAccountPassword($id, $roles, $password) {
+            $safe_id = str_replace("'", "", $id);
+            if($roles == "murid" || $roles == "pengajar" || $roles == "admin") {
+                $safe_roles = str_replace("'", "", $roles);
+            }
+            else {
+                $safe_roles = 0;
+            }
+
+            // create new password hash
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $this->db->nonReadingQuery("UPDATE $safe_roles SET password = '$hashed_password' WHERE id_$safe_roles = '$safe_id'");
+        }
+
+        public function editAccountStatus($id, $roles, $targetStatus) {
+            $safe_id = str_replace("'", "", $id);
+            if($roles == "murid" || $roles == "pengajar" || $roles == "admin") {
+                $safe_roles = str_replace("'", "", $roles);
+            }
+            else {
+                $safe_roles = 0;
+            }
+            $safe_targetStatus = str_replace("'", "", $targetStatus);
+            
+            // update the status
+            $this->db->nonReadingQuery("CALL SP_UbahStatusAkun('$safe_roles', '$safe_id', $safe_targetStatus)");
         }
 
         public function renderTableBody($roles, $type) {
@@ -157,7 +190,7 @@
                 // VIEW LIHAT TABEL
 
                 if($type == "dashboard") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardAdmin_JadwalTerisi");
+                    $result = $this->db->readingQuery("SELECT * FROM view_dashboardadmin_jadwalterisi");
                     
                     foreach($result as $row) {
                         echo "<tr>" . 
@@ -274,9 +307,11 @@
                     foreach($result as $row) {
                         if ($row['status']) {
                             $showStatus = "AKTIF";
+                            $buttonToggle = "<button class='btn-toggle' onclick='alihStatus(\"".strtolower($row['role_akun'])."\", \"".$row['id_akun']."\",0)'>Nonaktifkan</button>";
                         }
                         else {
                             $showStatus = "NON-AKTIF";
+                            $buttonToggle = "<button class='btn-toggle aktifkan' onclick='alihStatus(\"".strtolower($row['role_akun'])."\", \"".$row['id_akun']."\",1)'>Aktifkan</button>";
                         }
                         echo "<tr>" . 
                             "<td>" . $row['id_akun'] . "</td>" .
@@ -284,7 +319,7 @@
                             "<td>" . $row['email'] . "</td>" .
                             "<td>" . $row['role_akun'] . "</td>" .
                             "<td>" . $showStatus . "</td>" .
-                            "<td>" . "<div class=\"actionBtns\"><button class='btn-edit' onclick='editAccount(\"".$row['id_akun']."\", [\"".$row['nama']."\",\"".$row['email']."\",\"".strtolower($row['role_akun'])."\"])'>Edit</button> <button class='btn-toggle'>Nonaktifkan</button>" . "</div></td>";
+                            "<td>" . "<div class=\"actionBtns\"><button class='btn-edit' onclick='editAccount(\"".$row['id_akun']."\", [\"".$row['nama']."\",\"".$row['email']."\",\"".strtolower($row['role_akun'])."\"])'>Edit</button> $buttonToggle" . "</div></td>";
                     }
 
                 }
