@@ -1,236 +1,217 @@
-<div class="flex flex-col gap-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Absensi</h1>
-            <p class="text-sm text-gray-600 mt-1">Input absensi kehadiran murid</p>
-        </div>
-    </div>
+<!-- Frontend by 2472008, member of "Les Coding Private" Team -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Absensi</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Absensi Table -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-semibold text-gray-800">Daftar Jadwal</h2>
-            <div class="mt-4 flex flex-wrap items-end gap-3">
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Periode</label>
-                    <select id="filterPeriode" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua Periode</option>
-                        <option value="today" selected>Hari Ini</option>
-                        <option value="week">Minggu Ini</option>
-                        <option value="month">Bulan Ini</option>
-                    </select>
-                </div>
-                <div class="w-40">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Status</label>
-                    <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="all">Semua</option>
-                        <option value="belum">Belum Terisi</option>
-                        <option value="sudah">Terisi</option>
-                    </select>
-                </div>
-                <div class="w-36">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Urutkan</label>
-                    <select id="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="applyFilters()">
-                        <option value="terbaru">Terbaru</option>
-                        <option value="terlama">Terlama</option>
-                    </select>
-                </div>
-                <div class="flex-1"></div>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css" rel="stylesheet">
+
+        <style>
+            body, html {box-sizing: border-box; margin: 0; height: 100%;}
+            .poppins-regular {font-family: "Poppins", sans-serif;font-weight: 400;}
+            .poppins-bold {font-family: "Poppins", sans-serif;font-weight: 700;}
+
+            body {
+                display: grid;
+                grid-template-areas: "sidebar header" "sidebar content";
+                grid-template-columns: auto 1fr;
+                grid-template-rows: auto 1fr;
+                background-color: #ededed;
+            }
+            
+            .main { grid-area: content; padding: 20px; overflow-y: auto; }
+            .pageHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+            .pageHeader h2 { margin: 0; }
+            .pageHeader p { margin: 5px 0 0 0; color: #666; font-size: 14px; }
+
+            .tableCard { background-color: white; box-shadow: 0 0 10px 0 lightgray; border-radius: 8px; padding: 24px; }
+            .tableCard h3 { margin: 0 0 16px 0; }
+
+            .filterRow { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
+            .filterGroup { display: flex; flex-direction: column; gap: 4px; }
+            .filterGroup label { font-size: 12px; color: #666; }
+            .filterGroup select, .filterGroup input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+            .filterGroup select:focus, .filterGroup input:focus { outline: none; border-color: #2563eb; }
+            .spacer { flex: 1; }
+
+            table.dataTable { width: 100% !important; border-collapse: collapse; }
+            table.dataTable th, table.dataTable td { border: none; padding: 12px; text-align: left; }
+            table.dataTable thead th { background-color: #f9fafb; font-weight: 600; font-size: 12px; text-transform: uppercase; color: #666; }
+            table.dataTable tbody tr:hover { background-color: #f9fafb; }
+
+            .btn-input { background-color: #2563eb; color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+            .btn-input:hover { background-color: #1d4ed8; }
+            .text-belum { color: #3b82f6; font-style: italic; font-size: 12px; }
+            .text-muted { color: #9ca3af; font-style: italic; font-size: 12px; }
+            .actionBtns { display: flex; gap: 8px; justify-content: center; }
+
+            .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
+            .modal-overlay.show { display: flex; }
+            .modal { background: white; border-radius: 10px; width: 90%; max-width: 450px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+            .modal-header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+            .modal-header h3 { margin: 0; }
+            .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
+            .modal-close:hover { color: #333; }
+            .modal-body { padding: 20px; }
+            .form-group { margin-bottom: 16px; }
+            .form-group label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; }
+            .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; font-family: inherit; }
+            .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #2563eb; }
+            .modal-footer { padding: 16px 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px; }
+            .btn-cancel { background: white; border: 1px solid #ddd; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+            .btn-cancel:hover { background: #f9fafb; }
+            .btn-save { background-color: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+            .btn-save:hover { background-color: #1d4ed8; }
+
+            @media only screen and (max-width: 800px) {
+                body { display: block; }
+                .main { padding: 20px; overflow: visible; }
+                .filterRow { flex-direction: column; align-items: stretch; }
+            }
+        </style>
+    </head>
+    <body>
+        <?php include('occurence/navbar.php'); ?>
+        <?php include('pages/admin/sidebar.php'); ?>
+        
+        <div class="main poppins-regular">
+            <div class="pageHeader">
                 <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Cari</label>
-                    <input type="text" id="searchMuridPembayaran" placeholder="Cari pengajar atau murid..." class="px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="applyFilters()">
+                    <h2>Absensi</h2>
+                    <p>Input absensi kehadiran murid</p>
                 </div>
             </div>
-        </div>
-        <div class="overflow-x-auto p-6">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-600 font-semibold tracking-wide">
-                        <th class="px-6 py-4">Tanggal</th>
-                        <th class="px-6 py-4">Hari & Waktu</th>
-                        <th class="px-6 py-4">Pengajar</th>
-                        <th class="px-6 py-4">Mata Pelajaran</th>
-                        <th class="px-6 py-4">Murid</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100" id="absensiTableBody">
-                    <!-- Row 1 - Belum Absen -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-absensi-id="1">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">06 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Senin</p>
-                                <p class="text-sm text-gray-600">14:00 - 16:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ahmad Wijaya</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Python</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Budi Santoso</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="openAbsensiModal(1)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors" title="Input Absensi">
-                                    Input Absensi
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
 
-                    <!-- Row 2 - Belum Ada Murid -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-absensi-id="2">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">06 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Senin</p>
-                                <p class="text-sm text-gray-600">10:00 - 12:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Dewi Kusuma</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">JavaScript</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-xs text-blue-500 italic">Belum terisi</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <span class="text-gray-400 text-xs italic">Tidak ada murid</span>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 - Belum Absen -->
-                    <tr class="hover:bg-gray-50 transition-colors" data-absensi-id="3">
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">06 Jan 2026</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div>
-                                <p class="font-medium text-gray-800">Senin</p>
-                                <p class="text-sm text-gray-600">16:00 - 18:00</p>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ahmad Wijaya</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">React.js</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="font-medium text-gray-800 whitespace-nowrap">Ani Susanti</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" onclick="openAbsensiModal(3)" class="inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors" title="Input Absensi">
-                                    Input Absensi
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Absensi Modal -->
-<div id="absensiModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-2xl max-w-lg w-full mx-4">
-        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-xl font-semibold text-gray-800">Input Absensi</h3>
-            <button type="button" onclick="closeAbsensiModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <form id="absensiForm" class="p-6 space-y-4" onsubmit="handleAbsensiSubmit(event)">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Kehadiran</label>
-                <select name="kehadiran" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <option value="">-- Pilih Kehadiran --</option>
-                    <option value="hadir">Hadir</option>
-                    <option value="tidak-hadir">Tidak Hadir</option>
-                </select>
+            <div class="tableCard">
+                <h3>Daftar Jadwal</h3>
+                <div class="filterRow">
+                    <div class="filterGroup">
+                        <label>Periode</label>
+                        <select id="filterPeriode" onchange="applyFilters()">
+                            <option value="all">Semua Periode</option>
+                            <option value="today" selected>Hari Ini</option>
+                            <option value="week">Minggu Ini</option>
+                            <option value="month">Bulan Ini</option>
+                        </select>
+                    </div>
+                    <div class="filterGroup">
+                        <label>Status</label>
+                        <select id="filterStatus" onchange="applyFilters()">
+                            <option value="all">Semua</option>
+                            <option value="belum">Belum Terisi</option>
+                            <option value="sudah">Terisi</option>
+                        </select>
+                    </div>
+                    <div class="filterGroup">
+                        <label>Urutkan</label>
+                        <select id="sortBy" onchange="applyFilters()">
+                            <option value="terbaru">Terbaru</option>
+                            <option value="terlama">Terlama</option>
+                        </select>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="filterGroup">
+                        <label>Cari</label>
+                        <input type="text" id="searchInput" placeholder="Cari pengajar atau murid..." oninput="applyFilters()">
+                    </div>
+                </div>
+                <table id="absensiTb" class="display">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Hari & Waktu</th>
+                            <th>Pengajar</th>
+                            <th>Mata Pelajaran</th>
+                            <th>Murid</th>
+                            <th style="text-align:center;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="absensiTableBody">
+                        <?php echo $lesCodingUtil->renderTableBody("admin","absensi"); ?>
+                    </tbody>
+                </table>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Materi</label>
-                <textarea name="materi" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan materi yang diajarkan..."></textarea>
-            </div>
-        </form>
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
-            <button type="button" onclick="closeAbsensiModal()" class="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">Batal</button>
-            <button type="submit" form="absensiForm" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">Simpan</button>
         </div>
-    </div>
-</div>
 
-<script>
-let currentAbsensiId = null;
+        <!-- Modal -->
+        <div class="modal-overlay" id="absensiModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Input Absensi</h3>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <form id="absensiForm" onsubmit="handleSubmit(event)">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Kehadiran</label>
+                            <select name="kehadiran" required>
+                                <option value="">-- Pilih Kehadiran --</option>
+                                <option value="hadir">Hadir</option>
+                                <option value="tidak-hadir">Tidak Hadir</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Materi</label>
+                            <textarea name="materi" rows="3" placeholder="Masukkan materi yang diajarkan..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
+                        <button type="submit" class="btn-save">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
 
-function applyFilters() {
-    const searchValue = document.getElementById('searchMuridPembayaran').value.toLowerCase();
-    const statusFilter = document.getElementById('filterStatus').value;
-    const rows = document.querySelectorAll('#absensiTableBody tr');
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        const aksiCell = row.querySelectorAll('td')[5]; // Column 6 is aksi
-        const hasMurid = aksiCell && aksiCell.querySelector('button'); // Has input button means has murid
-        const rowStatus = hasMurid ? 'belum' : 'sudah';
-        
-        // Check if murid column has "Belum terisi"
-        const muridCell = row.querySelectorAll('td')[4]; // Column 5 is murid
-        const isBelumTerisi = muridCell && muridCell.textContent.includes('Belum terisi');
-        const actualStatus = isBelumTerisi ? 'sudah' : (hasMurid ? 'belum' : 'sudah');
-        
-        let matchesSearch = text.includes(searchValue);
-        let matchesStatus = statusFilter === 'all' || actualStatus === statusFilter;
-        
-        row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
-    });
-}
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
+    <script>
+        let currentId = null;
 
-function searchAbsensi(value) {
-    const searchValue = value.toLowerCase();
-    const rows = document.querySelectorAll('#absensiTableBody tr');
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchValue) ? '' : 'none';
-    });
-}
+        $(document).ready(function() {
+            new DataTable('#absensiTb', { scrollX: true });
+        });
 
-function openAbsensiModal(id) {
-    currentAbsensiId = id;
-    document.getElementById('absensiForm').reset();
-    document.getElementById('absensiModal').classList.remove('hidden');
-    document.getElementById('absensiModal').classList.add('flex');
-}
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#absensiTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                let visible = true;
+                if (searchQuery && !text.includes(searchQuery)) visible = false;
+                row.style.display = visible ? '' : 'none';
+            });
+        }
 
-function closeAbsensiModal() {
-    document.getElementById('absensiModal').classList.add('hidden');
-    document.getElementById('absensiModal').classList.remove('flex');
-    currentAbsensiId = null;
-}
+        function openAbsensiModal(id) {
+            currentId = id;
+            document.getElementById('absensiForm').reset();
+            document.getElementById('absensiModal').classList.add('show');
+        }
 
-function handleAbsensiSubmit(event) {
-    event.preventDefault();
-    alert('Absensi berhasil disimpan!');
-    closeAbsensiModal();
-}
-</script>
+        function closeModal() {
+            document.getElementById('absensiModal').classList.remove('show');
+            currentId = null;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Absensi berhasil disimpan!');
+            closeModal();
+        }
+
+        document.getElementById('absensiModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</html>

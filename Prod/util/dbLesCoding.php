@@ -194,6 +194,7 @@
                     
                     foreach($result as $row) {
                         echo "<tr>" . 
+                            "<td>" . $row['id_log'] . "</td>" .
                             "<td>" . $row['tanggal'] . "</td>" .
                             "<td>" . $row['aktivitas'] . "</td>" .
                             "<td>" . $row['id_akun'] . "</td>";
@@ -235,7 +236,39 @@
 
                 // SP LIHAT TABEL
 
-                
+                // Stub functions for new admin pages (to be filled in later)
+                else if($type == "accounts") {
+                    // TODO: Implement accounts table query
+                    // Query should return: id, nama, email, role, status
+                }
+                else if($type == "matapelajaran") {
+                    // TODO: Implement mata pelajaran table query (combined aktif/nonaktif)
+                    // Query should return: nama_mapel, deskripsi, status
+                }
+                else if($type == "paketles") {
+                    // TODO: Implement paket les table query (combined aktif/nonaktif)
+                    // Query should return: nama_paket, harga, jml_pertemuan, status
+                }
+                else if($type == "jadwal") {
+                    // TODO: Implement jadwal table query
+                    // Query should return: tanggal, hari, waktu, pengajar, mapel, murid
+                }
+                else if($type == "absensi") {
+                    // TODO: Implement absensi table query
+                    // Query should return: tanggal, hari, waktu, pengajar, mapel, murid
+                }
+                else if($type == "kehadiran") {
+                    // TODO: Implement kehadiran/riwayat table query
+                    // Query should return: tanggal, waktu, pengajar, mapel, murid, materi, status
+                }
+                else if($type == "pembelian") {
+                    // TODO: Implement pembelian table query
+                    // Query should return: id_pembelian, tanggal_pesan, tanggal_bayar, murid, paket, harga, masa_aktif
+                }
+                else if($type == "verifikasi") {
+                    // TODO: Implement verifikasi pembayaran table query
+                    // Query should return: id_pembelian, tanggal, murid, paket, jumlah, bukti_url
+                }
 
             }
             else if($roles == "murid") {
