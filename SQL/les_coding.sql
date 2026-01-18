@@ -681,6 +681,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatRiwayatPembelianMurid` (IN 
     DATE(pd.tgl_pemesanan) AS tanggal,
     k.nama_paket,
     k.harga,
+    pd.tgl_kedaluwarsa,
+    pd.pertemuan_terpakai,
+    k.jml_pertemuan,
 
     CASE
       WHEN pd.tgl_pembayaran IS NOT NULL THEN 'LUNAS'

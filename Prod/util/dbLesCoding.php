@@ -465,41 +465,43 @@
                 }
                 else if($type == "riwayatPembelianMurid") {
  
-                $result = $this->db->readingQuery("CALL SP_LihatRiwayatPembelianMurid ('" . $_SESSION['loginID'] . "', 'SEMUA')");
+                    $result = $this->db->readingQuery("CALL SP_LihatRiwayatPembelianMurid ('" . $_SESSION['loginID'] . "', 'SEMUA')");
 
-                foreach($result as $row) {
-                    echo "<tr>" .
-                            "<td>" . $row['id_pembelian'] . "</td>" .
-                            "<td>" . $row['tanggal'] . "</td>" .
-                            "<td>" . $row['nama_paket'] . "</td>" .
-                            "<td>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>" .
-                            "<td>" . $row['status_ui'] . "</td>";
-                    if($row['status_ui'] == 'MENUNGGU_PEMBAYARAN') {
-                        echo "<td><button class='btn-upload' onclick='openUploadModal(\"".$row['id_pembelian']."\")'>Upload Bukti</button></td>";
-                    }
-                    else {
-                        echo "<td>-</td>";
-                    }
-                    echo "</tr>";
-                }
+                    foreach($result as $row) {
+                        $statusClass = 'badge-pending';
+                        $dataStatus = 'pending';
+                        $statusText = 'Menunggu Pembayaran';
                         
+                        // Map status to UI
+                        if ($row['status_ui'] == 'LUNAS') {
+                            $statusClass = 'badge-lunas';
+                            $dataStatus = 'lunas';
+                            $statusText = 'Lunas';
+                        } else if ($row['status_ui'] == 'MENUNGGU_VERIFIKASI') {
+                            $statusClass = 'badge-verifikasi';
+                            $dataStatus = 'verifikasi';
+                            $statusText = 'Menunggu Verifikasi';
+                        }
 
+                        echo "<tr data-status='" . $dataStatus . "'>" .
+                                "<td>" . $row['id_pembelian'] . "</td>" .
+                                "<td>" . $row['tanggal'] . "</td>" .
+                                "<td>" . $row['nama_paket'] . "</td>" .
+                                "<td>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>" .
+                                "<td style='text-align:center;'><span class='badge " . $statusClass . "'>" . $statusText . "</span></td>";
+                                
+                        if($row['status_ui'] == 'MENUNGGU_PEMBAYARAN') {
+                            echo "<td style='text-align:center;'><button class='btn-upload' onclick='openUploadModal(\"".$row['id_pembelian']."\")'>Upload Bukti</button></td>";
+                        }
+                        else {
+                            echo "<td style='text-align:center;'>-</td>";
+                        }
+                        echo "</tr>";
+                    }
                 }
                 else if($type == "jadwal") {
                     // Map UI filters to SP parameters
                     $periodeMap = [
-                        'today' => 'HARI_INI', // Note: SP_LihatJadwalMurid in current SQL doesn't explicitly have HARI_INI in WHERE clause but has MINGGU_INI/BULAN_INI. Wait, user provided SP code has: UPPER(p_periode) = 'SEMUA', 'MINGGU_INI', 'BULAN_INI'. It does NOT have HARI_INI. 
-                        // I shall add HARI_INI support to the SP or map 'today' to something else? 
-                        // The user provided SP logic:
-                        // OR (UPPER(p_periode) = 'MINGGU_INI' ...
-                        // OR (UPPER(p_periode) = 'BULAN_INI' ...
-                        // It seems HARI_INI is missing from the provided SP logic in the prompt. I will Map it to 'MINGGU_INI' or just assume I need to update the SP later if 'today' is needed. 
-                        // Actually, looking at the user request: "CREATE DEFINER... SP_LihatJadwalMurid ... UPPER(p_periode) = 'SEMUA' OR ... 'MINGGU_INI' ... 'BULAN_INI'". 
-                        // It indeed misses 'HARI_INI'.
-                        // Howerver, standardizing with Pengajar which usually has 'today', I should probably use 'SEMUA' if not supported or ask to update SP.
-                        // But I'll stick to what is supported. 'week' -> 'MINGGU_INI', 'month' -> 'BULAN_INI'. 'today' -> fallback to 'SEMUA' or emulate? 
-                        // The user said "buat mirip speerti pengajar". Pengajar has 'today'.
-                        // I will pass 'TODAY' and I will update the SP next to support 'TODAY' (HARI_INI) as per standard.
                         'today' => 'HARI_INI',
                         'week' => 'MINGGU_INI',
                         'month' => 'BULAN_INI',
@@ -534,8 +536,47 @@
                     // Query should return: tanggal, waktu, pengajar, mapel, materi, status
                 }
                 else if($type == "paketsaya") {
-                    // TODO: Query paket yang dibeli murid
-                    // Query should return: id_pembelian, tanggal, paket, sisa, total, masa_aktif
+                    $result = $this->db->readingQuery("CALL SP_LihatRiwayatPembelianMurid ('" . $_SESSION['loginID'] . "', 'LUNAS')");
+
+                    foreach($result as $row) {
+                        $isExpired = false;
+                        $masaAktif = '-';
+                        
+                        if (!empty($row['tgl_kedaluwarsa'])) {
+                            $tglExp = new DateTime($row['tgl_kedaluwarsa']);
+                            $today = new DateTime();
+                            $today->setTime(0,0,0); // reset time part
+                            
+                            if ($tglExp < $today) {
+                                $isExpired = true;
+                                $masaAktif = 'Kadaluarsa';
+                            } else {
+                                $diff = $today->diff($tglExp);
+                                $masaAktif = $diff->days . ' hari';
+                            }
+                        }
+                        
+                        $rowClass = $isExpired ? 'row-expired' : '';
+                        $sisa = $row['jml_pertemuan'] - $row['pertemuan_terpakai'];
+                        
+                        // Get list pertemuan terpakai for detail modal
+                        $listPertemuan = $this->getListPertemuanTerpakai($row['id_pembelian']);
+                        $jsonPertemuan = base64_encode(json_encode($listPertemuan));
+                        
+                        echo "<tr class='" . $rowClass . "' " . 
+                             "data-id='" . $row['id_pembelian'] . "' " .
+                             "data-paket='" . htmlspecialchars($row['nama_paket'] ?? '') . "' " .
+                             "data-sisa='" . $sisa . "' " .
+                             "data-total='" . $row['jml_pertemuan'] . "' " .
+                             "data-terpakai='" . $jsonPertemuan . "'>" .
+                                "<td>" . $row['id_pembelian'] . "</td>" .
+                                "<td>" . $row['tanggal'] . "</td>" .
+                                "<td>" . $row['nama_paket'] . "</td>" .
+                                "<td style='text-align:center;'><span class='text-sisa'>" . $sisa . "</span> / " . $row['jml_pertemuan'] . "</td>" .
+                                "<td>" . ($isExpired ? '<span class="text-expired">Kadaluarsa</span>' : $masaAktif) . "</td>" .
+                                "<td style='text-align:center;'><button class='btn-view' onclick='openDetailModal(this)'>Lihat Detail</button></td>" .
+                             "</tr>";
+                    }
                 }
                 else if($type == "jadwaltersedia") {
                     // TODO: Query jadwal tersedia untuk dipilih
