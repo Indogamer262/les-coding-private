@@ -330,12 +330,51 @@
                     }
                 }  
                 else if($type == "paketdijual") {
-                    // TODO: Render paket cards for purchase                    
-                    // Should return paket cards HTML
+
+                    $result = $this->db->readingQuery("CALL SP_LihatPaketDijual ()");
+
+                    foreach($result as $row) {
+                        echo "<div class='paketCard'>" .
+                                "<div class='paketHeader'>" .
+                                    "<h3>" . $row['nama_paket'] . "</h3>" .
+                                "</div>" .
+                                "<div class='paketBody'>" .
+                                    "<div class='paketPrice'>Rp " . number_format($row['harga'], 0, ',', '.') . "</div>" .
+                                    "<ul class='paketFeatures'>" .
+                                        "<li>" .
+                                            "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>" .
+                                            $row['jml_pertemuan'] . " Pertemuan" .
+                                        "</li>" .
+                                        "<li>" .
+                                            "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>" .
+                                            "Masa aktif " . $row['masa_aktif_hari'] . " hari" .
+                                        "</li>" .
+                                    "</ul>" .
+
+                                    // need to make this work...
+                                    "<button class='btn-beli' onclick='openBeliModal(\"".$row['id_paket']."\", \"".addslashes($row['nama_paket'])."\", ".$row['harga'].")'>Beli Paket</button>" .
+                                "</div>" .
+                             "</div>";
+                    }
+
+                
+
                 }
                 else if($type == "riwayatPembelianMurid") {
-                    // TODO: Query riwayat pembelian murid
-                    // Query should return: id_pembelian, tanggal, paket, harga, status
+ 
+                $result = $this->db->readingQuery("CALL SP_LihatRiwayatPembelianMurid ('" . $_SESSION['loginID'] . "', 'SEMUA')");
+
+                foreach($result as $row) {
+                    echo "<tr>" .
+                            "<td>" . $row['id_pembelian'] . "</td>" .
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['nama_paket'] . "</td>" .
+                            "<td>Rp " . number_format($row['harga'], 0, ',', '.') . "</td>" .
+                            "<td>" . $row['status_ui'] . "</td>";
+
+                }
+                        
+
                 }
                 else if($type == "jadwal") {
                     // TODO: Query jadwal les murid
