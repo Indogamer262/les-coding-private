@@ -1,236 +1,133 @@
-<div class="flex flex-col gap-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Riwayat Kehadiran</h1>
-            <p class="text-sm text-gray-600 mt-1">Lihat seluruh riwayat kehadiran les</p>
-        </div>
-    </div>
+<!-- Frontend by 2472008, member of "Les Coding Private" Team -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Riwayat Kehadiran</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Attendance Table -->
-    <div class="bg-white rounded-lg shadow-md border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <h2 class="text-lg font-semibold text-gray-800">Daftar Kehadiran</h2>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css" rel="stylesheet">
 
-            <!-- Filters -->
-            <div id="kehadiranMuridDtFilters" class="hidden flex flex-wrap items-center gap-3">
-                <div class="flex items-center gap-2">
-                    <label class="text-sm whitespace-nowrap">Periode</label>
-                    <select id="filterPeriode" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="all">Semua</option>
-                        <option value="today">Hari Ini</option>
-                        <option value="week" selected>Minggu Ini</option>
-                        <option value="month">Bulan Ini</option>
-                    </select>
+        <style>
+            body, html {box-sizing: border-box; margin: 0; height: 100%;}
+            .poppins-regular {font-family: "Poppins", sans-serif;font-weight: 400;}
+            .poppins-bold {font-family: "Poppins", sans-serif;font-weight: 700;}
+
+            body {
+                display: grid;
+                grid-template-areas: "sidebar header" "sidebar content";
+                grid-template-columns: auto 1fr;
+                grid-template-rows: auto 1fr;
+                background-color: #ededed;
+            }
+            
+            .main { grid-area: content; padding: 20px; overflow-y: auto; }
+            .pageHeader { margin-bottom: 20px; }
+            .pageHeader h2 { margin: 0; }
+            .pageHeader p { margin: 5px 0 0 0; color: #666; font-size: 14px; }
+
+            .tableCard { background-color: white; box-shadow: 0 0 10px 0 lightgray; border-radius: 8px; padding: 24px; }
+            .tableCard h3 { margin: 0 0 16px 0; }
+
+            .filterRow { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
+            .filterGroup { display: flex; flex-direction: column; gap: 4px; }
+            .filterGroup label { font-size: 12px; color: #666; }
+            .filterGroup select, .filterGroup input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+            .filterGroup select:focus, .filterGroup input:focus { outline: none; border-color: #2563eb; }
+            .spacer { flex: 1; }
+
+            table.dataTable { width: 100% !important; border-collapse: collapse; }
+            table.dataTable th, table.dataTable td { border: none; padding: 12px; text-align: left; }
+            table.dataTable thead th { background-color: #f9fafb; font-weight: 600; font-size: 12px; text-transform: uppercase; color: #666; }
+            table.dataTable tbody tr:hover { background-color: #f9fafb; }
+
+            .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+            .badge-hadir { background-color: #dcfce7; color: #15803d; }
+            .badge-tidak-hadir { background-color: #fee2e2; color: #dc2626; }
+
+            @media only screen and (max-width: 800px) {
+                body { display: block; }
+                .main { padding: 20px; overflow: visible; }
+                .filterRow { flex-direction: column; align-items: stretch; }
+            }
+        </style>
+    </head>
+    <body>
+        <?php include('occurence/navbar.php'); ?>
+        <?php include('pages/murid/sidebar.php'); ?>
+        
+        <div class="main poppins-regular">
+            <div class="pageHeader">
+                <h2>Riwayat Kehadiran</h2>
+                <p>Lihat seluruh riwayat kehadiran les</p>
+            </div>
+
+            <div class="tableCard">
+                <h3>Daftar Kehadiran</h3>
+                <div class="filterRow">
+                    <div class="filterGroup">
+                        <label>Periode</label>
+                        <select id="filterPeriode" onchange="applyFilters()">
+                            <option value="all">Semua</option>
+                            <option value="today">Hari Ini</option>
+                            <option value="week" selected>Minggu Ini</option>
+                            <option value="month">Bulan Ini</option>
+                        </select>
+                    </div>
+                    <div class="filterGroup">
+                        <label>Status</label>
+                        <select id="filterStatus" onchange="applyFilters()">
+                            <option value="all">Semua</option>
+                            <option value="hadir">Hadir</option>
+                            <option value="tidak-hadir">Tidak Hadir</option>
+                        </select>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="filterGroup">
+                        <label>Cari</label>
+                        <input type="text" id="searchInput" placeholder="Cari..." oninput="applyFilters()">
+                    </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <label class="text-sm whitespace-nowrap">Status</label>
-                    <select id="filterStatus" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="all" selected>Semua</option>
-                        <option value="hadir">Hadir</option>
-                        <option value="tidak-hadir">Tidak Hadir</option>
-                    </select>
-                </div>
+                <table id="kehadiranTb" class="display">
+                    <thead>
+                        <tr>
+                            <th>Tanggal & Waktu</th>
+                            <th>Pengajar</th>
+                            <th>Mata Pelajaran</th>
+                            <th>Materi</th>
+                            <th style="text-align:center;">Kehadiran</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kehadiranTableBody">
+                        <?php echo $lesCodingUtil->renderTableBody("murid","kehadiran"); ?>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="px-6 py-6">
-            <table id="tableKehadiranMurid" class="display w-full text-sm text-left rtl:text-right text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3">Tanggal & Waktu</th>
-                        <th class="px-6 py-3">Pengajar</th>
-                        <th class="px-6 py-3">Mata Pelajaran</th>
-                        <th class="px-6 py-3">Materi</th>
-                        <th class="px-6 py-3 text-center">Kehadiran</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-</div>
+    </body>
 
-<script>
-let tableKehadiranMurid;
-let selectedPeriodeFilter = 'week';
-let selectedStatusFilter = 'all';
-
-function escapeHtml(value) {
-    if (value === null || value === undefined) return '';
-    return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}
-
-// Dummy data for kehadiran murid
-const kehadiranMuridData = [
-    {
-        kehadiran_id: 1,
-        tanggal: '2025-12-30',
-        tanggal_display: '30 Des 2025, Senin',
-        waktu: '14:00 - 16:00',
-        pengajar: 'Ahmad Wijaya',
-        mapel: 'Python',
-        materi: 'Python Functions & Modules',
-        status: 'hadir'
-    },
-    {
-        kehadiran_id: 2,
-        tanggal: '2025-12-31',
-        tanggal_display: '31 Des 2025, Selasa',
-        waktu: '10:00 - 12:00',
-        pengajar: 'Dewi Kusuma',
-        mapel: 'JavaScript',
-        materi: '-',
-        status: 'tidak-hadir'
-    },
-    {
-        kehadiran_id: 3,
-        tanggal: '2026-01-02',
-        tanggal_display: '02 Jan 2026, Kamis',
-        waktu: '14:00 - 16:00',
-        pengajar: 'Ahmad Wijaya',
-        mapel: 'React.js',
-        materi: 'React Components & Props',
-        status: 'hadir'
-    },
-    {
-        kehadiran_id: 4,
-        tanggal: '2026-01-04',
-        tanggal_display: '04 Jan 2026, Sabtu',
-        waktu: '09:00 - 11:00',
-        pengajar: 'Eko Prasetyo',
-        mapel: 'Node.js',
-        materi: 'Express.js Basics',
-        status: 'hadir'
-    }
-];
-
-function applyFilters() {
-    if (!tableKehadiranMurid) return;
-    tableKehadiranMurid.draw();
-}
-
-function getStatusBadge(status) {
-    const isHadir = status === 'hadir';
-    const label = isHadir ? 'Hadir' : 'Tidak Hadir';
-    const cls = isHadir ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
-    return `<span class="px-4 py-1 rounded-full text-xs font-medium ${cls}">${label}</span>`;
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Custom filter for status
-    $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
-        if (!settings?.nTable || settings.nTable.id !== 'tableKehadiranMurid') return true;
-        if (!tableKehadiranMurid) return true;
-
-        const row = tableKehadiranMurid.row(dataIndex).data();
-        if (!row) return true;
-
-        const statusOk = selectedStatusFilter === 'all' || row.status === selectedStatusFilter;
-        return statusOk;
-    });
-
-    tableKehadiranMurid = $('#tableKehadiranMurid').DataTable({
-        data: kehadiranMuridData,
-        columns: [
-            {
-                data: null,
-                render: (data, type, row) => {
-                    if (type === 'sort' || type === 'type') return row.tanggal;
-                    return `
-                        <div>
-                            <p class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(row.tanggal_display)}</p>
-                            <p class="text-sm text-gray-600">${escapeHtml(row.waktu)}</p>
-                        </div>
-                    `;
-                }
-            },
-            {
-                data: 'pengajar',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
-                }
-            },
-            {
-                data: 'mapel',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    return `<span class="font-medium text-gray-800 whitespace-nowrap">${escapeHtml(data)}</span>`;
-                }
-            },
-            {
-                data: 'materi',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    return `<span class="text-sm text-gray-800">${escapeHtml(data)}</span>`;
-                }
-            },
-            {
-                data: 'status',
-                className: 'text-center',
-                render: (data, type) => {
-                    if (type !== 'display') return data;
-                    return getStatusBadge(data);
-                }
-            }
-        ],
-        createdRow: (row, data) => {
-            $(row).addClass('hover:bg-gray-50 transition-colors');
-            row.setAttribute('data-kehadiran-id', String(data.kehadiran_id));
-        },
-        language: {
-            search: "Cari:",
-            lengthMenu: "Tampilkan _MENU_ data",
-            info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-            infoEmpty: "Tidak ada data",
-            infoFiltered: "(disaring dari _MAX_ total data)",
-            zeroRecords: "Tidak ada kehadiran ditemukan",
-            paginate: {
-                first: "Pertama",
-                last: "Terakhir",
-                next: "Selanjutnya",
-                previous: "Sebelumnya"
-            }
-        },
-        pageLength: 10,
-        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Semua"]],
-        ordering: true,
-        order: [[0, 'desc']]
-    });
-
-    // Move filters next to length menu
-    const wrapper = document.getElementById('tableKehadiranMurid_wrapper');
-    const lengthEl = wrapper?.querySelector('.dt-length') || wrapper?.querySelector('.dataTables_length');
-    const filterEl = document.getElementById('kehadiranMuridDtFilters');
-    if (lengthEl && filterEl) {
-        lengthEl.classList.add('flex', 'items-end', 'gap-3', 'flex-wrap');
-        filterEl.classList.remove('hidden');
-        lengthEl.appendChild(filterEl);
-    }
-
-    const periodeSelect = document.getElementById('filterPeriode');
-    const statusSelect = document.getElementById('filterStatus');
-
-    if (periodeSelect) {
-        selectedPeriodeFilter = periodeSelect.value || 'week';
-        periodeSelect.addEventListener('change', () => {
-            selectedPeriodeFilter = periodeSelect.value || 'week';
-            applyFilters();
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            new DataTable('#kehadiranTb', { scrollX: true });
         });
-    }
 
-    if (statusSelect) {
-        selectedStatusFilter = statusSelect.value || 'all';
-        statusSelect.addEventListener('change', () => {
-            selectedStatusFilter = statusSelect.value || 'all';
-            applyFilters();
-        });
-    }
-
-    applyFilters();
-});
-</script>
+        function applyFilters() {
+            const status = document.getElementById('filterStatus').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#kehadiranTableBody tr');
+            
+            rows.forEach(row => {
+                const rowStatus = row.getAttribute('data-status');
+                const text = row.textContent.toLowerCase();
+                let visible = true;
+                if (status !== 'all' && rowStatus !== status) visible = false;
+                if (search && !text.includes(search)) visible = false;
+                row.style.display = visible ? '' : 'none';
+            });
+        }
+    </script>
+</html>
