@@ -205,15 +205,59 @@
         function openDetailModal(btn) {
             const row = btn.closest('tr');
             const idCell = row.querySelector('td:first-child');
+            const idPembelian = row.dataset.id || (idCell ? idCell.textContent.trim() : '');
             
-            document.getElementById('detailId').textContent = idCell ? idCell.textContent.trim() : '-';
+            document.getElementById('detailId').textContent = idPembelian || '-';
             document.getElementById('detailMurid').textContent = row.dataset.murid || '-';
             
             const total = parseInt(row.dataset.total || '0');
             const sisa = parseInt(row.dataset.sisa || '0');
             document.getElementById('detailSisa').textContent = sisa + '/' + total;
             
+            // Reset table body
+            const tbody = document.getElementById('detailTerpakaiBody');
+            tbody.innerHTML = ''; // Clear existing
+            
+            // Show modal
             document.getElementById('detailModal').classList.add('show');
+            
+            // Get data from attribute (Pre-loaded, NO AJAX)
+            try {
+                const rawData = row.dataset.terpakai;
+                if (rawData) {
+                    // Decode base64 then parse JSON
+                    const jsonStr = atob(rawData);
+                    const data = JSON.parse(jsonStr);
+                    
+                    if (data && data.length > 0) {
+                        let html = '';
+                        data.forEach(item => {
+                            html += '<tr>' +
+                                '<td>' + escapeHtml(item['Ke-'] || '-') + '</td>' +
+                                '<td>' + escapeHtml(item['Tanggal'] || '-') + '<br><span style="color:#666;font-size:12px;">' + escapeHtml(item['Waktu'] || '') + '</span></td>' +
+                                '<td>' + escapeHtml(item['Pengajar'] || '-') + '</td>' +
+                                '<td>' + escapeHtml(item['Mata Pelajaran'] || '-') + '</td>' +
+                                '<td>' + escapeHtml(item['Materi'] || '-') + '</td>' +
+                            '</tr>';
+                        });
+                        tbody.innerHTML = html;
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" style="color: #999; text-align: center;">Belum ada pertemuan terpakai</td></tr>';
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="color: #999; text-align: center;">Belum ada pertemuan terpakai</td></tr>';
+                }
+            } catch (e) {
+                console.error("Error parsing data:", e);
+                tbody.innerHTML = '<tr><td colspan="5" style="color: #dc2626; text-align: center;">Gagal memuat data</td></tr>';
+            }
+        }
+
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
         }
 
         function closeModal() {

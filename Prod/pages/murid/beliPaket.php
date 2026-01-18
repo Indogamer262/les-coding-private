@@ -125,8 +125,6 @@
                             <option value="all">Semua</option>
                             <option value="pending">Menunggu Pembayaran</option>
                             <option value="verifikasi">Menunggu Verifikasi</option>
-                            <option value="lunas">Lunas</option>
-                            <option value="ditolak">Ditolak</option>
                         </select>
                     </div>
                     <div class="spacer"></div>
