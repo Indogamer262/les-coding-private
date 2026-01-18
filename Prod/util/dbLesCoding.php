@@ -310,6 +310,96 @@
                 else if($type == "pembelian") {
                     // TODO: Implement pembelian table query
                     // Query should return: id_pembelian, tanggal_pesan, tanggal_bayar, murid, paket, harga, masa_aktif
+                    
+// CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatRiwayatPembelian` (IN `p_periode` VARCHAR(20), IN `p_status` VARCHAR(20))   BEGIN
+//   SELECT
+//     pd.id_pembelian,
+//     pd.tgl_pemesanan,
+//     pd.tgl_pembayaran,
+//     m.nama_murid,
+//     k.nama_paket,
+//     k.harga,
+//     CASE
+//       WHEN pd.tgl_kedaluwarsa IS NULL THEN NULL
+//       WHEN pd.tgl_kedaluwarsa < CURDATE() THEN 'KADALUWARSA'
+//       ELSE CONCAT(DATEDIFF(pd.tgl_kedaluwarsa, CURDATE()), ' hari')
+//     END AS masa_aktif,
+//     CASE
+//       WHEN pd.tgl_kedaluwarsa IS NOT NULL
+//            AND pd.tgl_kedaluwarsa >= CURDATE()
+//         THEN 'AKTIF'
+//       ELSE 'KEDALUWARSA'
+//     END AS status
+//   FROM paketdibeli pd
+//   JOIN murid m ON pd.id_murid = m.id_murid
+//   JOIN katalogpaket k ON pd.id_paket = k.id_paket
+//   WHERE pd.tgl_pembayaran IS NOT NULL
+//     AND (
+//       UPPER(p_periode) = 'SEMUA'
+//       OR (UPPER(p_periode) = 'HARI_INI' AND DATE(pd.tgl_pembayaran) = CURDATE())
+//       OR (UPPER(p_periode) = 'MINGGU_INI'
+//           AND YEARWEEK(pd.tgl_pembayaran, 1) = YEARWEEK(CURDATE(), 1))
+//       OR (UPPER(p_periode) = 'BULAN_INI'
+//           AND MONTH(pd.tgl_pembayaran) = MONTH(CURDATE())
+//           AND YEAR(pd.tgl_pembayaran) = YEAR(CURDATE()))
+//     )
+//     AND (
+//       UPPER(p_status) = 'SEMUA'
+//       OR (UPPER(p_status) = 'AKTIF'
+//           AND pd.tgl_kedaluwarsa >= CURDATE())
+//       OR (UPPER(p_status) = 'KEDALUWARSA'
+//           AND pd.tgl_kedaluwarsa < CURDATE())
+//     )
+//   ORDER BY pd.tgl_pembayaran DESC;
+// END$$
+
+// CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatRiwayatPembelianMurid` (IN `p_id_murid` VARCHAR(20), IN `p_status` VARCHAR(20))   BEGIN
+//   SELECT
+//     pd.id_pembelian,
+//     DATE(pd.tgl_pemesanan) AS tanggal,
+//     k.nama_paket,
+//     k.harga,
+
+//     CASE
+//       WHEN pd.tgl_pembayaran IS NOT NULL THEN 'LUNAS'
+//       WHEN pd.gambar_bukti_pembayaran IS NOT NULL THEN 'MENUNGGU_VERIFIKASI'
+//       ELSE 'MENUNGGU_PEMBAYARAN'
+//     END AS status_ui
+
+//   FROM paketdibeli pd
+//   JOIN katalogpaket k ON pd.id_paket = k.id_paket
+//   WHERE pd.id_murid = p_id_murid
+//     AND (
+//       UPPER(p_status) = 'SEMUA'
+//       OR (UPPER(p_status) = 'LUNAS' AND pd.tgl_pembayaran IS NOT NULL)
+//       OR (UPPER(p_status) = 'MENUNGGU_PEMBAYARAN'
+//           AND pd.tgl_pembayaran IS NULL
+//           AND pd.gambar_bukti_pembayaran IS NULL)
+//       OR (UPPER(p_status) = 'MENUNGGU_VERIFIKASI'
+//           AND pd.tgl_pembayaran IS NULL
+//           AND pd.gambar_bukti_pembayaran IS NOT NULL)
+//     )
+//   ORDER BY pd.tgl_pemesanan DESC;
+// END$$
+
+                    $result = $this->db->readingQuery("CALL SP_LihatRiwayatPembelian('SEMUA', 'SEMUA')");
+
+                    foreach($result as $row) {
+                        $formattedJumlah = "Rp " . number_format($row['harga'], 0, ',', '.');
+                        echo "<tr>" . 
+                            "<td>" . $row['id_pembelian'] . "</td>" .
+                            "<td>" . $row['tgl_pembayaran'] . "</td>" .
+                            "<td>" . $row['tgl_pemesanan'] . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>" .
+                            "<td>" . $row['nama_paket'] . "</td>" .
+                            "<td>" . $formattedJumlah . "</td>" .
+                            "<td>" . $row['masa_aktif'] . "</td>" .
+                            "<td><button class='btn btn-primary'>Lihat Detail</button></td>" .
+                            "</tr>";
+                    }
+
+                    
+                
                 }
                 else if($type == "verifikasi") {
                     $result = $this->db->readingQuery("CALL SP_LihatPembelianPaket('SEMUA', 'MENUNGGU_BUKTI')");
