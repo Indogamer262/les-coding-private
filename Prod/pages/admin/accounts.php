@@ -540,6 +540,7 @@
             document.getElementById('accountModal').classList.add('show');
             document.getElementById('editId').setAttribute('value',null);
             document.getElementById('handlerType').setAttribute('value','tambahAkun');
+            document.getElementById('accountForm').elements["role"].removeAttribute('disabled');
         }
 
         function editAccount(id, data) {
@@ -552,6 +553,7 @@
             document.getElementById('accountForm').elements["nama"].value = data[0];
             document.getElementById('accountForm').elements["email"].value = data[1];
             document.getElementById('accountForm').elements["role"].value = data[2];
+            document.getElementById('accountForm').elements["role"].setAttribute('disabled', '');
         }
         
 
