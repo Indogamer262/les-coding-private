@@ -375,17 +375,17 @@
                         <label>Akun</label>
                         <select id="filterRole" onchange="applyFilters()">
                             <option value="all">Semua</option>
-                            <option value="murid">Murid</option>
-                            <option value="pengajar">Pengajar</option>
-                            <option value="admin">Admin</option>
+                            <option value="MURID">Murid</option>
+                            <option value="PENGAJAR">Pengajar</option>
+                            <option value="ADMIN">Admin</option>
                         </select>
                     </div>
                     <div class="filterGroup">
                         <label>Status</label>
                         <select id="filterStatus" onchange="applyFilters()">
                             <option value="all">Semua</option>
-                            <option value="aktif">Aktif</option>
-                            <option value="nonaktif">Nonaktif</option>
+                            <option value="AKTIF">AKTIF</option>
+                            <option value="NON-AKTIF">NON-AKTIF</option>
                         </select>
                     </div>
                     <div class="spacer"></div>
@@ -413,13 +413,15 @@
         </div>
 
         <!-- Modal Tambah/Edit Akun -->
-        <div class="modal-overlay" id="accountModal">
+        <div class="modal-overlay poppins-regular" id="accountModal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 id="modalTitle">Tambah Akun Baru</h3>
+                    <h3 id="modalTitle">Untitled Modal</h3>
                     <button class="modal-close" onclick="closeModal()">&times;</button>
                 </div>
-                <form id="accountForm" onsubmit="handleSubmit(event)">
+                <form id="accountForm" action="submissionHandler.php" method="POST">
+                    <input type="hidden" name="handlerType" id="handlerType" value="tambahAkun">
+                    <input type="hidden" name="editId" id="editId" value="">
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group">
@@ -457,6 +459,26 @@
                 </form>
             </div>
         </div>
+
+        <!-- Modal Sukses -->
+        <div class="modal-overlay poppins-regular" id="successModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Tambah Akun Baru</h3>
+                    <button class="modal-close" onclick="closeModalSuccess()">&times;</button>
+                </div>
+            
+    
+                <div class="modal-body">
+                    <p>Akun berhasil ditambahkan!</p>
+                </div>
+                          
+                <div class="modal-footer">
+                    <button type="submit" class="btn-save" onclick="closeModalSuccess()">Selesai</button>
+                </div>
+            </div>
+        </div>
+
     </body>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -486,38 +508,70 @@
         function applyFilters() {
             const roleFilter = document.getElementById('filterRole').value;
             const statusFilter = document.getElementById('filterStatus').value;
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const rows = document.querySelectorAll('#accountsTableBody tr');
-            
-            rows.forEach(row => {
-                const role = row.getAttribute('data-role');
-                const status = row.getAttribute('data-status');
-                const text = row.textContent.toLowerCase();
-                
-                let visible = true;
-                
-                if (roleFilter !== 'all' && role !== roleFilter) visible = false;
-                if (statusFilter !== 'all' && status !== statusFilter) visible = false;
-                if (searchQuery && !text.includes(searchQuery)) visible = false;
-                
-                row.style.display = visible ? '' : 'none';
-            });
+            const searchQuery = document.getElementById('searchInput').value;
+
+            // 1. Filter Role (Kolom indeks ke-3)
+            if (roleFilter === 'all') {
+                dataTable.column(3).search(''); // Kosongkan filter
+            } else {
+                // Menggunakan RegEx agar pencarian tepat (Exact Match)
+                dataTable.column(3).search('^' + roleFilter + '$', true, false);
+            }
+
+            // 2. Filter Status (Kolom indeks ke-4)
+            if (statusFilter === 'all') {
+                dataTable.column(4).search('');
+            } else {
+                // Gunakan .toUpperCase() jika data di database/tabelmu huruf besar (AKTIF)
+                const formattedStatus = statusFilter.toUpperCase(); 
+                dataTable.column(4).search('^' + formattedStatus + '$', true, false);
+            }
+
+            // 3. Filter Pencarian Global (Nama/Email)
+            dataTable.search(searchQuery);
+
+            // 4. Gambar ulang tabelnya
+            dataTable.draw();
         }
 
         function openAddModal() {
             document.getElementById('modalTitle').textContent = 'Tambah Akun Baru';
             document.getElementById('accountForm').reset();
             document.getElementById('accountModal').classList.add('show');
+            document.getElementById('editId').setAttribute('value',null);
+            document.getElementById('handlerType').setAttribute('value','tambahAkun');
         }
 
-        function editAccount(id) {
+        function editAccount(id, data) {
             document.getElementById('modalTitle').textContent = 'Edit Akun';
             document.getElementById('accountModal').classList.add('show');
-            // TODO: Load account data
+            document.getElementById('editId').setAttribute('value',id);
+            document.getElementById('handlerType').setAttribute('value','editAkun');
+            
+            // Load account data
+            document.getElementById('accountForm').elements["nama"].value = data[0];
+            document.getElementById('accountForm').elements["email"].value = data[1];
+            document.getElementById('accountForm').elements["role"].value = data[2];
         }
+        
 
         function closeModal() {
             document.getElementById('accountModal').classList.remove('show');
+        }
+
+        function openSuccessModal() {
+            document.getElementById('modalTitle').textContent = 'Tambah Akun Baru';
+            document.getElementById('successModal').classList.add('show');
+        }
+
+        function closeModalSuccess() {
+            document.getElementById('successModal').classList.remove('show');
+            
+            const url = new URL(window.location.href);
+            // Delete the specific parameter
+            url.searchParams.delete("addAccount"); 
+            // Update the browser URL without reloading the page
+            window.history.replaceState({}, document.title, url.toString());
         }
 
         function handleSubmit(event) {
@@ -559,5 +613,8 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
         });
+
+        // open successModal on success
+        <?php if($_GET['addAccount']??null =="success") {echo "openSuccessModal();";} ?>
     </script>
 </html>

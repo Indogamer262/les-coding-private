@@ -3,11 +3,14 @@
 
     class DBLesCoding {
         private DBUtil $db;
-        private $servername;//= "localhost";
-        private $username; //= "root";
-        private $password; //= "root";
-        private $dbname; //= "les_coding";
+        private $servername;
+        private $username;
+        private $password;
+        private $dbname;
 
+        // ===========================================
+        // CONFIGURE YOUR MySQL LOGIN CREDENTIALS HERE
+        // ===========================================
         public function __construct() {
             $this->servername = "localhost:3306";
             $this->username = "christi5_lesCoding";
@@ -120,6 +123,32 @@
             else {
                 return null;
             }
+        }
+
+        public function insertAccount($roles, $name, $email, $password) {
+            $safe_email = str_replace("'", "", $email);
+            $safe_name = str_replace("'", "", $name);
+            if($roles == "murid" || $roles == "pengajar" || $roles == "admin") {
+                $safe_roles = str_replace("'", "", $roles);
+            }
+            else {
+                $safe_roles = 0;
+            }
+
+            // create password hash
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insert to database
+            $this->db->nonReadingQuery("CALL SP_TambahAkun ('$safe_roles','$safe_name','$safe_email','$hashed_password')");
+        }
+
+        public function editAccount($id, $name, $email, $password) {
+            $safe_email = str_replace("'", "", $email);
+            $safe_name = str_replace("'", "", $name);
+            $safe_id = str_replace("'", "", $id);
+
+            // Something is wrong: SP does not change password
+            // thus i cannot create this method
         }
 
         public function renderTableBody($roles, $type) {
@@ -240,6 +269,24 @@
                 else if($type == "accounts") {
                     // TODO: Implement accounts table query
                     // Query should return: id, nama, email, role, status
+                    $result = $this->db->readingQuery("CALL SP_LihatAkun ('SEMUA', 'SEMUA')");
+
+                    foreach($result as $row) {
+                        if ($row['status']) {
+                            $showStatus = "AKTIF";
+                        }
+                        else {
+                            $showStatus = "NON-AKTIF";
+                        }
+                        echo "<tr>" . 
+                            "<td>" . $row['id_akun'] . "</td>" .
+                            "<td>" . $row['nama'] . "</td>" .
+                            "<td>" . $row['email'] . "</td>" .
+                            "<td>" . $row['role_akun'] . "</td>" .
+                            "<td>" . $showStatus . "</td>" .
+                            "<td>" . "<div class=\"actionBtns\"><button class='btn-edit' onclick='editAccount(\"".$row['id_akun']."\", [\"".$row['nama']."\",\"".$row['email']."\",\"".strtolower($row['role_akun'])."\"])'>Edit</button> <button class='btn-toggle'>Nonaktifkan</button>" . "</div></td>";
+                    }
+
                 }
                 else if($type == "matapelajaran") {
                     // TODO: Implement mata pelajaran table query (combined aktif/nonaktif)
