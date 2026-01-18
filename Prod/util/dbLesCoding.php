@@ -354,7 +354,7 @@
             }
             else if($roles == "murid") {
                 if($type == "dashboard") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardMurid_JadwalMendatang WHERE id_murid = '".$_SESSION["loginID"]."'");
+                    $result = $this->db->readingQuery("SELECT * FROM view_dashboardmurid_jadwalmendatang WHERE id_murid = '".$_SESSION["loginID"]."'");
                     
                     foreach($result as $row) {
                         echo "<tr>" . 
@@ -395,7 +395,7 @@
             }
             else if($roles == "pengajar") {
                 if($type == "dashboard") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_DashboardPengajar_JadwalMendatang WHERE id_pengajar = '".$_SESSION["loginID"]."'");
+                    $result = $this->db->readingQuery("SELECT * FROM view_dashboardpengajar_jadwalmendatang WHERE id_pengajar = '".$_SESSION["loginID"]."'");
                     
                     foreach($result as $row) {
                         echo "<tr>" . 
