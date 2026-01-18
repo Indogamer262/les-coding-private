@@ -119,7 +119,7 @@
 
             <div class="jadwalTerisiDashboard">
                 <div style="display:flex;justify-content: space-between;">
-                    <span style="font-size:20px;"><b>Jadwal Terisi</b></span>
+                    <span style="font-size:20px;"><b>Jadwal Mendatang</b></span>
                     <a href="">Lihat Semua</a>
                 </div>
                 <hr>

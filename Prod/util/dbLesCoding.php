@@ -481,17 +481,82 @@
                             "<td>" . $row['nama_murid'] . "</td>";
                     }
                 }
-                else if($type == "absensi") {
-                    // TODO: Query jadwal untuk input absensi
-                    // Query should return: tanggal, hari, waktu, mapel, murid
-                }
                 else if($type == "jadwal") {
-                    // TODO: Query jadwal mengajar pengajar
-                    // Query should return: tanggal, hari, waktu, mapel, murid, status
+                    // SP_JadwalMengajarPengajar(p_id_pengajar, p_periode, p_status)
+                    // Using 'SEMUA' for both periode and status to get all records
+                    $result = $this->db->readingQuery("CALL SP_JadwalMengajarPengajar('".$_SESSION["loginID"]."', 'SEMUA', 'SEMUA')");
+                    
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $statusUI = strtoupper($row['status_jadwal_ui']);
+                        $badgeClass = ($statusUI == 'SELESAI') ? 'badge-selesai' : 'badge-mendatang';
+                        $dataStatus = ($statusUI == 'SELESAI') ? 'selesai' : 'mendatang';
+                        
+                        echo "<tr data-status='" . $dataStatus . "'>" . 
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['hari'] . "<br>" . $waktu . "</td>" .
+                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>" .
+                            "<td style='text-align:center;'><span class='badge " . $badgeClass . "'>" . $statusUI . "</span></td>" .
+                            "</tr>";
+                    }
+                }
+                else if($type == "absensi") {
+                    // SP_LihatAbsensi_Pengajar(p_id_pengajar, p_periode, p_status, p_urut)
+                    // Using 'SEMUA' for periode and status, 'TERBARU' for sort order
+                    $result = $this->db->readingQuery("CALL SP_LihatAbsensi_Pengajar('".$_SESSION["loginID"]."', 'SEMUA', 'SEMUA', 'TERBARU')");
+                    
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $dataStatus = ($row['status_kehadiran'] == null) ? 'belum' : 'sudah';
+                        
+                        // Only show InputAbsensi button if status_kehadiran is NULL (belum diisi)
+                        if($row['status_kehadiran'] == null) {
+                            $aksiBtn = "<button class='btn-input' onclick='openAbsensiModal(\"" . $row['kode_jadwal'] . "\", \"" . $row['tanggal'] . "\", \"" . $waktu . "\", \"" . addslashes($row['nama_murid']) . "\", \"" . addslashes($row['nama_mapel']) . "\")'>Input Absensi</button>";
+                        } else {
+                            // Show badge "Sudah Absen" like reference
+                            $aksiBtn = "<span class='badge badge-sudah'>Sudah Absen</span>";
+                        }
+                        
+                        echo "<tr data-status='" . $dataStatus . "'>" . 
+                            "<td>" . $row['tanggal'] . "</td>" .
+                            "<td>" . $row['hari'] . "<br>" . $waktu . "</td>" .
+                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>" .
+                            "<td style='text-align:center;'>" . $aksiBtn . "</td>" .
+                            "</tr>";
+                    }
                 }
                 else if($type == "kehadiran") {
-                    // TODO: Query riwayat kehadiran murid yang diajar
-                    // Query should return: tanggal, waktu, murid, mapel, materi, status
+                    // SP_RiwayatKehadiranPengajar(p_id_pengajar, p_periode, p_status, p_urut)
+                    // Using 'SEMUA' for periode and status, 'TERBARU' for sort order
+                    $result = $this->db->readingQuery("CALL SP_RiwayatKehadiranPengajar('".$_SESSION["loginID"]."', 'SEMUA', 'SEMUA', 'TERBARU')");
+                    
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $tanggalWaktu = $row['tanggal'] . "<br>" . $row['hari'] . " " . $waktu;
+                        
+                        $statusUI = $row['status_kehadiran_ui'];
+                        if($statusUI == 'HADIR') {
+                            $badgeClass = 'badge-hadir';
+                            $statusText = 'Hadir';
+                            $dataStatus = 'hadir';
+                        } else {
+                            $badgeClass = 'badge-tidak-hadir';
+                            $statusText = 'Tidak Hadir';
+                            $dataStatus = 'tidak-hadir';
+                        }
+                        
+                        $materi = !empty($row['deskripsiMateri']) ? $row['deskripsiMateri'] : '-';
+                        
+                        echo "<tr data-status='" . $dataStatus . "'>" . 
+                            "<td>" . $tanggalWaktu . "</td>" .
+                            "<td>" . $row['nama_murid'] . "</td>" .
+                            "<td>" . $row['nama_mapel'] . "</td>" .
+                            "<td>" . $materi . "</td>" .
+                            "<td style='text-align:center;'><span class='badge " . $badgeClass . "'>" . $statusText . "</span></td>" .
+                            "</tr>";
+                    }
                 }
             }
         }
@@ -562,6 +627,27 @@
         public function getListPertemuanTerpakai($id_pembelian) {
             $safe_id = str_replace("'", "", $id_pembelian);
             return $this->db->readingQuery("CALL SP_ListPertemuanTerpakai('$safe_id')");
+        }
+
+        // =============================================
+        // ABSENSI PENGAJAR METHODS
+        // =============================================
+
+        /**
+         * Input absensi kehadiran oleh pengajar
+         * @param string $kode_jadwal Kode jadwal
+         * @param string $id_pengajar ID pengajar yang input
+         * @param int $status_kehadiran 1 = Hadir, 0 = Tidak Hadir
+         * @param string $deskripsi_materi Materi yang diajarkan
+         * @return string|bool Success message or error
+         */
+        public function inputAbsensi($kode_jadwal, $id_pengajar, $status_kehadiran, $deskripsi_materi) {
+            $safe_kode_jadwal = str_replace("'", "", $kode_jadwal);
+            $safe_id_pengajar = str_replace("'", "", $id_pengajar);
+            $safe_status = intval($status_kehadiran);
+            $safe_materi = str_replace("'", "", $deskripsi_materi);
+            
+            return $this->db->nonReadingQuery("CALL SP_InputAbsensi_Pengajar('$safe_kode_jadwal', '$safe_id_pengajar', $safe_status, '$safe_materi')");
         }
     }
 ?>
