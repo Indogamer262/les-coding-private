@@ -19,6 +19,9 @@
             $this->db = new DBUtil($this->servername, $this->username, $this->password, $this->dbname);
         }
 
+        // =============================================
+        // AUTHENTICATION & LOGIN METHODS
+        // =============================================
         public function verifyLogin($roles, $email, $password) {
             // sanitize the input
             $safe_username = str_replace("'", "", $email);
@@ -82,6 +85,10 @@
             
             return $id;
         }
+
+        // =============================================
+        // DASHBOARD STATISTICS METHODS
+        // =============================================
         public function getValueStatistic($type, $role_id = null) {
             // admins dashboard
             
@@ -125,6 +132,10 @@
             }
         }
 
+
+        // =============================================
+        // MANAGE ACCOUNT METHODS
+        // =============================================
         public function insertAccount($roles, $name, $email, $password) {
             $safe_email = str_replace("'", "", $email);
             $safe_name = str_replace("'", "", $name);
@@ -264,6 +275,10 @@
              return $this->db->nonReadingQuery("CALL SP_EditMapel('$safe_id', '$nama', '$desc', $safe_status)");
         }
 
+
+        // =============================================
+        // RENDER TABLE DATA METHODS
+        // =============================================
         public function renderTableBody($roles, $type, $filters = []) {
             if($roles == "admin") {
 
@@ -280,56 +295,7 @@
                             "<td>" . $row['nama_mapel'] . "</td>" .
                             "<td>" . $row['nama_murid'] . "</td>";
                     }
-                }
-
-                else if($type == "matapelajaranaktif") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_matapelajaranaktif");
-                    
-                    foreach($result as $row) {
-                        echo "<tr>" . 
-                            "<td>" . $row['nama_mapel'] . "</td>" .
-                            "<td>" . $row['deskripsiMapel'] . "</td>" .
-                            // pengajar somehow
-                            "<td>" . $row['status'] . "</td>";
-                            // aksi somehow
-                    }
-                }
-                else if($type == "matapelajarannonaktif") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_matapelajarannonaktif");
-                    
-                    foreach($result as $row) {
-                        echo "<tr>" . 
-                            "<td>" . $row['nama_mapel'] . "</td>" .
-                            "<td>" . $row['deskripsiMapel'] . "</td>" .
-                            // pengajar somehow
-                            "<td>" . $row['status'] . "</td>";
-                            // aksi somehow
-                    }
-                }
-                else if($type == "paketlesaktif") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_paketlesaktif");
-                    
-                    foreach($result as $row) {
-                        echo "<tr>" . 
-                            "<td>" . $row['nama_paket'] . "</td>" .
-                            "<td>" . $row['harga'] . "</td>" .
-                            "<td>" . $row['jml_pertemuan'] . "</td>" .
-                            "<td>" . $row['status'] . "</td>";
-                            // aksi somehow
-                    }
-                }
-                else if($type == "paketlesnonaktif") {
-                    $result = $this->db->readingQuery("SELECT * FROM view_paketlesnonaktif");
-                    
-                    foreach($result as $row) {
-                        echo "<tr>" . 
-                            "<td>" . $row['nama_paket'] . "</td>" .
-                            "<td>" . $row['harga'] . "</td>" .
-                            "<td>" . $row['jml_pertemuan'] . "</td>" .
-                            "<td>" . $row['status'] . "</td>";
-                            // aksi somehow
-                    }
-                }
+                }              
 
                 else if($type == "logsemua") {
                     $result = $this->db->readingQuery("SELECT * FROM view_logsemua");
