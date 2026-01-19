@@ -514,14 +514,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatJadwalTersediaMurid` (IN `p
   JOIN pengajar pg ON j.id_pengajar = pg.id_pengajar
   JOIN mata_pelajaran mp ON j.id_mapel = mp.id_mapel
   WHERE j.id_murid IS NULL
-    AND j.tanggal >= CURDATE()
+    AND (
+      j.tanggal > CURDATE()
+      OR (j.tanggal = CURDATE() AND j.jam_mulai > CURTIME())
+    )
     AND (
       p_id_mapel IS NULL OR p_id_mapel = '' OR j.id_mapel = p_id_mapel
     )
     AND (
       UPPER(p_periode) = 'SEMUA'
+      OR (UPPER(p_periode) = 'HARI_INI' AND j.tanggal = CURDATE())
       OR (UPPER(p_periode) = 'MINGGU_INI'
           AND YEARWEEK(j.tanggal, 1) = YEARWEEK(CURDATE(), 1))
+      OR (UPPER(p_periode) = 'BULAN_INI'
+          AND MONTH(j.tanggal) = MONTH(CURDATE())
+          AND YEAR(j.tanggal) = YEAR(CURDATE()))
     )
   ORDER BY j.tanggal ASC, j.jam_mulai ASC;
 END$$
