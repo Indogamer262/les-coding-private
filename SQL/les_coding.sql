@@ -270,7 +270,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_JadwalMengajarPengajar` (IN `p_i
     mp.nama_mapel,
     m.nama_murid,
     CASE
-      WHEN j.tanggal < CURDATE() OR j.status_kehadiran IS NOT NULL THEN 'SELESAI'
+      WHEN j.status_kehadiran IS NOT NULL THEN 'SELESAI'
+      WHEN j.tanggal < CURDATE() THEN 'SELESAI'
+      WHEN j.tanggal = CURDATE() AND j.jam_akhir <= CURTIME() THEN 'SELESAI'
       ELSE 'MENDATANG'
     END AS status_jadwal_ui
   FROM jadwal j
@@ -291,12 +293,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_JadwalMengajarPengajar` (IN `p_i
       UPPER(p_status) = 'SEMUA'
       OR (
         UPPER(p_status) = 'SELESAI'
-        AND (j.tanggal < CURDATE() OR j.status_kehadiran IS NOT NULL)
+        AND (
+          j.status_kehadiran IS NOT NULL
+          OR j.tanggal < CURDATE()
+          OR (j.tanggal = CURDATE() AND j.jam_akhir <= CURTIME())
+        )
       )
       OR (
         UPPER(p_status) = 'MENDATANG'
-        AND j.tanggal >= CURDATE()
         AND j.status_kehadiran IS NULL
+        AND (
+          j.tanggal > CURDATE()
+          OR (j.tanggal = CURDATE() AND j.jam_akhir > CURTIME())
+        )
       )
     )
 
@@ -434,6 +443,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatJadwalMurid` (IN `p_id_muri
 
     CASE
       WHEN j.tanggal > CURDATE() THEN 'MENDATANG'
+      WHEN j.tanggal = CURDATE() AND j.jam_akhir > CURTIME() THEN 'MENDATANG'
       ELSE 'SELESAI'
     END AS status_ui
 
@@ -451,8 +461,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LihatJadwalMurid` (IN `p_id_muri
     )
     AND (
       UPPER(p_status) = 'SEMUA'
-      OR (UPPER(p_status) = 'MENDATANG' AND j.tanggal > CURDATE())
-      OR (UPPER(p_status) = 'SELESAI' AND j.tanggal <= CURDATE())
+      OR (
+        UPPER(p_status) = 'MENDATANG' 
+        AND (
+          j.tanggal > CURDATE()
+          OR (j.tanggal = CURDATE() AND j.jam_akhir > CURTIME())
+        )
+      )
+      OR (
+        UPPER(p_status) = 'SELESAI' 
+        AND (
+          j.tanggal < CURDATE()
+          OR (j.tanggal = CURDATE() AND j.jam_akhir <= CURTIME())
+        )
+      )
     )
   ORDER BY j.tanggal DESC, j.jam_mulai DESC;
 END$$
@@ -1390,16 +1412,16 @@ INSERT INTO `jadwal` (`kode_jadwal`, `id_mapel`, `id_pengajar`, `id_murid`, `id_
 ('JD-2601021', 'MP-00002', 'P-2601001', 'M-2601003', 'PB-2612002', 'JOIN dan Query Lanjutan', '2026-01-14', '11:00:00', '12:00:00', 1),
 ('JD-2609001', 'MP-00001', 'P-2601005', 'M-2601001', 'PB-2601001', 'Materi Lama 1', '2025-09-10', '08:00:00', '09:00:00', 1),
 ('JD-2609002', 'MP-00002', 'P-2601005', 'M-2601002', 'PB-2601003', 'Materi Lama 2', '2025-09-12', '09:00:00', '10:00:00', 0),
-('JD-2612001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', NULL),
-('JD-2612002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-12-25', '08:00:00', '09:00:00', NULL),
-('JD-2612003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-25', '09:00:00', '10:00:00', NULL),
-('JD-2612004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2612003', NULL, '2026-12-14', '08:00:00', '09:00:00', NULL),
-('JD-2612005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', 'Form, Table, dan Layout Web', '2026-12-30', '08:00:00', '09:00:00', NULL),
-('JD-2612006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2612003', NULL, '2026-12-20', '08:00:00', '09:00:00', NULL),
-('JD-2612007', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-12-20', '09:00:00', '10:00:00', NULL),
-('JD-2612008', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-12-15', '08:00:00', '09:00:00', NULL),
-('JD-2612009', 'MP-00002', 'P-2601001', 'M-2601006', 'PB-2612003', NULL, '2026-12-15', '08:00:00', '09:00:00', NULL),
-('JD-2612010', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-12-31', '10:00:00', '11:00:00', NULL);
+('JD-2612001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-01-20', '08:00:00', '09:00:00', NULL),
+('JD-2612002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-01-21', '08:00:00', '09:00:00', NULL),
+('JD-2612003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-01-22', '09:00:00', '10:00:00', NULL),
+('JD-2612004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2612003', NULL, '2026-02-10', '08:00:00', '09:00:00', NULL),
+('JD-2612005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', 'Form, Table, dan Layout Web', '2026-02-15', '08:00:00', '09:00:00', NULL),
+('JD-2612006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2612003', NULL, '2026-02-20', '08:00:00', '09:00:00', NULL),
+('JD-2612007', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-02-25', '09:00:00', '10:00:00', NULL),
+('JD-2612008', 'MP-00001', 'P-2601001', 'M-2601005', 'PB-2601006', 'Variabel, Tipe Data, dan Operator', '2026-03-01', '08:00:00', '09:00:00', NULL),
+('JD-2612009', 'MP-00002', 'P-2601001', 'M-2601006', 'PB-2612003', NULL, '2026-03-05', '08:00:00', '09:00:00', NULL),
+('JD-2612010', 'MP-00001', 'P-2601001', NULL, NULL, NULL, '2026-03-10', '10:00:00', '11:00:00', NULL);
 
 --
 -- Triggers `jadwal`
