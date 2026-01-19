@@ -17,6 +17,13 @@
     // Fetch Lists for Dropdowns
     $listPengajar = $lesCodingUtil->db->readingQuery("SELECT id_pengajar, nama_pengajar FROM pengajar WHERE status = 1 ORDER BY nama_pengajar ASC");
     $listMapel = $lesCodingUtil->db->readingQuery("SELECT id_mapel, nama_mapel FROM mata_pelajaran WHERE status = 1 ORDER BY nama_mapel ASC");
+    
+    // Fetch Link Mapels to Pengajars
+    $rawLinks = $lesCodingUtil->db->readingQuery("SELECT id_pengajar, id_mapel FROM diajar");
+    $mapelPengajarMap = [];
+    foreach($rawLinks as $row) {
+        $mapelPengajarMap[$row['id_pengajar']][] = $row['id_mapel'];
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -185,7 +192,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Mata Pelajaran</label>
                             <select name="mapel" id="inputMapel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                                <option value="">-- Pilih Mata Pelajaran --</option>
+                                <option value="">-- Pilih Pengajar Dahulu --</option>
                                 <?php foreach($listMapel as $m): ?>
                                     <option value="<?php echo $m['id_mapel']; ?>"><?php echo htmlspecialchars($m['nama_mapel']); ?></option>
                                 <?php endforeach; ?>
@@ -282,11 +289,17 @@
         <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
         <script>
             const hariNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const mapelPengajarMap = <?php echo json_encode($mapelPengajarMap); ?>;
 
             $(document).ready(function() {
                 $('#tableJadwalAdmin').DataTable({
                     scrollX: true,
                     ordering: false // Sorting handled by backend filter
+                });
+
+                // Initialize filtering for modal
+                $('#inputPengajar').on('change', function() {
+                    filterMapelByPengajar($(this).val());
                 });
             });
 
@@ -308,6 +321,48 @@
                 window.location.href = `?periode=${period}&status=${status}`;
             }
 
+            // Helper function to filter mapel dropdown based on pengajar
+            function filterMapelByPengajar(pengajarId) {
+                const availableMapels = mapelPengajarMap[pengajarId] || [];
+                const mapelSelect = $('#inputMapel');
+                
+                // Reset selection
+                mapelSelect.val('');
+                
+                // Show/Hide options based on pengajar
+                mapelSelect.find('option').each(function() {
+                    const optionVal = $(this).val();
+                    if (optionVal === "") {
+                        // Always show placeholder but keep it as hint
+                        $(this).show();
+                        $(this).prop('disabled', false);
+                        return;
+                    }
+                    
+                    // If no pengajar selected, hide all mapel options
+                    if (!pengajarId) {
+                        $(this).hide();
+                        $(this).prop('disabled', true);
+                    } else if (availableMapels.includes(optionVal)) {
+                        $(this).show();
+                        $(this).prop('disabled', false);
+                    } else {
+                        $(this).hide();
+                        $(this).prop('disabled', true);
+                    }
+                });
+                
+                // Update placeholder text based on selection state
+                const placeholderOption = mapelSelect.find('option[value=""]');
+                if (!pengajarId) {
+                    placeholderOption.text('-- Pilih Pengajar Dahulu --');
+                } else if (availableMapels.length === 0) {
+                    placeholderOption.text('-- Tidak ada mapel tersedia --');
+                } else {
+                    placeholderOption.text('-- Pilih Mata Pelajaran --');
+                }
+            }
+
             function openScheduleModal() {
                 document.getElementById('scheduleForm').reset();
                 document.getElementById('handlerType').value = 'tambahJadwal';
@@ -316,6 +371,9 @@
                 
                 document.getElementById('inputPengajar').disabled = false;
                 document.getElementById('inputMapel').disabled = false;
+                
+                // Apply initial filter - hide all mapel until pengajar is selected
+                filterMapelByPengajar('');
                 
                 document.getElementById('scheduleModal').classList.remove('hidden');
                 document.getElementById('scheduleModal').classList.add('flex');
