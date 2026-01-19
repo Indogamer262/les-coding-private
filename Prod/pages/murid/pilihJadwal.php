@@ -130,17 +130,7 @@
                                     <option value="month" <?php echo ($_GET['periode'] ?? '') == 'month' ? 'selected' : ''; ?>>Bulan Ini</option>
                                 </select>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <label class="text-sm whitespace-nowrap">Mata Pelajaran</label>
-                                <select id="filterMapel" class="h-9 px-3 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="all" selected>Semua</option>
-                                    <option value="python">Python</option>
-                                    <option value="javascript">JavaScript</option>
-                                    <option value="react">React.js</option>
-                                    <option value="html-css">HTML & CSS</option>
-                                    <option value="nodejs">Node.js</option>
-                                </select>
-                            </div>
+
                         </div>
                     </div>
                     <div class="px-6 py-6">
@@ -156,7 +146,7 @@
                             </thead>
                             <tbody id="tersediaTableBody">
                                 <?php 
-                                    $filters = ['periode' => $_GET['periode'] ?? 'week', 'mapel' => $_GET['mapel'] ?? 'all'];
+                                    $filters = ['periode' => $_GET['periode'] ?? 'week'];
                                     echo $lesCodingUtil->renderTableBody("murid", "jadwaltersedia", $filters); 
                                 ?>
                             </tbody>
@@ -331,37 +321,10 @@
                     ordering: false
                 });
                 
-                // Custom filtering for Mapel in frontend (optional optimization)
-                $('#filterMapel').on('change', function() {
-                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                    if(val === 'all') val = '';
-                    
-                    // We can just reload the page for server-side filter consistency, 
-                    // OR filter client side.
-                    // The Reference file did mostly client side filtering or mock.
-                    // Let's use simple client side filtering for Mapel if rows have data-mapel attribute
-                    // But standard DataTables search is better.
-                    
-                    // If we want filtering by column:
-                    // But our columns don't have the key visible. We used data-mapel on TR.
-                    // DataTables custom search plugin:
-                });
+
             });
             
-            // Register custom search function for DataTables
-            $.fn.dataTable.ext.search.push(
-                function(settings, data, dataIndex) {
-                    if (settings.nTable.id !== 'tableJadwalTersedia') return true;
-                    
-                    var mapelFilter = $('#filterMapel').val();
-                    if (mapelFilter === 'all') return true;
-                    
-                    var row = settings.aoData[dataIndex].nTr;
-                    var mapelKey = row.getAttribute('data-mapel');
-                    
-                    return mapelKey === mapelFilter;
-                }
-            );
+
 
             function applyFiltersTersedia() {
                 var period = document.getElementById('filterPeriode').value;
@@ -370,9 +333,7 @@
             }
             
             // For Mapel, we can just redraw table to trigger client side filter
-            document.getElementById('filterMapel').addEventListener('change', function() {
-                 $('#tableJadwalTersedia').DataTable().draw();
-            });
+
 
             function openPilihModal(id, tanggal, waktu, pengajar, mapel) {
                 document.getElementById('pilihKodeJadwal').value = id;

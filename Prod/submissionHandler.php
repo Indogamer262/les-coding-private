@@ -223,7 +223,7 @@
                 // Re-checking SP_PilihJadwal: IN `p_kode_jadwal` VARCHAR(20), IN `p_id_murid` VARCHAR(20), IN `p_id_pembelian` VARCHAR(20)
                 
                 // We need to pass id_pembelian. We can fetch it via a helper function:
-                $id_pembelian = $lesCodingUtil->db->readSingleValue("SELECT id_pembelian FROM paketdibeli WHERE id_murid = '$id_murid' AND tgl_kedaluwarsa >= CURDATE() AND (jml_pertemuan - pertemuan_terpakai) > 0 ORDER BY tgl_kedaluwarsa ASC LIMIT 1");
+                $id_pembelian = $lesCodingUtil->db->readSingleValue("SELECT pd.id_pembelian FROM paketdibeli pd JOIN katalogpaket k ON pd.id_paket = k.id_paket WHERE pd.id_murid = '$id_murid' AND pd.tgl_kedaluwarsa >= CURDATE() AND (k.jml_pertemuan - pd.pertemuan_terpakai) > 0 ORDER BY pd.tgl_kedaluwarsa ASC LIMIT 1");
 
                 if($id_pembelian) {
                      $result = $lesCodingUtil->pilihJadwal($kode_jadwal, $id_murid, $id_pembelian);
