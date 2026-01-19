@@ -1,6 +1,6 @@
 ## Cara menjalankan
 
-1. Buka terminal dan masuk ke "prod" ini.
+1. Buka terminal dan masuk ke "Prod" ini.
 2. Jalankan server PHP built-in:
 
 	php -S localhost:8000 -t .
