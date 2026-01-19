@@ -573,8 +573,35 @@
                     }
                 }
                 else if($type == "kehadiran") {
-                    // TODO: Query riwayat kehadiran murid
-                    // Query should return: tanggal, waktu, pengajar, mapel, materi, status
+                    // SP_RiwayatKehadiranMurid(p_id_murid, p_periode, p_status, p_urut)
+                    // Using 'SEMUA' for periode and status, 'TERBARU' for sort order
+                    $result = $this->db->readingQuery("CALL SP_RiwayatKehadiranMurid('".$_SESSION["loginID"]."', 'SEMUA', 'SEMUA', 'TERBARU')");
+                    
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $tanggalWaktu = $row['tanggal_ui'] . "<br>" . $row['hari'] . " " . $waktu;
+                        
+                        $statusUI = $row['status_kehadiran_ui'];
+                        if($statusUI == 'Hadir') {
+                            $badgeClass = 'badge-hadir';
+                            $statusText = 'Hadir';
+                            $dataStatus = 'hadir';
+                        } else {
+                            $badgeClass = 'badge-tidak-hadir';
+                            $statusText = 'Tidak Hadir';
+                            $dataStatus = 'tidak-hadir';
+                        }
+                        
+                        $materi = !empty($row['deskripsiMateri']) && $row['deskripsiMateri'] != '-' ? $row['deskripsiMateri'] : '-';
+                        
+                        echo "<tr data-status='" . $dataStatus . "' data-tanggal='" . htmlspecialchars($row['tanggal'] ?? '') . "'>" . 
+                            "<td>" . $tanggalWaktu . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_pengajar'] ?? '') . "</td>" .
+                            "<td>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</td>" .
+                            "<td>" . $materi . "</td>" .
+                            "<td style='text-align:center;'><span class='badge " . $badgeClass . "'>" . $statusText . "</span></td>" .
+                            "</tr>";
+                    }
                 }
                 else if($type == "paketsaya") {
                     $result = $this->db->readingQuery("CALL SP_LihatRiwayatPembelianMurid ('" . $_SESSION['loginID'] . "', 'LUNAS')");

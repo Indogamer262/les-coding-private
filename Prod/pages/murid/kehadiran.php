@@ -84,6 +84,13 @@
                             <option value="tidak-hadir">Tidak Hadir</option>
                         </select>
                     </div>
+                    <div class="filterGroup">
+                        <label>Urutkan</label>
+                        <select id="sortBy" onchange="applyFilters()">
+                            <option value="terbaru">Terbaru</option>
+                            <option value="terlama">Terlama</option>
+                        </select>
+                    </div>
                     <div class="spacer"></div>
 
                 </div>
@@ -108,23 +115,94 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
     <script>
+        let kehadiranTable = null;
+
         $(document).ready(function() {
-            new DataTable('#kehadiranTb', { scrollX: true });
+            kehadiranTable = new DataTable('#kehadiranTb', { 
+                scrollX: true,
+                order: [[0, 'desc']] // Default sort by tanggal descending (terbaru)
+            });
+            
+            // Apply initial filter
+            applyFilters();
         });
 
         function applyFilters() {
-            const status = document.getElementById('filterStatus').value;
-
+            const periodeFilter = document.getElementById('filterPeriode').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const sortBy = document.getElementById('sortBy').value;
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // Calculate week start (Monday)
+            const weekStart = new Date(today);
+            const dayOfWeek = today.getDay();
+            const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            weekStart.setDate(today.getDate() - diffToMonday);
+            
+            // Calculate month start
+            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+            
             const rows = document.querySelectorAll('#kehadiranTableBody tr');
             
             rows.forEach(row => {
                 const rowStatus = row.getAttribute('data-status');
-                const text = row.textContent.toLowerCase();
+                const tanggalStr = row.getAttribute('data-tanggal') || '';
+                
                 let visible = true;
-                if (status !== 'all' && rowStatus !== status) visible = false;
+                
+                // Filter by status
+                if (statusFilter !== 'all' && rowStatus !== statusFilter) {
+                    visible = false;
+                }
+                
+                // Filter by periode
+                if (visible && periodeFilter !== 'all' && tanggalStr) {
+                    const rowDate = parseDate(tanggalStr);
+                    if (rowDate) {
+                        rowDate.setHours(0, 0, 0, 0);
+                        
+                        if (periodeFilter === 'today') {
+                            visible = rowDate.getTime() === today.getTime();
+                        } else if (periodeFilter === 'week') {
+                            visible = rowDate >= weekStart && rowDate <= today;
+                        } else if (periodeFilter === 'month') {
+                            visible = rowDate >= monthStart && rowDate <= today;
+                        }
+                    }
+                }
 
                 row.style.display = visible ? '' : 'none';
             });
+            
+            // Apply sorting using DataTables
+            if (kehadiranTable) {
+                const sortOrder = sortBy === 'terbaru' ? 'desc' : 'asc';
+                kehadiranTable.order([0, sortOrder]).draw();
+            }
+        }
+        
+        // Parse date string (supports YYYY-MM-DD and DD-MM-YYYY formats)
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            
+            // Try YYYY-MM-DD format first
+            if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+                return new Date(dateStr.substring(0, 10));
+            }
+            
+            // Try DD-MM-YYYY or DD/MM/YYYY format
+            const parts = dateStr.split(/[-\/]/);
+            if (parts.length >= 3) {
+                if (parts[0].length === 4) {
+                    return new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+                } else {
+                    return new Date(parts[2], parseInt(parts[1]) - 1, parts[0]);
+                }
+            }
+            
+            return new Date(dateStr);
         }
     </script>
 </html>
