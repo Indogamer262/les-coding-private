@@ -2,7 +2,7 @@
     include_once("util/dbUtil.php");
 
     class DBLesCoding {
-        private DBUtil $db;
+        public DBUtil $db;
         private $servername;
         private $username;
         private $password;
@@ -331,8 +331,49 @@
                     // Query should return: nama_paket, harga, jml_pertemuan, status
                 }
                 else if($type == "jadwal") {
-                    // TODO: Implement jadwal table query
-                    // Query should return: tanggal, hari, waktu, pengajar, mapel, murid
+                    // Filter handling
+                    $periodeMap = [
+                        'today' => 'HARI_INI',
+                        'week' => 'MINGGU_INI',
+                        'month' => 'BULAN_INI',
+                        'all' => 'SEMUA'
+                    ];
+                    $statusMap = [
+                        'terisi' => 'TERISI',
+                        'belum' => 'KOSONG',
+                        'all' => 'SEMUA'
+                    ];
+                    $sortMap = [
+                        'terbaru' => 'TERBARU',
+                        'terlama' => 'TERLAMA'
+                    ];
+
+                    $p_periode = isset($filters['periode']) ? ($periodeMap[$filters['periode']] ?? 'BULAN_INI') : 'BULAN_INI';
+                    $p_status = isset($filters['status']) ? ($statusMap[$filters['status']] ?? 'SEMUA') : 'SEMUA';
+                    $p_urut = isset($filters['sort']) ? ($sortMap[$filters['sort']] ?? 'TERBARU') : 'TERBARU';
+
+                    $result = $this->db->readingQuery("CALL SP_LihatJadwal_Admin('$p_periode', '$p_status', '$p_urut')");
+
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $formattedDate = date('d M Y', strtotime($row['tanggal']));
+                        $muridDisplay = !empty($row['nama_murid']) ? 
+                            '<span class="font-medium text-gray-800 whitespace-nowrap">' . htmlspecialchars($row['nama_murid']) . '</span>' : 
+                            '<span class="text-xs text-blue-500 italic">Belum terisi</span>';
+                        $dataStatus = !empty($row['nama_murid']) ? 'terisi' : 'belum';
+                        
+                        echo "<tr data-status='$dataStatus' class='hover:bg-gray-50 transition-colors'>" . 
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . $formattedDate . "</span></td>" .
+                            "<td><div><p class='font-medium text-gray-800'>" . $row['hari'] . "</p><p class='text-sm text-gray-600'>". $waktu ."</p></div></td>" .
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . htmlspecialchars($row['nama_pengajar'] ?? '') . "</span></td>" .
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</span></td>" .
+                            "<td>" . $muridDisplay . "</td>" .
+                            "<td><div class='flex items-center justify-center gap-2'>" .
+                                "<button type='button' onclick='editJadwal(\"".$row['kode_jadwal']."\", \"".$row['tanggal']."\", \"".$row['jam_mulai']."\", \"".$row['jam_akhir']."\")' class='inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-yellow-500 text-white hover:bg-yellow-600 transition-colors'>Edit</button>" .
+                                "<button type='button' onclick='deleteJadwal(\"".$row['kode_jadwal']."\")' class='inline-flex items-center justify-center w-16 px-4 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700 transition-colors'>Hapus</button>" .
+                            "</div></td>" .
+                            "</tr>";
+                    }
                 }
                 else if($type == "absensi") {
                     // TODO: Implement absensi table query
@@ -579,12 +620,54 @@
                     }
                 }
                 else if($type == "jadwaltersedia") {
-                    // TODO: Query jadwal tersedia untuk dipilih
-                    // Query should return: tanggal, hari, waktu, pengajar, mapel
+                    $periodeMap = [
+                        'today' => 'HARI_INI',
+                        'week' => 'MINGGU_INI',
+                        'month' => 'BULAN_INI',
+                        'all' => 'SEMUA'
+                    ];
+                    
+                    $p_periode = isset($filters['periode']) ? ($periodeMap[$filters['periode']] ?? 'MINGGU_INI') : 'MINGGU_INI';
+                    $p_mapel = isset($filters['mapel']) && $filters['mapel'] != 'all' ? $filters['mapel'] : '';
+                    
+                    // We need to resolve mapel name to ID if needed, or pass string if SP accepts string.
+                    // SP_LihatJadwalTersediaMurid accepts p_id_mapel. Frontend passes 'python' (string key).
+                    // In real app, we should pass ID. For now assuming name matching or empty logic.
+                    // Let's assume frontend sends something that SP can handle OR we ignore mapel filter at DB level 
+                    // and rely on frontend JS filtering (which is what the JS code did).
+                    // So we pass '' for mapel ID to get all and let JS filter.
+                    
+                    $result = $this->db->readingQuery("CALL SP_LihatJadwalTersediaMurid('$p_periode', '')");
+
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $formattedDate = date('d M Y', strtotime($row['tanggal']));
+                        $mapelKey = strtolower($row['nama_mapel']); // For frontend filtering
+                        
+                        echo "<tr data-mapel='" . $mapelKey . "' class='hover:bg-gray-50 transition-colors'>" . 
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . $formattedDate . "</span></td>" .
+                            "<td><div><p class='font-medium text-gray-800'>" . $row['hari'] . "</p><p class='text-sm text-gray-600'>". $waktu ."</p></div></td>" .
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . htmlspecialchars($row['nama_pengajar'] ?? '') . "</span></td>" .
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</span></td>" .
+                            "<td style='text-align:center;'><button type='button' onclick='openPilihModal(\"".$row['kode_jadwal']."\", \"$formattedDate\", \"$waktu\", \"".addslashes($row['nama_pengajar'])."\", \"".addslashes($row['nama_mapel'])."\")' class='inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-orange-500 hover:bg-orange-600 text-white transition-colors'>Pilih</button></td>" .
+                            "</tr>";
+                    }
                 }
                 else if($type == "jadwaldipilih") {
-                    // TODO: Query jadwal yang sudah dipilih murid
-                    // Query should return: tanggal, hari, waktu, pengajar, mapel
+                    $result = $this->db->readingQuery("CALL SP_LihatJadwalSayaMurid('" . $_SESSION['loginID'] . "', 'SEMUA')");
+
+                    foreach($result as $row) {
+                        $waktu = substr($row['jam_mulai'], 0, 5) . ' - ' . substr($row['jam_akhir'], 0, 5);
+                        $formattedDate = date('d M Y', strtotime($row['tanggal']));
+                        
+                        echo "<tr class='hover:bg-gray-50 transition-colors'>" . 
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . $formattedDate . "</span></td>" .
+                            "<td><div><p class='font-medium text-gray-800'>" . $row['hari'] . "</p><p class='text-sm text-gray-600'>". $waktu ."</p></div></td>" .
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . htmlspecialchars($row['nama_pengajar'] ?? '') . "</span></td>" .
+                            "<td><span class='font-medium text-gray-800 whitespace-nowrap'>" . htmlspecialchars($row['nama_mapel'] ?? '') . "</span></td>" .
+                             "<td style='text-align:center;'><button type='button' onclick='openBatalModal(\"".$row['kode_jadwal']."\", \"$formattedDate\", \"$waktu\", \"".addslashes($row['nama_mapel'])."\")' class='inline-flex items-center justify-center px-4 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700 transition-colors'>Batalkan</button></td>" .
+                            "</tr>";
+                    }
                 }
             }
             else if($roles == "pengajar") {
@@ -785,6 +868,54 @@
             $safe_materi = str_replace("'", "", $deskripsi_materi);
             
             return $this->db->nonReadingQuery("CALL SP_InputAbsensi_Pengajar('$safe_kode_jadwal', '$safe_id_pengajar', $safe_status, '$safe_materi')");
+        }
+
+        // =============================================
+        // KELOLA JADWAL (ADMIN) METHODS
+        // =============================================
+
+        public function tambahJadwalAdmin($mapel, $pengajar, $tanggal, $p_jam_mulai, $p_jam_akhir) {
+            $safe_mapel = str_replace("'", "", $mapel);
+            $safe_pengajar = str_replace("'", "", $pengajar);
+            $safe_tanggal = str_replace("'", "", $tanggal);
+            $safe_jam_mulai = str_replace("'", "", $p_jam_mulai);
+            $safe_jam_akhir = str_replace("'", "", $p_jam_akhir);
+
+            return $this->db->nonReadingQuery("CALL SP_TambahJadwal_Admin('$safe_mapel', '$safe_pengajar', '$safe_tanggal', '$safe_jam_mulai', '$safe_jam_akhir')");
+        }
+
+        public function editJadwalAdmin($kode, $tanggal, $p_jam_mulai, $p_jam_akhir) {
+            $safe_kode = str_replace("'", "", $kode);
+            $safe_tanggal = str_replace("'", "", $tanggal);
+            $safe_jam_mulai = str_replace("'", "", $p_jam_mulai);
+            $safe_jam_akhir = str_replace("'", "", $p_jam_akhir);
+
+            return $this->db->nonReadingQuery("CALL SP_EditJadwal_Admin('$safe_kode', '$safe_tanggal', '$safe_jam_mulai', '$safe_jam_akhir')");
+        }
+
+        public function hapusJadwalAdmin($kode) {
+            $safe_kode = str_replace("'", "", $kode);
+            
+            return $this->db->nonReadingQuery("CALL SP_HapusJadwal_Admin('$safe_kode')");
+        }
+
+        // =============================================
+        // PILIH JADWAL (MURID) METHODS
+        // =============================================
+
+        public function pilihJadwal($kode_jadwal, $id_murid, $id_pembelian) {
+            $safe_kode = str_replace("'", "", $kode_jadwal);
+            $safe_murid = str_replace("'", "", $id_murid);
+            $safe_pembelian = str_replace("'", "", $id_pembelian);
+
+            return $this->db->nonReadingQuery("CALL SP_PilihJadwal('$safe_kode', '$safe_murid', '$safe_pembelian')");
+        }
+
+        public function batalJadwal($kode_jadwal, $id_murid) {
+            $safe_kode = str_replace("'", "", $kode_jadwal);
+            $safe_murid = str_replace("'", "", $id_murid);
+            
+            return $this->db->nonReadingQuery("CALL SP_BatalPilihJadwal('$safe_kode', '$safe_murid')");
         }
     }
 ?>

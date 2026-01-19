@@ -158,6 +158,99 @@
                 header("Location: dashboard.php");
             }
         }
+        // =============================================
+        // JADWAL HANDLERS (Admin)
+        // =============================================
+        else if($handlerType == "tambahJadwal") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $pengajar = $_POST['pengajar'];
+                $mapel = $_POST['mapel'];
+                $tanggal = $_POST['tanggal'];
+                $jamMulai = $_POST['jamMulai'];
+                $jamSelesai = $_POST['jamSelesai'];
+
+                $result = $lesCodingUtil->tambahJadwalAdmin($mapel, $pengajar, $tanggal, $jamMulai, $jamSelesai);
+                
+                if($result == "success") {
+                    header("Location: jadwalLes.php?msg=success");
+                } else {
+                    header("Location: jadwalLes.php?msg=" . urlencode($result));
+                }
+            }
+        }
+        else if($handlerType == "editJadwal") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $kode = $_POST['kodeJadwal'];
+                $tanggal = $_POST['tanggal'];
+                $jamMulai = $_POST['jamMulai'];
+                $jamSelesai = $_POST['jamSelesai'];
+
+                $result = $lesCodingUtil->editJadwalAdmin($kode, $tanggal, $jamMulai, $jamSelesai);
+                
+                if($result == "success") {
+                    header("Location: jadwalLes.php?msg=edit");
+                } else {
+                    header("Location: jadwalLes.php?msg=" . urlencode($result));
+                }
+            }
+        }
+        else if($handlerType == "hapusJadwal") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $kode = $_POST['kodeJadwal'];
+
+                $result = $lesCodingUtil->hapusJadwalAdmin($kode);
+                
+                if($result == "success") {
+                    header("Location: jadwalLes.php?msg=delete");
+                } else {
+                    header("Location: jadwalLes.php?msg=" . urlencode($result));
+                }
+            }
+        }
+        // =============================================
+        // PILIH JADWAL HANDLER (Murid)
+        // =============================================
+        else if($handlerType == "pilihJadwal") {
+            if($_SESSION["loginRoles"] == "murid") {
+                $id_murid = $_SESSION["loginID"];
+                $kode_jadwal = $_POST['kodeJadwal'];
+                // For simplicity, we assume we pick the first active package. 
+                // Ideally user selects package, but let's try to get it automatically or pass it if UI allows.
+                // The SP needs id_pembelian. We need to find valid pembelian for this murid.
+                // We'll let the user pick or auto-pick in frontend or backend.
+                // Frontend accounts for this by passing id_pembelian? 
+                // Let's assume we query for the latest active package in dbLesCoding (or pass it from form if we implemented selector).
+                // Re-checking SP_PilihJadwal: IN `p_kode_jadwal` VARCHAR(20), IN `p_id_murid` VARCHAR(20), IN `p_id_pembelian` VARCHAR(20)
+                
+                // We need to pass id_pembelian. We can fetch it via a helper function:
+                $id_pembelian = $lesCodingUtil->db->readSingleValue("SELECT id_pembelian FROM paketdibeli WHERE id_murid = '$id_murid' AND tgl_kedaluwarsa >= CURDATE() AND (jml_pertemuan - pertemuan_terpakai) > 0 ORDER BY tgl_kedaluwarsa ASC LIMIT 1");
+
+                if($id_pembelian) {
+                     $result = $lesCodingUtil->pilihJadwal($kode_jadwal, $id_murid, $id_pembelian);
+                     if($result == "success") {
+                        header("Location: pilihJadwal.php?msg=success");
+                     } else {
+                        header("Location: pilihJadwal.php?msg=" . urlencode($result));
+                     }
+                } else {
+                     header("Location: pilihJadwal.php?msg=" . urlencode("Tidak ada paket aktif yang valid"));
+                }
+            }
+        }
+        else if($handlerType == "batalJadwal") {
+            if($_SESSION["loginRoles"] == "murid") {
+                $id_murid = $_SESSION["loginID"];
+                $kode_jadwal = $_POST['kodeJadwal'];
+                
+                $result = $lesCodingUtil->batalJadwal($kode_jadwal, $id_murid);
+                
+                if($result == "success") {
+                    header("Location: pilihJadwal.php?msg=canceled");
+                } else {
+                    header("Location: pilihJadwal.php?msg=" . urlencode($result));
+                }
+            }
+        }
         else {
             header("Location: dashboard.php");
         }

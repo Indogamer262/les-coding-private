@@ -1,4 +1,10 @@
 <!-- Frontend by 2472042, member of "Les Coding Private" Team -->
+<?php
+    if (!isset($lesCodingUtil)) {
+        header("Location: ../../index.php");
+        exit;
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
