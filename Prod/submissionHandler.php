@@ -207,22 +207,10 @@
                 }
             }
         }
-        // =============================================
-        // PILIH JADWAL HANDLER (Murid)
-        // =============================================
         else if($handlerType == "pilihJadwal") {
             if($_SESSION["loginRoles"] == "murid") {
                 $id_murid = $_SESSION["loginID"];
                 $kode_jadwal = $_POST['kodeJadwal'];
-                // For simplicity, we assume we pick the first active package. 
-                // Ideally user selects package, but let's try to get it automatically or pass it if UI allows.
-                // The SP needs id_pembelian. We need to find valid pembelian for this murid.
-                // We'll let the user pick or auto-pick in frontend or backend.
-                // Frontend accounts for this by passing id_pembelian? 
-                // Let's assume we query for the latest active package in dbLesCoding (or pass it from form if we implemented selector).
-                // Re-checking SP_PilihJadwal: IN `p_kode_jadwal` VARCHAR(20), IN `p_id_murid` VARCHAR(20), IN `p_id_pembelian` VARCHAR(20)
-                
-                // We need to pass id_pembelian. We can fetch it via a helper function:
                 $id_pembelian = $lesCodingUtil->db->readSingleValue("SELECT pd.id_pembelian FROM paketdibeli pd JOIN katalogpaket k ON pd.id_paket = k.id_paket WHERE pd.id_murid = '$id_murid' AND pd.tgl_kedaluwarsa >= CURDATE() AND (k.jml_pertemuan - pd.pertemuan_terpakai) > 0 ORDER BY pd.tgl_kedaluwarsa ASC LIMIT 1");
 
                 if($id_pembelian) {
@@ -251,9 +239,6 @@
                 }
             }
         }
-        // =============================================
-        // KELOLA PAKET LES HANDLERS (Admin only)
-        // =============================================
         else if($handlerType == "tambahPaketLes") {
             if($_SESSION["loginRoles"] == "admin") {
                 $nama = $_POST["nama"] ?? "";
@@ -304,6 +289,63 @@
                     header("Location: paketLes.php?msg=status");
                 } else {
                     header("Location: paketLes.php?msg=" . urlencode($result));
+                }
+            } else {
+                header("Location: dashboard.php");
+            }
+        }
+        else if($handlerType == "tambahMapel") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $nama = $_POST["subjectName"] ?? "";
+                $desc = $_POST["description"] ?? "";
+                $status = ($_POST["status"] == "active") ? 1 : 0;
+                $pengajarIds = $_POST["pengajar_ids"] ?? [];
+                
+                if (!is_array($pengajarIds)) $pengajarIds = [];
+
+                $result = $lesCodingUtil->tambahMapel($nama, $desc, $status, $pengajarIds);
+                
+                if($result == "success") {
+                    header("Location: mataPelajaran.php?msg=success");
+                } else {
+                    header("Location: mataPelajaran.php?msg=" . urlencode($result));
+                }
+            } else {
+                header("Location: dashboard.php");
+            }
+        }
+        else if($handlerType == "editMapel") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $id = $_POST["id_mapel"] ?? "";
+                $nama = $_POST["subjectName"] ?? "";
+                $desc = $_POST["description"] ?? "";
+                $status = ($_POST["status"] == "active") ? 1 : 0;
+                $pengajarIds = $_POST["pengajar_ids"] ?? [];
+                 
+                if (!is_array($pengajarIds)) $pengajarIds = [];
+
+                $result = $lesCodingUtil->editMapel($id, $nama, $desc, $status, $pengajarIds);
+                
+                if($result == "success") {
+                    header("Location: mataPelajaran.php?msg=edit");
+                } else {
+                    header("Location: mataPelajaran.php?msg=" . urlencode($result));
+                }
+            } else {
+                header("Location: dashboard.php");
+            }
+        }
+        else if($handlerType == "toggleStatusMapel") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $id = $_POST["id_mapel"] ?? "";
+                $status = intval($_POST["status"] ?? 0);
+                
+                $result = $lesCodingUtil->toggleStatusMapel($id, $status);
+                
+                if($result == "success") {
+                    header("Location: mataPelajaran.php?msg=status");
+                } else {
+                    header("Location: mataPelajaran.php?msg=" . urlencode($result));
                 }
             } else {
                 header("Location: dashboard.php");

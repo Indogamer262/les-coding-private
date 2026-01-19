@@ -184,6 +184,86 @@
             $this->db->nonReadingQuery("CALL SP_UbahStatusAkun('$safe_roles', '$safe_id', $safe_targetStatus)");
         }
 
+        // =============================================
+        // KELOLA MATA PELAJARAN METHODS
+        // =============================================
+        
+        public function getPengajarAktif() {
+             return $this->db->readingQuery("SELECT id_pengajar, nama_pengajar FROM pengajar WHERE status = 1 ORDER BY nama_pengajar ASC");
+        }
+
+        public function getPengajarMapelIds($id_mapel) {
+            $safe_id = str_replace("'", "", $id_mapel);
+            $result = $this->db->readingQuery("SELECT id_pengajar FROM diajar WHERE id_mapel = '$safe_id'");
+            return array_column($result, 'id_pengajar');
+        }
+
+        public function tambahMapel($nama, $desc, $status, $pengajarIds) {
+            $safe_nama = str_replace("'", "", $nama);
+            $safe_desc = str_replace("'", "", $desc);
+            $safe_status = intval($status);
+
+            // 1. Insert Mapel
+            $this->db->nonReadingQuery("CALL SP_TambahMapel('$safe_nama', '$safe_desc', $safe_status)");
+            
+            // 2. Get the new ID
+            // Using a query to fetch the latest ID for this name. Not 100% race-condition proof but sufficient here.
+            $rows = $this->db->readingQuery("SELECT id_mapel FROM mata_pelajaran WHERE nama_mapel = '$safe_nama' ORDER BY id_mapel DESC LIMIT 1");
+            if (empty($rows)) return "Gagal mendapatkan ID mapel baru";
+            $newId = $rows[0]['id_mapel'];
+
+            // 3. Insert Relations
+            if (!empty($pengajarIds)) {
+                foreach ($pengajarIds as $pid) {
+                    $safe_pid = str_replace("'", "", $pid);
+                    $this->db->nonReadingQuery("CALL SP_TambahDiajar('$newId', '$safe_pid')");
+                }
+            }
+            return "success";
+        }
+
+        public function editMapel($id, $nama, $desc, $status, $pengajarIds) {
+             $safe_id = str_replace("'", "", $id);
+             $safe_nama = str_replace("'", "", $nama);
+             $safe_desc = str_replace("'", "", $desc);
+             $safe_status = intval($status);
+
+             // 1. Update Mapel
+             $this->db->nonReadingQuery("CALL SP_EditMapel('$safe_id', '$safe_nama', '$safe_desc', $safe_status)");
+             
+             // 2. Update Relations
+             $currentIds = $this->getPengajarMapelIds($id);
+             
+             // To Add (in new but not in old)
+             $toAdd = array_diff($pengajarIds, $currentIds);
+             foreach($toAdd as $pid) {
+                 $safe_pid = str_replace("'", "", $pid);
+                 $this->db->nonReadingQuery("CALL SP_TambahDiajar('$safe_id', '$safe_pid')");
+             }
+             
+             // To Remove (in old but not in new)
+             $toRemove = array_diff($currentIds, $pengajarIds);
+             foreach($toRemove as $pid) {
+                 $safe_pid = str_replace("'", "", $pid);
+                 $this->db->nonReadingQuery("CALL SP_HapusDiajar('$safe_id', '$safe_pid')");
+             }
+             
+             return "success";
+        }
+        
+        public function toggleStatusMapel($id, $status) {
+             $safe_id = str_replace("'", "", $id);
+             $rows = $this->db->readingQuery("SELECT * FROM mata_pelajaran WHERE id_mapel = '$safe_id'");
+             if (empty($rows)) return "Mapel not found";
+             $row = $rows[0];
+             
+             $safe_status = intval($status);
+             $desc = str_replace("'", "", $row['deskripsiMapel'] ?? '');
+             $nama = str_replace("'", "", $row['nama_mapel']);
+             
+             return $this->db->nonReadingQuery("CALL SP_EditMapel('$safe_id', '$nama', '$desc', $safe_status)");
+        }
+
         public function renderTableBody($roles, $type, $filters = []) {
             if($roles == "admin") {
 
@@ -323,8 +403,54 @@
 
                 }
                 else if($type == "matapelajaran") {
-                    // TODO: Implement mata pelajaran table query (combined aktif/nonaktif)
-                    // Query should return: nama_mapel, deskripsi, status
+                    // Combine active and inactive
+                    $activeMapels = $this->db->readingQuery("SELECT * FROM view_matapelajaranaktif");
+                    $inactiveMapels = $this->db->readingQuery("SELECT * FROM view_matapelajarannonaktif");
+                    
+                    // We need to render them with consistent columns
+                    
+                    $renderRow = function($row, $isActive) {
+                        $id = $row['id_mapel'];
+                        $nama = htmlspecialchars($row['nama_mapel']);
+                        $desc = htmlspecialchars($row['deskripsiMapel'] ?? '');
+                        $pengajarStr = htmlspecialchars($row['daftar_pengajar'] ?? 'Belum ada');
+                        
+                        // Fetch relation IDs for edit modal
+                        $idsArray = $this->getPengajarMapelIds($id); 
+                        $idsJson = htmlspecialchars(json_encode($idsArray), ENT_QUOTES, 'UTF-8');
+                        
+                        $statusKey = $isActive ? 'active' : 'inactive';
+                        $statusLabel = $isActive ? 'Aktif' : 'Nonaktif';
+                        $statusClass = $isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
+                        
+                        $toggleLabel = $isActive ? 'Nonaktifkan' : 'Aktifkan';
+                        $toggleClass = $isActive ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-50' : 'bg-blue-600 text-white hover:bg-blue-700';
+                        $newStatus = $isActive ? 0 : 1;
+
+                        echo "<tr data-status='$statusKey'
+                                  data-id='$id'
+                                  data-nama='$nama'
+                                  data-deskripsi='$desc'
+                                  data-pengajar-ids='$idsJson'>" .
+                                "<td><p class='font-medium text-gray-800'>$nama</p></td>" .
+                                "<td><span class='text-gray-700'>$desc</span></td>" .
+                                "<td><span class='text-gray-700 text-sm'>$pengajarStr</span></td>" .
+                                "<td class='text-center'><span class='item-status-badge px-4 py-1 rounded-full text-xs font-medium $statusClass'>$statusLabel</span></td>" .
+                                "<td class='text-center'>
+                                    <div class='flex items-center justify-center gap-2'>
+                                        <button type='button' class='btn-edit' onclick='editSubject(this)'>Edit</button>
+                                        <button type='button' class='status-toggle-btn' onclick='toggleSubjectStatus(\"$id\", $newStatus)' class='status-toggle-btn inline-flex items-center justify-center w-20 px-4 py-1 rounded text-xs font-medium $toggleClass transition-colors'>$toggleLabel</button>
+                                    </div>
+                                </td>" .
+                             "</tr>";
+                    };
+
+                    if (!empty($activeMapels)) {
+                        foreach($activeMapels as $row) { $renderRow($row, true); }
+                    }
+                    if (!empty($inactiveMapels)) {
+                        foreach($inactiveMapels as $row) { $renderRow($row, false); }
+                    }
                 }
                 else if($type == "paketles") {
                     // Get both aktif and nonaktif packages
