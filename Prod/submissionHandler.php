@@ -251,6 +251,64 @@
                 }
             }
         }
+        // =============================================
+        // KELOLA PAKET LES HANDLERS (Admin only)
+        // =============================================
+        else if($handlerType == "tambahPaketLes") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $nama = $_POST["nama"] ?? "";
+                $jumlah = $_POST["jumlah"] ?? 0;
+                $masa = $_POST["masa"] ?? 0;
+                $harga = $_POST["harga"] ?? 0;
+                $status = $_POST["status"] == "aktif" ? 1 : 0;
+                
+                $result = $lesCodingUtil->tambahPaketLes($nama, $jumlah, $masa, $harga, $status);
+                
+                if($result == "success") {
+                    header("Location: paketLes.php?msg=success");
+                } else {
+                    header("Location: paketLes.php?msg=" . urlencode($result));
+                }
+            } else {
+                header("Location: dashboard.php");
+            }
+        }
+        else if($handlerType == "editPaketLes") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $id = $_POST["id_paket"] ?? "";
+                $nama = $_POST["nama"] ?? "";
+                $jumlah = $_POST["jumlah"] ?? 0;
+                $masa = $_POST["masa"] ?? 0;
+                $harga = $_POST["harga"] ?? 0;
+                $status = $_POST["status"] == "aktif" ? 1 : 0;
+                
+                $result = $lesCodingUtil->editPaketLes($id, $nama, $jumlah, $masa, $harga, $status);
+                
+                if($result == "success") {
+                    header("Location: paketLes.php?msg=edit");
+                } else {
+                    header("Location: paketLes.php?msg=" . urlencode($result));
+                }
+            } else {
+                header("Location: dashboard.php");
+            }
+        }
+        else if($handlerType == "ubahStatusPaketLes") {
+            if($_SESSION["loginRoles"] == "admin") {
+                $id = $_POST["id_paket"] ?? "";
+                $status = intval($_POST["status"] ?? 0);
+                
+                $result = $lesCodingUtil->ubahStatusPaketLes($id, $status);
+                
+                if($result == "success") {
+                    header("Location: paketLes.php?msg=status");
+                } else {
+                    header("Location: paketLes.php?msg=" . urlencode($result));
+                }
+            } else {
+                header("Location: dashboard.php");
+            }
+        }
         else {
             header("Location: dashboard.php");
         }

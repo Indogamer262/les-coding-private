@@ -151,28 +151,36 @@
                     <h3 id="modalTitle">Tambah Paket Baru</h3>
                     <button class="modal-close" onclick="closeModal()">&times;</button>
                 </div>
-                <form id="paketForm" onsubmit="handleSubmit(event)">
+                <form id="paketForm" action="submissionHandler.php" method="POST">
+                    <input type="hidden" name="handlerType" id="handlerType" value="tambahPaketLes">
+                    <input type="hidden" name="id_paket" id="id_paket" value="">
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Nama Paket</label>
-                            <input type="text" name="nama" placeholder="Contoh: Paket 4 Pertemuan" required>
+                            <input type="text" name="nama" id="inputNama" placeholder="Contoh: Paket 4x" required>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Jumlah Pertemuan</label>
-                                <input type="number" name="jumlah" min="1" placeholder="Contoh: 4" required>
+                                <input type="number" name="jumlah" id="inputJumlah" min="1" placeholder="Contoh: 4" required>
                             </div>
                             <div class="form-group">
-                                <label>Harga (Rp)</label>
-                                <input type="number" name="harga" min="0" placeholder="Contoh: 250000" required>
+                                <label>Masa Aktif (Hari)</label>
+                                <input type="number" name="masa" id="inputMasa" min="1" placeholder="Contoh: 30" required>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select name="status">
-                                <option value="aktif">Aktif</option>
-                                <option value="nonaktif">Nonaktif</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Harga (Rp)</label>
+                                <input type="number" name="harga" id="inputHarga" min="0" placeholder="Contoh: 250000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select name="status" id="inputStatus">
+                                    <option value="aktif">Aktif</option>
+                                    <option value="nonaktif">Nonaktif</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -202,28 +210,44 @@
         }
 
         function applyFilters() {
-
             const rows = document.querySelectorAll('#paketTableBody tr');
             
             rows.forEach(row => {
                 const status = row.getAttribute('data-status');
-                const text = row.textContent.toLowerCase();
-                
                 let visible = status === selectedStatus;
-
-                
                 row.style.display = visible ? '' : 'none';
             });
         }
 
         function openAddModal() {
             document.getElementById('modalTitle').textContent = 'Tambah Paket Baru';
-            document.getElementById('paketForm').reset();
+            document.getElementById('handlerType').value = 'tambahPaketLes';
+            document.getElementById('id_paket').value = '';
+            document.getElementById('inputNama').value = '';
+            document.getElementById('inputJumlah').value = '';
+            document.getElementById('inputMasa').value = '';
+            document.getElementById('inputHarga').value = '';
+            document.getElementById('inputStatus').value = 'aktif';
             document.getElementById('paketModal').classList.add('show');
         }
 
-        function editPaket(id) {
+        function editPaket(btn) {
+            const row = btn.closest('tr');
+            const id = row.getAttribute('data-id');
+            const nama = row.getAttribute('data-nama');
+            const jumlah = row.getAttribute('data-jumlah');
+            const masa = row.getAttribute('data-masa');
+            const harga = row.getAttribute('data-harga');
+            const status = row.getAttribute('data-status');
+            
             document.getElementById('modalTitle').textContent = 'Edit Paket';
+            document.getElementById('handlerType').value = 'editPaketLes';
+            document.getElementById('id_paket').value = id;
+            document.getElementById('inputNama').value = nama;
+            document.getElementById('inputJumlah').value = jumlah;
+            document.getElementById('inputMasa').value = masa;
+            document.getElementById('inputHarga').value = harga;
+            document.getElementById('inputStatus').value = status;
             document.getElementById('paketModal').classList.add('show');
         }
 
@@ -231,34 +255,36 @@
             document.getElementById('paketModal').classList.remove('show');
         }
 
-        function handleSubmit(event) {
-            event.preventDefault();
-            alert('Paket berhasil disimpan!');
-            closeModal();
-        }
-
-        function toggleStatus(id, btn) {
-            const row = btn.closest('tr');
-            const currentStatus = row.getAttribute('data-status');
-            const newStatus = currentStatus === 'aktif' ? 'nonaktif' : 'aktif';
-            const action = newStatus === 'aktif' ? 'mengaktifkan' : 'menonaktifkan';
+        function toggleStatus(id, newStatus, btn) {
+            const action = newStatus == 1 ? 'mengaktifkan' : 'menonaktifkan';
             
             if (!confirm('Apakah Anda yakin ingin ' + action + ' paket ini?')) return;
 
-            row.setAttribute('data-status', newStatus);
-            row.classList.toggle('row-inactive', newStatus === 'nonaktif');
-
-            const badge = row.querySelector('.badge');
-            if (badge) {
-                badge.textContent = newStatus === 'aktif' ? 'Aktif' : 'Nonaktif';
-                badge.className = 'badge ' + (newStatus === 'aktif' ? 'badge-aktif' : 'badge-nonaktif');
-            }
-
-            btn.textContent = newStatus === 'aktif' ? 'Nonaktifkan' : 'Aktifkan';
-            btn.classList.toggle('aktifkan', newStatus === 'nonaktif');
-
-            alert('Status berhasil diubah!');
-            applyFilters();
+            // Create a form and submit to handler
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'submissionHandler.php';
+            
+            const inputHandler = document.createElement('input');
+            inputHandler.type = 'hidden';
+            inputHandler.name = 'handlerType';
+            inputHandler.value = 'ubahStatusPaketLes';
+            form.appendChild(inputHandler);
+            
+            const inputId = document.createElement('input');
+            inputId.type = 'hidden';
+            inputId.name = 'id_paket';
+            inputId.value = id;
+            form.appendChild(inputId);
+            
+            const inputStatus = document.createElement('input');
+            inputStatus.type = 'hidden';
+            inputStatus.name = 'status';
+            inputStatus.value = newStatus;
+            form.appendChild(inputStatus);
+            
+            document.body.appendChild(form);
+            form.submit();
         }
 
         document.getElementById('paketModal').addEventListener('click', function(e) {
@@ -270,3 +296,4 @@
         });
     </script>
 </html>
+

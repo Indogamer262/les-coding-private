@@ -327,8 +327,49 @@
                     // Query should return: nama_mapel, deskripsi, status
                 }
                 else if($type == "paketles") {
-                    // TODO: Implement paket les table query (combined aktif/nonaktif)
-                    // Query should return: nama_paket, harga, jml_pertemuan, status
+                    // Get both aktif and nonaktif packages
+                    $resultAktif = $this->db->readingQuery("SELECT * FROM view_paketlesaktif");
+                    $resultNonaktif = $this->db->readingQuery("SELECT * FROM view_paketlesnonaktif");
+                    
+                    // Render aktif packages
+                    foreach($resultAktif as $row) {
+                        $formattedHarga = "Rp " . number_format($row['harga'], 0, ',', '.');
+                        echo "<tr data-status='aktif' 
+                                  data-id='" . htmlspecialchars($row['id_paket']) . "'
+                                  data-nama='" . htmlspecialchars($row['nama_paket']) . "'
+                                  data-jumlah='" . $row['jml_pertemuan'] . "'
+                                  data-masa='" . $row['masa_aktif_hari'] . "'
+                                  data-harga='" . $row['harga'] . "'>" . 
+                            "<td>" . htmlspecialchars($row['nama_paket']) . "</td>" .
+                            "<td>" . $formattedHarga . "</td>" .
+                            "<td style='text-align:center;'>" . $row['jml_pertemuan'] . "x pertemuan</td>" .
+                            "<td style='text-align:center;'><span class='badge badge-aktif'>Aktif</span></td>" .
+                            "<td><div class='actionBtns'>" .
+                                "<button class='btn-edit' onclick='editPaket(this)'>Edit</button>" .
+                                "<button class='btn-toggle' onclick='toggleStatus(\"" . $row['id_paket'] . "\", 0, this)'>Nonaktifkan</button>" .
+                            "</div></td>" .
+                            "</tr>";
+                    }
+                    
+                    // Render nonaktif packages
+                    foreach($resultNonaktif as $row) {
+                        $formattedHarga = "Rp " . number_format($row['harga'], 0, ',', '.');
+                        echo "<tr data-status='nonaktif' class='row-inactive'
+                                  data-id='" . htmlspecialchars($row['id_paket']) . "'
+                                  data-nama='" . htmlspecialchars($row['nama_paket']) . "'
+                                  data-jumlah='" . $row['jml_pertemuan'] . "'
+                                  data-masa='" . $row['masa_aktif_hari'] . "'
+                                  data-harga='" . $row['harga'] . "'>" . 
+                            "<td>" . htmlspecialchars($row['nama_paket']) . "</td>" .
+                            "<td>" . $formattedHarga . "</td>" .
+                            "<td style='text-align:center;'>" . $row['jml_pertemuan'] . "x pertemuan</td>" .
+                            "<td style='text-align:center;'><span class='badge badge-nonaktif'>Nonaktif</span></td>" .
+                            "<td><div class='actionBtns'>" .
+                                "<button class='btn-edit' onclick='editPaket(this)'>Edit</button>" .
+                                "<button class='btn-toggle aktifkan' onclick='toggleStatus(\"" . $row['id_paket'] . "\", 1, this)'>Aktifkan</button>" .
+                            "</div></td>" .
+                            "</tr>";
+                    }
                 }
                 else if($type == "jadwal") {
                     // Filter handling
@@ -943,6 +984,63 @@
             $safe_murid = str_replace("'", "", $id_murid);
             
             return $this->db->nonReadingQuery("CALL SP_BatalPilihJadwal('$safe_kode', '$safe_murid')");
+        }
+
+        // =============================================
+        // KELOLA PAKET LES (ADMIN) METHODS
+        // =============================================
+
+        /**
+         * Tambah paket les baru
+         * @param string $nama Nama paket
+         * @param int $jumlah Jumlah pertemuan
+         * @param int $masa Masa aktif dalam hari
+         * @param float $harga Harga paket
+         * @param int $status Status dijual (1 = aktif, 0 = nonaktif)
+         * @return string|bool Success message or error
+         */
+        public function tambahPaketLes($nama, $jumlah, $masa, $harga, $status) {
+            $safe_nama = str_replace("'", "", $nama);
+            $safe_jumlah = intval($jumlah);
+            $safe_masa = intval($masa);
+            $safe_harga = floatval($harga);
+            $safe_status = intval($status);
+            
+            return $this->db->nonReadingQuery("CALL SP_TambahPaketLes('$safe_nama', $safe_jumlah, $safe_masa, $safe_harga, $safe_status)");
+        }
+
+        /**
+         * Edit paket les
+         * @param string $id ID paket
+         * @param string $nama Nama paket
+         * @param int $jumlah Jumlah pertemuan
+         * @param int $masa Masa aktif dalam hari
+         * @param float $harga Harga paket
+         * @param int $status Status dijual (1 = aktif, 0 = nonaktif)
+         * @return string|bool Success message or error
+         */
+        public function editPaketLes($id, $nama, $jumlah, $masa, $harga, $status) {
+            $safe_id = str_replace("'", "", $id);
+            $safe_nama = str_replace("'", "", $nama);
+            $safe_jumlah = intval($jumlah);
+            $safe_masa = intval($masa);
+            $safe_harga = floatval($harga);
+            $safe_status = intval($status);
+            
+            return $this->db->nonReadingQuery("CALL SP_EditPaketLes('$safe_id', '$safe_nama', $safe_jumlah, $safe_masa, $safe_harga, $safe_status)");
+        }
+
+        /**
+         * Ubah status paket les (aktif/nonaktif)
+         * @param string $id ID paket
+         * @param int $status Status baru (1 = aktif, 0 = nonaktif)
+         * @return string|bool Success message or error
+         */
+        public function ubahStatusPaketLes($id, $status) {
+            $safe_id = str_replace("'", "", $id);
+            $safe_status = intval($status);
+            
+            return $this->db->nonReadingQuery("CALL SP_UbahStatusPaketLes('$safe_id', $safe_status)");
         }
     }
 ?>
