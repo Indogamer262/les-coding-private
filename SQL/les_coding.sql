@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 19, 2026 at 06:44 AM
+-- Generation Time: Jan 19, 2026 at 01:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1313,7 +1313,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id_admin`, `nama_admin`, `email`, `password`, `status`) VALUES
-('A-2601001', 'Gavin Malik Setiawan', 'gavin@gavin.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
+('A-2601001', 'Admin Three', 'admin3@gmail.com', '$2y$10$BIVIMWJQntfLWJkAJlOz1eoAgh419giHU2Ud5tPN4yuqvmZk1EnL.', 1),
 ('A-2601002', 'Admin One', 'admin1@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
 ('A-2601003', 'Admin Two', 'admin2@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1);
 
@@ -1575,7 +1575,21 @@ INSERT INTO `log_sistem` (`id_log`, `tanggal`, `aktivitas`, `id_akun`) VALUES
 (27, '2026-01-18 21:33:15', 'Edit akun admin: A-2601002', 'A-2601002'),
 (28, '2026-01-18 21:33:22', 'Edit akun admin: A-2601003', 'A-2601003'),
 (29, '2026-01-19 12:07:59', 'Edit jadwal: JD-2612003', 'P-2601004'),
-(30, '2026-01-19 12:07:59', 'Murid M-2601001 memilih jadwal JD-2612003 (paket PB-2601001)', 'M-2601001');
+(30, '2026-01-19 12:07:59', 'Murid M-2601001 memilih jadwal JD-2612003 (paket PB-2601001)', 'M-2601001'),
+(31, '2026-01-19 19:33:01', 'Edit akun admin: A-2601001', 'A-2601001'),
+(32, '2026-01-19 19:33:02', 'Edit akun admin: A-2601001', 'A-2601001'),
+(33, '2026-01-19 19:33:39', 'Edit akun pengajar: P-2601001', 'P-2601001'),
+(34, '2026-01-19 19:33:55', 'Edit akun pengajar: P-2601002', 'P-2601002'),
+(35, '2026-01-19 19:33:55', 'Edit akun pengajar: P-2601002', 'P-2601002'),
+(36, '2026-01-19 19:34:13', 'Edit akun pengajar: P-2601003', 'P-2601003'),
+(37, '2026-01-19 19:34:14', 'Edit akun pengajar: P-2601003', 'P-2601003'),
+(38, '2026-01-19 19:34:45', 'Edit akun pengajar: P-2601004', 'P-2601004'),
+(39, '2026-01-19 19:34:45', 'Edit akun pengajar: P-2601004', 'P-2601004'),
+(40, '2026-01-19 19:35:10', 'Edit akun pengajar: P-2601005', 'P-2601005'),
+(41, '2026-01-19 19:35:10', 'Edit akun pengajar: P-2601005', 'P-2601005'),
+(42, '2026-01-19 19:35:27', 'Edit akun pengajar: P-2601003', 'P-2601003'),
+(43, '2026-01-19 19:35:34', 'Edit akun pengajar: P-2601004', 'P-2601004'),
+(44, '2026-01-19 19:35:46', 'Edit akun pengajar: P-2601005', 'P-2601005');
 
 -- --------------------------------------------------------
 
@@ -1797,11 +1811,11 @@ CREATE TABLE `pengajar` (
 --
 
 INSERT INTO `pengajar` (`id_pengajar`, `nama_pengajar`, `email`, `password`, `status`) VALUES
-('P-2601001', 'Pengajar Andi', 'andi.pengajar@mail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
-('P-2601002', 'Pengajar Bima', 'bima.pengajar@mail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
-('P-2601003', 'Pengajar Citra', 'citra.pengajar@mail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 0),
-('P-2601004', 'Pengajar Dewa', 'dewa.pengajar@mail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
-('P-2601005', 'Pengajar Eko', 'eko.pengajar@mail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 0);
+('P-2601001', 'Pak Andi', 'andi.pengajar@gmail.com', '$2y$10$8qmd9YCXNtFzABM.V9tOdu9Lbnl7i3AQbMUzypNjUwJdUuAC8Hrii', 1),
+('P-2601002', 'Pak Bima', 'bima.pengajar@gmail.com', '$2y$10$z.D3XzQcEzlGVzBs2.8GieCbeTHwDnpFVfHPEebpVA9o7hIEyGZ2K', 1),
+('P-2601003', 'Bu Citra', 'citra.pengajar@gmail.com', '$2y$10$qxOnOBn1mM9dfDJs3sz1.e0e/FuMDcC62yhSv51nscJ8JQgfoVc9O', 0),
+('P-2601004', 'Pak Dewa', 'dewa.pengajar@gmail.com', '$2y$10$3Jy32FJqLWzZR7Uoc1Sh0.fImUS96bGNvooMprJpXnhiOiCblRTnu', 1),
+('P-2601005', 'Pak Eko', 'eko.pengajar@gmail.com', '$2y$10$X9g2yOcfWW0EqJg8j.J8Ku5YJhsEbFSRxo00di7whDXXc/Dci1B/G', 0);
 
 --
 -- Triggers `pengajar`
@@ -2137,7 +2151,7 @@ ALTER TABLE `diajar`
 -- AUTO_INCREMENT for table `log_sistem`
 --
 ALTER TABLE `log_sistem`
-  MODIFY `id_log` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_log` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- Constraints for dumped tables
