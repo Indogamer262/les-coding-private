@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 18, 2026 at 03:36 PM
+-- Generation Time: Jan 19, 2026 at 06:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1370,7 +1370,8 @@ INSERT INTO `diajar` (`id_diajar`, `id_mapel`, `id_pengajar`) VALUES
 (2, 'MP-00002', 'P-2601001'),
 (6, 'MP-00002', 'P-2601005'),
 (3, 'MP-00003', 'P-2601002'),
-(4, 'MP-00005', 'P-2601004');
+(4, 'MP-00005', 'P-2601004'),
+(7, 'MP-00007', 'P-2601004');
 
 -- --------------------------------------------------------
 
@@ -1421,7 +1422,7 @@ INSERT INTO `jadwal` (`kode_jadwal`, `id_mapel`, `id_pengajar`, `id_murid`, `id_
 ('JD-2609002', 'MP-00002', 'P-2601005', 'M-2601002', 'PB-2601003', 'Materi Lama 2', '2025-09-12', '09:00:00', '10:00:00', 0),
 ('JD-2612001', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-01-20', '08:00:00', '09:00:00', NULL),
 ('JD-2612002', 'MP-00005', 'P-2601004', 'M-2601004', 'PB-2612003', 'Materi', '2026-01-21', '08:00:00', '09:00:00', NULL),
-('JD-2612003', 'MP-00005', 'P-2601004', NULL, NULL, 'Pengenalan Database dan Tabel', '2026-01-22', '09:00:00', '10:00:00', NULL),
+('JD-2612003', 'MP-00005', 'P-2601004', 'M-2601001', 'PB-2601001', 'Pengenalan Database dan Tabel', '2026-01-22', '09:00:00', '10:00:00', NULL),
 ('JD-2612004', 'MP-00001', 'P-2601001', 'M-2601006', 'PB-2612003', NULL, '2026-02-10', '08:00:00', '09:00:00', NULL),
 ('JD-2612005', 'MP-00003', 'P-2601002', 'M-2601003', 'PB-2612002', 'Form, Table, dan Layout Web', '2026-02-15', '08:00:00', '09:00:00', NULL),
 ('JD-2612006', 'MP-00003', 'P-2601002', 'M-2601004', 'PB-2612003', NULL, '2026-02-20', '08:00:00', '09:00:00', NULL),
@@ -1524,7 +1525,8 @@ INSERT INTO `katalogpaket` (`id_paket`, `nama_paket`, `jml_pertemuan`, `masa_akt
 ('PK-00003', 'Paket 12x', 12, 90, 1000000.00, 1),
 ('PK-00004', 'Paket 4x Promo', 4, 30, 300000.00, 0),
 ('PK-00005', 'Paket 6x', 6, 45, 550000.00, 1),
-('PK-00006', 'Paket Lama', 10, 60, 800000.00, 0);
+('PK-00006', 'Paket Lama', 10, 60, 800000.00, 0),
+('PK-00007', 'Paket 5x', 5, 30, 250000.00, 0);
 
 -- --------------------------------------------------------
 
@@ -1571,7 +1573,9 @@ INSERT INTO `log_sistem` (`id_log`, `tanggal`, `aktivitas`, `id_akun`) VALUES
 (25, '2026-01-18 21:01:50', 'Pembelian paket: PB-2601016', 'M-2601005'),
 (26, '2026-01-18 21:04:18', 'Input absensi jadwal: JD-2601006', 'P-2601002'),
 (27, '2026-01-18 21:33:15', 'Edit akun admin: A-2601002', 'A-2601002'),
-(28, '2026-01-18 21:33:22', 'Edit akun admin: A-2601003', 'A-2601003');
+(28, '2026-01-18 21:33:22', 'Edit akun admin: A-2601003', 'A-2601003'),
+(29, '2026-01-19 12:07:59', 'Edit jadwal: JD-2612003', 'P-2601004'),
+(30, '2026-01-19 12:07:59', 'Murid M-2601001 memilih jadwal JD-2612003 (paket PB-2601001)', 'M-2601001');
 
 -- --------------------------------------------------------
 
@@ -1596,7 +1600,8 @@ INSERT INTO `mata_pelajaran` (`id_mapel`, `nama_mapel`, `deskripsiMapel`, `statu
 ('MP-00003', 'PHP & MySQL', 'Membangun website dinamis dengan PHP dan database MySQL', 1),
 ('MP-00004', 'Java OOP', 'Belajar pemrograman berorientasi objek menggunakan Java', 0),
 ('MP-00005', 'Python Programming', 'Belajar Python untuk pemula sampai menengah', 1),
-('MP-00006', 'Algoritma & Struktur Data', 'Belajar algoritma, array, stack, queue, dan sorting', 0);
+('MP-00006', 'Algoritma & Struktur Data', 'Belajar algoritma, array, stack, queue, dan sorting', 0),
+('MP-00007', 'Unity', 'Bikin Game 2D', 1);
 
 -- --------------------------------------------------------
 
@@ -1681,7 +1686,7 @@ CREATE TABLE `paketdibeli` (
 --
 
 INSERT INTO `paketdibeli` (`id_pembelian`, `id_murid`, `id_paket`, `tgl_pemesanan`, `tgl_pembayaran`, `gambar_bukti_pembayaran`, `tgl_kedaluwarsa`, `pertemuan_terpakai`) VALUES
-('PB-2601001', 'M-2601001', 'PK-00002', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 6),
+('PB-2601001', 'M-2601001', 'PK-00002', '2026-01-14 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 7),
 ('PB-2601002', 'M-2601001', 'PK-00002', '2026-01-11 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-03-15 21:38:00', 0),
 ('PB-2601003', 'M-2601002', 'PK-00002', '2026-01-04 21:38:00', '2026-01-14 21:38:00', 'bukti.jpg', '2026-02-13 21:38:00', 6),
 ('PB-2601004', 'M-2601003', 'PK-00002', '2026-01-14 21:38:00', NULL, NULL, NULL, 0),
@@ -2126,13 +2131,13 @@ ALTER TABLE `pengajar`
 -- AUTO_INCREMENT for table `diajar`
 --
 ALTER TABLE `diajar`
-  MODIFY `id_diajar` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_diajar` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `log_sistem`
 --
 ALTER TABLE `log_sistem`
-  MODIFY `id_log` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_log` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables

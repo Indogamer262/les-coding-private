@@ -58,6 +58,14 @@
         <?php include('occurence/navbar.php'); ?>
         <?php include('pages/admin/sidebar.php'); ?>
         
+        <?php
+            $roleFilter = isset($_GET['role']) ? $_GET['role'] : 'semua';
+            $tableType = 'logsemua';
+            if($roleFilter == 'murid') $tableType = 'logmurid';
+            else if($roleFilter == 'pengajar') $tableType = 'logpengajar';
+            else if($roleFilter == 'admin') $tableType = 'logadmin';
+        ?>
+
         <div class="main poppins-regular">
             <div class="pageHeader">
                 <div>
@@ -70,10 +78,10 @@
                 <h3>Daftar Log</h3>
                 <div class="filterRow">
                     <div class="roleTabs">
-                        <button id="filterSemua" class="active" onclick="setRoleFilter('semua')">Semua</button>
-                        <button id="filterMurid" onclick="setRoleFilter('murid')">Murid</button>
-                        <button id="filterPengajar" onclick="setRoleFilter('pengajar')">Pengajar</button>
-                        <button id="filterAdmin" onclick="setRoleFilter('admin')">Admin</button>
+                        <button id="filterSemua" class="<?php echo $roleFilter == 'semua' ? 'active' : ''; ?>" onclick="setRoleFilter('semua')">Semua</button>
+                        <button id="filterMurid" class="<?php echo $roleFilter == 'murid' ? 'active' : ''; ?>" onclick="setRoleFilter('murid')">Murid</button>
+                        <button id="filterPengajar" class="<?php echo $roleFilter == 'pengajar' ? 'active' : ''; ?>" onclick="setRoleFilter('pengajar')">Pengajar</button>
+                        <button id="filterAdmin" class="<?php echo $roleFilter == 'admin' ? 'active' : ''; ?>" onclick="setRoleFilter('admin')">Admin</button>
                     </div>
                     <div class="spacer"></div>
 
@@ -88,7 +96,7 @@
                         </tr>
                     </thead>
                     <tbody id="logsTableBody">
-                        <?php echo $lesCodingUtil->renderTableBody("admin","logsemua"); ?>
+                        <?php echo $lesCodingUtil->renderTableBody("admin", $tableType); ?>
                     </tbody>
                 </table>
             </div>
@@ -98,38 +106,12 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
     <script>
-        let selectedRole = 'semua';
-
         $(document).ready(function() {
             new DataTable('#logsTb', { scrollX: true });
         });
 
         function setRoleFilter(role) {
-            selectedRole = role;
-            
-            // Update button states
-            ['Semua', 'Murid', 'Pengajar', 'Admin'].forEach(r => {
-                const btn = document.getElementById('filter' + r);
-                if (btn) btn.classList.toggle('active', r.toLowerCase() === role);
-            });
-            
-            applyFilters();
-        }
-
-        function applyFilters() {
-
-            const rows = document.querySelectorAll('#logsTableBody tr');
-            
-            rows.forEach(row => {
-                const role = row.getAttribute('data-role') || '';
-                const text = row.textContent.toLowerCase();
-                
-                let visible = true;
-                if (selectedRole !== 'semua' && role !== selectedRole) visible = false;
-
-                
-                row.style.display = visible ? '' : 'none';
-            });
+            window.location.href = '?role=' + role;
         }
     </script>
 </html>
